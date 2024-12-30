@@ -278,7 +278,7 @@ export class Tab1Page implements OnInit {
             );
           },
           (error: any) => {
-            //console.log(error);
+            console.log(error);
           },
           () => {
             this.loadingSync.dismiss();
@@ -289,7 +289,6 @@ export class Tab1Page implements OnInit {
 
   doRefresh() {
     this.sync.syncAll().subscribe((res) => {
-      console.log('[loadFrequencies]');
       this.loadFrequencies();
     });
   }

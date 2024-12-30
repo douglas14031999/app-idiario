@@ -56,7 +56,7 @@ export class NewContentRecordFormPage implements OnInit {
         this.classrooms = classrooms.data[0];
       },
       (error) => {
-        //console.log(error);
+        console.log(error);
       },
     );
   }
@@ -72,7 +72,7 @@ export class NewContentRecordFormPage implements OnInit {
         this.disciplines = result.data;
       },
       (error) => {
-        //console.log(error);
+        console.log(error);
       },
     );
   }

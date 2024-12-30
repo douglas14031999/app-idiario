@@ -113,7 +113,7 @@ export class SignInPage implements OnInit {
         }
       },
       (error: any) => {
-        //console.log(error)
+        console.log(error)
         this.anyError = true;
         this.errorMessage = 'Não foi possível efetuar login.';
         loading.dismiss();

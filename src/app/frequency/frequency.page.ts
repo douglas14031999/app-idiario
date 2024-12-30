@@ -178,7 +178,7 @@ export class FrequencyPage implements OnInit {
                   this.scrollTo('frequency-discipline');
                 }),
                 catchError((error) => {
-                  //console.log(error);
+                  console.log(error);
                   return of(null); // Retorna um Observable nulo para encerrar o fluxo
                 }),
                 finalize(() => loader.dismiss()),

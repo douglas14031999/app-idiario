@@ -11,9 +11,7 @@ export class GlobalFrequenciesPersisterService {
     private classrooms: ClassroomsService,
     private storage: Storage,
     private frequencies: DailyFrequencyService,
-  ) {
-    console.log('GlobalFrequenciesPersisterService');
-  }
+  ) {}
 
   async persist(user: any, classrooms: any[]): Promise<Observable<any>> {
     await this.storage.get('examRules').then((res) => {
