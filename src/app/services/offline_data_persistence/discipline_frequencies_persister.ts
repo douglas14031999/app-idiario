@@ -14,7 +14,7 @@ export class DisciplineFrequenciesPersisterService {
     private frequencies: DailyFrequencyService
   ) {
     this.storage.get('examRules').then(res => {
-      console.log(res);
+      //console.log(res);
       this.examRules = res;
     })
   }
@@ -26,12 +26,12 @@ export class DisciplineFrequenciesPersisterService {
   persist(user: any, disciplines: any[]): Observable<any> {
     return from(this.examRules).pipe(
       concatMap((examRule: any) => {
-        console.log(examRule)
+        //console.log(examRule)
         const frequenciesObservables = disciplines.flatMap(disciplineList =>
           disciplineList.data.map((discipline: { id: number; }) => {
-            
+
             const currentExamRule = examRule;
-            console.log(currentExamRule)
+            //console.log(currentExamRule)
             if (currentExamRule && (currentExamRule.data.exam_rule.frequency_type === "2" || currentExamRule.data.exam_rule.allow_frequency_by_discipline)) {
               return this.frequencies.getFrequencies(disciplineList.classroomId, discipline.id, user.teacher_id);
             } else {

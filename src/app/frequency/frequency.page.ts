@@ -71,7 +71,7 @@ export class FrequencyPage implements OnInit {
     }
     if (!this.unities || !this.unities.length) {
       this.unities = await this.storage.get('unities');
-      console.log(this.unities)
+      //console.log(this.unities)
       this.emptyUnities = (!this.unities || this.unities.length === 0);
     }
   }
@@ -91,7 +91,7 @@ export class FrequencyPage implements OnInit {
       this.auth.currentUser().subscribe((user: User) => {
         this.classroomsService.getOfflineClassrooms(this.unityId!).subscribe(
           (classrooms: any) => {
-            console.log(classrooms)
+            //console.log(classrooms)
             this.schoolCalendarsService.getOfflineSchoolCalendar(this.unityId!).subscribe(
               (schoolCalendar: any) => {
                 this.resetSelectedValues();
@@ -110,14 +110,14 @@ export class FrequencyPage implements OnInit {
               error => {
                 loader.dismiss();
                 this.messages.showToast(error);
-                console.log(error)
+                //console.log(error)
               }
             );
           },
           error => {
             loader.dismiss();
             this.messages.showToast(error);
-            console.log(error)
+            //console.log(error)
           }
         );
       });
@@ -128,7 +128,7 @@ export class FrequencyPage implements OnInit {
     if (!this.classroomId) { return; }
 
     this.disciplineId = undefined;
-    console.log(this.classroomId);
+    //console.log(this.classroomId);
 
     // Evitar ExpressionChangedAfterItHasBeenCheckedError
     let _classes = this.classes;
@@ -144,20 +144,19 @@ export class FrequencyPage implements OnInit {
 
     this.examRulesService.getOfflineExamRules(this.classroomId).pipe(
       tap((result: any) => {
-        console.log(result);
+        //console.log(result);
 
         if (result.data.exam_rule && result.data.exam_rule.allow_frequency_by_discipline) {
-          console.log('oi')
           this.disciplinesService.getOfflineDisciplines(this.classroomId).pipe(
             tap((disciplineResult: any) => {
-              console.log(disciplineResult)
+              //console.log(disciplineResult)
               this.disciplines = disciplineResult.data;
               this.globalAbsence = false;
               this.cdr.detectChanges();
               this.scrollTo("frequency-discipline");
             }),
             catchError((error) => {
-              console.log(error);
+              //console.log(error);
               return of(null); // Retorna um Observable nulo para encerrar o fluxo
             }),
             finalize(() => loader.dismiss())

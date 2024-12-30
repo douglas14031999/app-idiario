@@ -18,7 +18,7 @@ interface LessonPlan {
   activities?: string;
   opinion?: string;
   resources?: string;
-  start_at: Date; 
+  start_at: Date;
   end_at: Date;
 }
 
@@ -56,10 +56,10 @@ export class LessonPlanDetailsPage implements OnInit {
   ) {}
 
   async ngOnInit() {
-    
+
 
     const state = this.router.getCurrentNavigation()?.extras.state;
-    console.log(state)
+    //console.log(state)
     this.lessonPlanId = state!['lessonPlanId'];
     await this.storage.create();  // Necessário para inicializar o storage
     const lessonPlans: { unities: Unity[] } = await this.storage.get('lessonPlans');

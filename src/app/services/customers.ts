@@ -12,12 +12,12 @@ export class CustomersService {
   constructor(
     private http: HttpClient,
     private api: ApiService
-  ){} 
+  ){}
 
   getCustomers(): Observable<Customer[]> {
     return this.http.get<any[]>(this.api.getallHostsUrl()).pipe(
       map((response: any) => {
-        console.log(response)
+        //console.log(response)
         if (response && response.customers) {
           return response.customers.map((customer: Customer) => {
             return { name: customer.name, url: customer.url, support_url: customer.support_url };

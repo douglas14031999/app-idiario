@@ -42,11 +42,11 @@ export class OfflineDataPersisterService {
   }
 
   persist(user: User): Observable<void> {
-    console.log(user)
+    //console.log(user)
    if (this.connectionService.isOnline) {
       this.clearStorage();
     }
- 
+
     return concat(
       this.unitiesPersister.persist(user).pipe(catchError(() => of(void 0))),
       this.lessonPlansPersister.persist(user).pipe(catchError(() => of(void 0))),

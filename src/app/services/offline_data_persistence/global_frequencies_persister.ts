@@ -15,8 +15,8 @@ export class GlobalFrequenciesPersisterService {
   ) { }
 
   async persist(user: any, classrooms: any[]): Promise<Observable<any>> {
-    console.log(user);
-    console.log(classrooms);
+    //console.log(user);
+    //console.log(classrooms);
 
     // Verifique se 'classrooms' é um array e se contém arrays aninhados como esperado
     /*if (!Array.isArray(classrooms)) {
@@ -24,24 +24,24 @@ export class GlobalFrequenciesPersisterService {
       return of([]); // Retorna um observable vazio caso não seja um array
     }*/
     await this.storage.get('examRules').then(res => {
-      console.log(res)
+      //console.log(res)
     })
     return from(this.storage.get('examRules')).pipe(
       concatMap(examRule => {
-        console.log(examRule);
+        //console.log(examRule);
 
         // Flatte o array de classrooms se for necessário
         const frequenciesObservables = classrooms.flatMap(classroomList => {
-          console.log(classroomList)
+          //console.log(classroomList)
           /*if (!Array.isArray(classroomList)) {
             console.error('Expected classroomList to be an array');
             return []; // Retorna um array vazio se não for um array
           }*/
 
           return classroomList.data[0].map((classroom: any): Observable<any> => {
-            console.log(classroom)
+            //console.log(classroom)
             const currentExamRule = examRule.find((rule: any) => rule.classroomId === classroom.id);
-            console.log(currentExamRule);
+            //console.log(currentExamRule);
 
             if (currentExamRule) {
               return this.frequencies.getFrequencies(classroom.id, 0, user.teacher_id);

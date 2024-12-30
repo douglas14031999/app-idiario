@@ -17,23 +17,23 @@ export class ClassroomsPersisterService {
   ) { }
 
   persist(user: User, unities: any[]): Observable<any> {
-    console.log(unities)
+    //console.log(unities)
     return new Observable((observer) => {
       const classroomsObservables = unities.map((unity) => {
         // Retorna o Observable corretamente
         return this.classrooms.getOnlineClassrooms(user.teacher_id, unity.id);
       });
-      
+
       forkJoin(classroomsObservables).pipe(
         tap((classrooms: any) => {
-          console.log(classrooms)
+          //console.log(classrooms)
           let classes = [
             {
               data: classrooms,
               unityId: unities[0].id
             }
           ]
-          console.log(classes)
+          //console.log(classes)
           this.storage.set('classrooms', classes);
         }),
         mergeMap((classrooms: any) =>

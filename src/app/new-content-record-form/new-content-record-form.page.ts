@@ -29,7 +29,7 @@ export class NewContentRecordFormPage implements OnInit {
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
-      console.log(params)
+      //console.log(params)
       this.unityId = params['unityId'];
       this.date = params['date'];
       // Use os parâmetros conforme necessário
@@ -37,7 +37,7 @@ export class NewContentRecordFormPage implements OnInit {
 
     const state = this.router.getCurrentNavigation()?.extras.state;
     if (state && state['unities']) {
-      console.log(state)
+      //console.log(state)
       this.unities = state['unities'];
       this.emptyUnities = false;
       // Utilize o array de unities conforme necessário
@@ -53,23 +53,23 @@ export class NewContentRecordFormPage implements OnInit {
         this.classrooms = classrooms.data[0];
       },
       (error) => {
-        console.log(error);
+        //console.log(error);
       }
     );
   }
 
-  onChangeClassroom() { 
+  onChangeClassroom() {
     if (!this.classroomId) return;
 
     this.disciplineId = null;
 
     this.disciplinesService.getOfflineDisciplines(this.classroomId).subscribe(
       (result: any) => {
-        console.log(result)
+        //console.log(result)
         this.disciplines = result.data;
       },
       (error) => {
-        console.log(error);
+        //console.log(error);
       }
     );
   }
@@ -84,7 +84,7 @@ export class NewContentRecordFormPage implements OnInit {
     const date = this.utilsService.dateToTimezone(form.value.date);
     const stringDate = this.utilsService.toStringWithoutTime(date);
     const disciplineId = form.value.discipline;
-    console.log(this.disciplines)
+    //console.log(this.disciplines)
     const disciplineDescription = this.disciplines.find((d: { id: any; }) => d.id === disciplineId)?.description || '';
 
     const navigationExtras = {

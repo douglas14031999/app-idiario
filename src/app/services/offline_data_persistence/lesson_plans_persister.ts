@@ -14,22 +14,22 @@ export class LessonPlansPersisterService {
   ) {}
 
   persist(user: User): Observable<any> {
-    console.log(user.teacher_id)
+    //console.log(user.teacher_id)
     return this.lessonPlans.getLessonPlans(user.teacher_id).pipe(
-      tap(lessonPlans => { 
-        console.log(lessonPlans)
+      tap(lessonPlans => {
+        //console.log(lessonPlans)
         this.storage.set('lessonPlans', lessonPlans).then(() => {
-          console.log('Lesson plans saved successfully.');
-         
+          //console.log('Lesson plans saved successfully.');
+
         });
         this.unities.getOnlineUnities(user.teacher_id).subscribe(res => {
-          console.log(res)
+          //console.log(res)
           this.storage.set('unities', res)
         })
-       
+
       }),
       catchError(error => {
-        console.error('Failed to persist lesson plans:', error);
+        //console.error('Failed to persist lesson plans:', error);
         throw error; // Re-throwing error to propagate it downstream
       })
     );

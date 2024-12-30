@@ -41,12 +41,12 @@ export class Tab1Page implements OnInit {
     const classroms = this.storage.get('classrooms');
 
     this.storage.get('user').then(async res => {
-      console.log(res);
+      //console.log(res);
       if(res){
         const user = res;
-    
+
         (await this.global.persist(await user, await classroms)).subscribe(res => {
-          console.log(res)
+          //console.log(res)
         })
         this.loadFrequencies();
         this.frequenciesLoaded = true;
@@ -55,7 +55,7 @@ export class Tab1Page implements OnInit {
         this.router.navigate(['/sign-in']);
       }
     })
-    
+
   }
 
   ionViewWillEnter() {
@@ -70,7 +70,7 @@ export class Tab1Page implements OnInit {
     this.currentDate = this.utilsService.getCurrentDate();
     this.currentDate.setHours(0, 0, 0, 0);
     this.storage.get('frequencies').then((frequencies) => {
-      console.log(frequencies);
+      //console.log(frequencies);
       if (frequencies) {
         this.lastFrequencyDays = this.lastTenFrequencies(frequencies.daily_frequencies);
         this.emptyFrequencies = false;
@@ -88,7 +88,7 @@ export class Tab1Page implements OnInit {
         return;
       }
       this.storage.get('unities').then((unities) => {
-        console.log(unities)
+        //console.log(unities)
         this.router.navigate(['/frequency']);
       });
     });
@@ -118,7 +118,7 @@ export class Tab1Page implements OnInit {
       });
       this.currentDate.setDate(this.currentDate.getDate() - 1);
     }
-    console.log(lastDays)
+    //console.log(lastDays)
     return lastDays;
   }
 
@@ -184,7 +184,7 @@ export class Tab1Page implements OnInit {
       });
       this.loadingSync.present();
       this.storage.get('frequencies').then((frequencies) => {
-        console.log(frequencies)
+        //console.log(frequencies)
         if (frequencies) {
 
           // Verifica se this.lastFrequencyDays está inicializado
@@ -211,7 +211,7 @@ export class Tab1Page implements OnInit {
     this.loadingSync.present();
 
     this.auth.currentUser().subscribe(res => {
-      console.log(res);
+      //console.log(res);
       const usuario = res;
       this.dailyFrequencyService.getStudents({
         userId: usuario.id,
@@ -223,7 +223,7 @@ export class Tab1Page implements OnInit {
         classNumbers: classes ? classes.join() : ''
       }).subscribe(
         (result: any) => {
-          console.log(result)
+          //console.log(result)
           const navigationExtras = {
             queryParams: {
               //frequencies: result,
@@ -236,7 +236,7 @@ export class Tab1Page implements OnInit {
           this.router.navigate(['/students-frequency-edit'], navigationExtras);
         },
         (error: any) => {
-          console.log(error);
+          //console.log(error);
         },
         () => {
           this.loadingSync.dismiss();
@@ -250,7 +250,7 @@ export class Tab1Page implements OnInit {
   doRefresh() {
     this.sync.syncAll().subscribe(res => {
       this.loadFrequencies();
-      console.log(res);
+      //console.log(res);
     })
 
 

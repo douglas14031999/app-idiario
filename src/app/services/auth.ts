@@ -8,7 +8,7 @@ import { User } from '../data/user.interface';
 
 @Injectable({
   providedIn: 'root'
-}) 
+})
 export class AuthService {
   constructor(
     private http: HttpClient,
@@ -27,7 +27,7 @@ export class AuthService {
 
   isSignedIn(): Observable<boolean> {
     this.storage.get('user').then(res => {
-      console.log(res)
+      //console.log(res)
     })
 
     return from(this.storage.get('user')).pipe(

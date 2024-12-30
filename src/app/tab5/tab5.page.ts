@@ -31,20 +31,20 @@ export class Tab5Page implements OnInit {
   async ngOnInit() {
     this.app_version = environment.appversion;
     await Device.getInfo().then(res => {
-      console.log(res);
+      //console.log(res);
       if (res) {
         this.device = res;
         this.carregou = true;
       }
     });
 
-    console.log(this.device);
+    //console.log(this.device);
   }
 
   logout() {
 
     this.storage.clear().then(res => {
-      console.log(res);
+      //console.log(res);
     }).finally(() => {
       this.router.navigate(['/sign-in']);
     });

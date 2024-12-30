@@ -99,7 +99,7 @@ export class SyncProvider {
   public isSyncDelayed() {
     return this.getLastSyncDate().then(lastSyncDate => {
       const daysDifference = Math.round((this.utilsService.getCurrentDate().getTime() - lastSyncDate.getTime()) / (1000 * 60 * 60 * 24));
-      console.log(daysDifference)
+      //console.log(daysDifference)
       if (daysDifference >= 5) {
         this.callDelayedSyncAlert(daysDifference);
       }
@@ -164,7 +164,7 @@ export class SyncProvider {
                 contentRecordsToSync: from(this.storage.get('contentRecordsToSync') || [])
               }).pipe(
                 switchMap(results => {
-                  console.log(results);
+                  //console.log(results);
                   if (!results) {
                     observer.error('Nenhum resultado retornado.');
                     return of(null);

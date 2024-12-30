@@ -61,7 +61,6 @@ export class Tab4Page implements OnInit {
 
   // Atualize o método openDetail
   openDetail(teachingPlanId: number) {
-    console.log(teachingPlanId);
     this.router.navigate(['/teaching-plan-details', teachingPlanId]);
   }
 }

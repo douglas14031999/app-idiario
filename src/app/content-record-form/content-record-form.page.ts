@@ -39,7 +39,7 @@ export class ContentRecordFormPage implements OnInit {
   ngOnInit(): void {
 
     this.route.queryParams.subscribe(params => {
-      console.log(params)
+      // console.log(params)
       this.baseContents = {};
       this.contentRecord = {};
       this.contents = [];
@@ -97,8 +97,7 @@ export class ContentRecordFormPage implements OnInit {
 
     const state = this.router.getCurrentNavigation()?.extras.state;
     if (state && state['unities']) {
-      console.log(state)
-
+      // console.log(state)
     }
   }
 
@@ -149,7 +148,7 @@ export class ContentRecordFormPage implements OnInit {
     const indexFound = this.contents.findIndex((c) =>
       this.utilsService.compareStrings(c.description, this.newContent)
     );
- 
+
     if (indexFound >= 0) {
       this.contents[indexFound].checked = true;
     } else {

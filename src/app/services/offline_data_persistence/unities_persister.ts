@@ -17,10 +17,10 @@ export class UnitiesPersisterService {
     private storage: StorageService
   ) {
     this.storage.get('user').then(res => {
-      console.log(res)
+      //console.log(res)
       if (res) {
         this.unities.getOnlineUnities(res.teacher_id).subscribe(res => {
-          console.log(res)
+          //console.log(res)
           this.storage.set('unities', res)
         })
       }
@@ -29,7 +29,7 @@ export class UnitiesPersisterService {
   }
 
   persist(user: User): Observable<any> {
-    console.log(user)
+    //console.log(user)
     return this.unities.getOnlineUnities(user.teacher_id)
       .pipe(
         concatMap((unities) =>

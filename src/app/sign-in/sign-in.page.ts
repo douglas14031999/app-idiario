@@ -48,7 +48,7 @@ export class SignInPage implements OnInit {
   async ngOnInit(): Promise<void> {
     this.isOnline = this.connection.isOnline;
     await this.connection.eventOnline.subscribe((online: boolean) =>{
-      console.log(online)
+      //console.log(online)
       this.changeInputMunicipios(online)
     } );
   }
@@ -58,7 +58,7 @@ export class SignInPage implements OnInit {
   }
 
   changeInputMunicipios(online: boolean) {
-    console.log(online)
+    //console.log(online)
     this.isOnline = online;
     if (!this.isOnline) {
       this.selectedCity = undefined;
@@ -79,17 +79,17 @@ export class SignInPage implements OnInit {
   getCustomers() {
     this.customersService.getCustomers().subscribe(
       (data: Customer[]) => {
-        console.log(data)
+        //console.log(data)
         this.cities = data;
         this.cdr.detectChanges();
       });
   }
 
   async loginForm(form: NgForm) {
-    console.log(form);
+    //console.log(form);
     const credential = this.credentials;
     const password = this.password;
-    console.log(credential);
+    //console.log(credential);
     const loading = await this.loadingCtrl.create({
       message: 'Carregando ...',
       duration: 3000,
@@ -99,11 +99,11 @@ export class SignInPage implements OnInit {
 
     this.auth.signIn(credential, password).subscribe(
       (user: User) => {
-        console.log(user);
+        //console.log(user);
         if (user) {
           this.auth.setCurrentUser(user);
           this.offlineDataPersister.persist(user).subscribe(res => {
-            console.log(res);
+            //console.log(res);
           })
 
           this.router.navigate([''], { queryParams: user });
@@ -115,7 +115,7 @@ export class SignInPage implements OnInit {
 
       },
       (error: any) => {
-        console.log(error)
+        //console.log(error)
         this.anyError = true;
         this.errorMessage = "Não foi possível efetuar login.";
         loading.dismiss();

@@ -8,13 +8,13 @@ export class ConnectionService {
   public status: any;
 
   constructor(){
-    
+
     this.init();
     //this.isOnline = (this.network.type !== "none");
   }
   async init(){
     this.status = await Network.getStatus();
-    console.log(this.status)
+    //console.log(this.status)
     if(this.status.connectionType != "none"){
       this.isOnline = true;
     }

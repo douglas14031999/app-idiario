@@ -13,7 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   selector: 'app-students-frequency-edit',
   templateUrl: './students-frequency-edit.page.html',
   styleUrls: ['./students-frequency-edit.page.scss'],
-  
+
 })
 export class StudentsFrequencyEditPage implements OnInit {
   studentsFrequency: any;
@@ -33,7 +33,7 @@ export class StudentsFrequencyEditPage implements OnInit {
 
   constructor(
     private navCtrl: NavController,
-    //private navParams: NavParams, 
+    //private navParams: NavParams,
     private dailyFrequencyStudentService: DailyFrequencyStudentService,
     private loadingCtrl: LoadingController,
     private utilsService: UtilsService,
@@ -50,23 +50,23 @@ export class StudentsFrequencyEditPage implements OnInit {
 
     this.route.queryParams.subscribe(params => {
       this.globalAbsence = JSON.parse(params['global']);
-      console.log(this.globalAbsence)
+      //console.log(this.globalAbsence)
       const state = this.router.getCurrentNavigation()?.extras.state;
-      console.log(state)
+      //console.log(state)
       if (this.globalAbsence) {
         this.studentsFrequency = state?.['result']['daily_frequency'];
-        console.log(this.globalAbsence)
+        //console.log(this.globalAbsence)
        } else {
         this.studentsFrequency = state?.['result']['daily_frequencies'];
-        console.log(this.studentsFrequency)
+        //console.log(this.studentsFrequency)
        }
 
     })
 
-   
 
-    
-  
+
+
+
     this.classes = this.mountClassNumbers();
     console.log(this.classes)
     this.setCurrentClassroom();
@@ -94,14 +94,14 @@ export class StudentsFrequencyEditPage implements OnInit {
         userId: user.id,
         frequencyDate: this.frequencyDate,
       };
-  
+
       this.dailyFrequencyStudentService.updateFrequency(params).subscribe(
         (dailyFrequencyStudentsToSync) => {
           if (this.connection.isOnline) {
             this.loadingCount++;
             const loadingCountLocal = this.loadingCount;
             this.isSavingFrequencies = true;
-  
+
             this.dailyFrequencyStudentsSynchronizer.sync(dailyFrequencyStudentsToSync).subscribe(
               () => {
                 // Sucesso na sincronização
@@ -124,8 +124,8 @@ export class StudentsFrequencyEditPage implements OnInit {
       );
     })
   }
-  
-  
+
+
 
   private sortStudents(studentA: any, studentB: any): number {
     if (studentA.sequence > studentB.sequence) {
