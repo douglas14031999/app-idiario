@@ -65,7 +65,6 @@ export class ApiService {
   }
 
   getTeacherUnitiesUrl() {
-    // console.log(this.serverUrl + '/api/v2/teacher_unities.json');
     return this.serverUrl + '/api/v2/teacher_unities.json';
   }
 

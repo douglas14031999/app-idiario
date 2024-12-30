@@ -22,11 +22,9 @@ export class ClassroomsService {
   ) {}
 
   getOnlineClassrooms(teacherId: number, unityId: number) {
-    const request = this.http.get(this.api.getTeatcherClassroomsUrl(), {
+    return this.http.get(this.api.getTeatcherClassroomsUrl(), {
       params: { teacher_id: teacherId, unity_id: unityId },
     });
-    //console.log(request)
-    return request;
   }
 
   getOfflineClassrooms(unityId: number) {

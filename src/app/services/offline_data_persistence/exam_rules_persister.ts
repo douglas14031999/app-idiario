@@ -1,5 +1,5 @@
-import { ExamRulesService } from './../exam_rules';
-import { ClassroomsService } from './../classrooms';
+import { ExamRulesService } from '../exam_rules';
+import { ClassroomsService } from '../classrooms';
 import { Observable, concatMap, forkJoin, from, map } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';

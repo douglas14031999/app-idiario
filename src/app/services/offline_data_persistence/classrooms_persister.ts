@@ -19,7 +19,6 @@ export class ClassroomsPersisterService {
   persist(user: User, unities: any[]): Observable<any> {
     return new Observable((observer) => {
       const classroomsObservables = unities.map((unity) => {
-        // Retorna o Observable corretamente
         return this.classrooms.getOnlineClassrooms(user.teacher_id, unity.id);
       });
 

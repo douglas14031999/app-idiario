@@ -17,6 +17,7 @@ export class UnitiesService {
     const request = this.http.get(this.api.getTeacherUnitiesUrl(), {
       params: { teacher_id: teacherId },
     });
+
     return request.pipe(
       map((response: any) => {
         return response;
