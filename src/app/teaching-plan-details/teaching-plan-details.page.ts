@@ -8,7 +8,7 @@ import { ActivatedRoute } from '@angular/router';
   selector: 'app-teaching-plan-details',
   templateUrl: './teaching-plan-details.page.html',
   styleUrls: ['./teaching-plan-details.page.scss'],
-  "standalone": false,
+  standalone: false,
 })
 export class TeachingPlanDetailsPage implements OnInit {
   teachingPlanId!: number;

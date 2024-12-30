@@ -13,7 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   selector: 'app-students-frequency-edit',
   templateUrl: './students-frequency-edit.page.html',
   styleUrls: ['./students-frequency-edit.page.scss'],
-  "standalone": false,
+  standalone: false,
 })
 export class StudentsFrequencyEditPage implements OnInit {
   studentsFrequency: any;

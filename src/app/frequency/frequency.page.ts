@@ -29,7 +29,7 @@ import { catchError, finalize, of, tap } from 'rxjs';
   templateUrl: './frequency.page.html',
   styleUrls: ['./frequency.page.scss'],
   providers: [NavParams],
-  "standalone": false,
+  standalone: false,
 })
 export class FrequencyPage implements OnInit {
   @ViewChild(IonContent, { static: false }) content: IonContent | undefined;

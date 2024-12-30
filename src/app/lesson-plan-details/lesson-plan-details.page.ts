@@ -30,7 +30,7 @@ interface Unity {
   selector: 'app-lesson-plan-details',
   templateUrl: './lesson-plan-details.page.html',
   styleUrls: ['./lesson-plan-details.page.scss'],
-  "standalone": false,
+  standalone: false,
 })
 export class LessonPlanDetailsPage implements OnInit {
   lessonPlanId!: number;

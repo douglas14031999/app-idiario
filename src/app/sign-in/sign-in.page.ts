@@ -16,7 +16,7 @@ import { OfflineDataPersisterService } from '../services/offline_data_persistenc
   selector: 'app-sign-in',
   templateUrl: './sign-in.page.html',
   styleUrls: ['./sign-in.page.scss'],
-  "standalone": false,
+  standalone: false,
 })
 export class SignInPage implements OnInit {
   cities: Customer[] = [

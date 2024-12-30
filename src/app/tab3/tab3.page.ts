@@ -7,7 +7,7 @@ import { SyncProvider } from '../services/sync';
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
-  "standalone": false,
+  standalone: false,
 })
 export class Tab3Page {
   shownGroup: any = null; // Ajustado para tipagem adequada
@@ -16,8 +16,8 @@ export class Tab3Page {
   constructor(
     private navCtrl: NavController,
     private sync: SyncProvider,
-    private storage: Storage
-  ) { }
+    private storage: Storage,
+  ) {}
   ngOnInit(): void {
     //throw new Error('Method not implemented.');
     this.updateLessonPlans();

@@ -5,12 +5,13 @@ import { Storage } from '@ionic/storage-angular';
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
-  "standalone": false,
+  standalone: false,
 })
 export class AppComponent {
-  constructor( private storage: Storage,   private platform: Platform) {
-
-  }
+  constructor(
+    private storage: Storage,
+    private platform: Platform,
+  ) {}
   async ngOnInit() {
     // If using a custom driver:
     // await this.storage.defineDriver(MyCustomDriver)
