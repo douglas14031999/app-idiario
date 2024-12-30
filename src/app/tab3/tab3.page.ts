@@ -18,7 +18,7 @@ export class Tab3Page {
     private sync: SyncProvider,
     private storage: Storage
   ) { }
-  ngOnInit(): void {
+  OnInit(): void {
     //throw new Error('Method not implemented.');
     this.updateLessonPlans();
   }
