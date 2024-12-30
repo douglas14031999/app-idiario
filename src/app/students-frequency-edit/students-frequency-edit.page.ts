@@ -48,21 +48,18 @@ export class StudentsFrequencyEditPage implements OnInit {
 
   async ngOnInit() {
     this.route.queryParams.subscribe((params) => {
-      this.globalAbsence = JSON.parse(params['global']);
-      //console.log(this.globalAbsence)
       const state = this.router.getCurrentNavigation()?.extras.state;
-      //console.log(state)
+
+      this.globalAbsence = JSON.parse(params['global']);
+
       if (this.globalAbsence) {
         this.studentsFrequency = state?.['result']['daily_frequency'];
-        //console.log(this.globalAbsence)
       } else {
         this.studentsFrequency = state?.['result']['daily_frequencies'];
-        //console.log(this.studentsFrequency)
       }
     });
 
     this.classes = this.mountClassNumbers();
-    console.log(this.classes);
     this.setCurrentClassroom();
     this.setCurrentDiscipline();
     this.setCurrentUnity();
@@ -80,7 +77,7 @@ export class StudentsFrequencyEditPage implements OnInit {
     checked: boolean = false,
   ) {
     frequency.present = checked; // Atualiza o valor de 'present' com o valor do checkbox
-    console.log(frequency);
+
     this.auth.currentUser().subscribe((user) => {
       const params = {
         id: frequency.id,

@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
 import { catchError, concatMap } from 'rxjs/operators';
-import { Storage } from '@ionic/storage-angular';
-import { UnitiesService } from './../unities';
-import { SchoolCalendarsPersisterService } from './school_calendars_persister';
 import { ClassroomsPersisterService } from './classrooms_persister';
-import { User } from './../../data/user.interface';
+import { SchoolCalendarsPersisterService } from './school_calendars_persister';
 import { StorageService } from '../storage.service';
+import { UnitiesService } from '../unities';
+import { User } from '../../data/user.interface';
 
 @Injectable()
 export class UnitiesPersisterService {
@@ -16,19 +15,14 @@ export class UnitiesPersisterService {
     private schoolCalendarsPersister: SchoolCalendarsPersisterService,
     private storage: StorageService,
   ) {
-    this.storage.get('user').then((res) => {
-      //console.log(res)
-      if (res) {
-        this.unities.getOnlineUnities(res.teacher_id).subscribe((res) => {
-          //console.log(res)
-          this.storage.set('unities', res);
-        });
-      }
+    this.storage.get('user').then((user) => {
+      this.unities.getOnlineUnities(user.teacher_id).subscribe((unities) => {
+        this.storage.set('unities', unities);
+      });
     });
   }
 
   persist(user: User): Observable<any> {
-    //console.log(user)
     return this.unities.getOnlineUnities(user.teacher_id).pipe(
       concatMap((unities) =>
         forkJoin([

@@ -19,7 +19,6 @@ export class UnitiesService {
     });
     return request.pipe(
       map((response: any) => {
-        // console.log(response)
         return response;
       }),
     );

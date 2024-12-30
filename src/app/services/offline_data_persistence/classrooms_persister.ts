@@ -1,11 +1,11 @@
+import { Injectable } from '@angular/core';
+import { Observable, forkJoin } from 'rxjs';
+import { catchError, tap, mergeMap } from 'rxjs/operators';
 import { DisciplinesPersisterService } from './disciplines_persister';
 import { ExamRulesPersisterService } from './exam_rules_persister';
-import { ClassroomsService } from './../classrooms';
-import { Observable, forkJoin } from 'rxjs';
-import { Injectable } from '@angular/core';
+import { ClassroomsService } from '../classrooms';
 import { User } from 'src/app/data/user.interface';
 import { StorageService } from '../storage.service';
-import { catchError, tap, mergeMap } from 'rxjs/operators';
 
 @Injectable()
 export class ClassroomsPersisterService {
@@ -17,7 +17,6 @@ export class ClassroomsPersisterService {
   ) {}
 
   persist(user: User, unities: any[]): Observable<any> {
-    //console.log(unities)
     return new Observable((observer) => {
       const classroomsObservables = unities.map((unity) => {
         // Retorna o Observable corretamente
@@ -27,14 +26,13 @@ export class ClassroomsPersisterService {
       forkJoin(classroomsObservables)
         .pipe(
           tap((classrooms: any) => {
-            //console.log(classrooms)
             let classes = [
               {
                 data: classrooms,
                 unityId: unities[0].id,
               },
             ];
-            //console.log(classes)
+
             this.storage.set('classrooms', classes);
           }),
           mergeMap((classrooms: any) =>
