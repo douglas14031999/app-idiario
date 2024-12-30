@@ -16,9 +16,9 @@ export class Tab3Page {
   constructor(
     private navCtrl: NavController,
     private sync: SyncProvider,
-    private storage: Storage,
-  ) {}
-  OnInit(): void {
+    private storage: Storage
+  ) { }
+  ngOnInit(): void {
     //throw new Error('Method not implemented.');
     this.updateLessonPlans();
   }
