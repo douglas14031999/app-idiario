@@ -7,7 +7,7 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { InterceptService } from './services/intercept.service';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { ApiService } from './services/api';
 import { ConnectionService } from './services/connection';
@@ -53,7 +53,6 @@ import { DailyFrequencyStudentService } from './services/daily_frequency_student
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    HttpClientModule,
     IonicStorageModule.forRoot(),
   ],
   providers: [
@@ -63,6 +62,7 @@ import { DailyFrequencyStudentService } from './services/daily_frequency_student
       useClass: InterceptService,
       multi: true,
     },
+    provideHttpClient(withInterceptorsFromDi()),
     ApiService,
     ConnectionService,
     CustomersService,
