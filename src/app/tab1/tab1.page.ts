@@ -10,7 +10,6 @@ import { DailyFrequencyService } from '../services/daily_frequency';
 import { StorageService } from '../services/storage.service';
 import { GlobalFrequenciesPersisterService } from '../services/offline_data_persistence/global_frequencies_persister';
 
-
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
@@ -211,7 +210,6 @@ export class Tab1Page implements OnInit {
     this.loadingSync.present();
 
     this.auth.currentUser().subscribe(res => {
-      //console.log(res);
       const usuario = res;
       this.dailyFrequencyService.getStudents({
         userId: usuario.id,
@@ -223,7 +221,6 @@ export class Tab1Page implements OnInit {
         classNumbers: classes ? classes.join() : ''
       }).subscribe(
         (result: any) => {
-          //console.log(result)
           const navigationExtras = {
             queryParams: {
               //frequencies: result,
@@ -249,11 +246,8 @@ export class Tab1Page implements OnInit {
 
   doRefresh() {
     this.sync.syncAll().subscribe(res => {
+      console.log('[loadFrequencies]');
       this.loadFrequencies();
-      //console.log(res);
     })
-
-
-
   }
 }
