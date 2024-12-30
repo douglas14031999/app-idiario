@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   selector: 'app-content-record-form',
   templateUrl: './content-record-form.page.html',
   styleUrls: ['./content-record-form.page.scss'],
+  "standalone": false,
 })
 export class ContentRecordFormPage implements OnInit {
   recordDate!: string;

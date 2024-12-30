@@ -11,6 +11,7 @@ import { NgForm } from '@angular/forms';
   selector: 'app-new-content-record-form',
   templateUrl: './new-content-record-form.page.html',
   styleUrls: ['./new-content-record-form.page.scss'],
+  "standalone": false,
 })
 export class NewContentRecordFormPage implements OnInit {
   unities: Unity[] = [];
