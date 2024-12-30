@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Platform } from '@ionic/angular';
-import { Storage } from '@ionic/storage-angular';
+import { StorageService } from "./services/storage.service";
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -9,15 +10,13 @@ import { Storage } from '@ionic/storage-angular';
 })
 export class AppComponent {
   constructor(
-    private storage: Storage,
+    private storage: StorageService,
     private platform: Platform,
   ) {}
-  async ngOnInit() {
-    // If using a custom driver:
-    // await this.storage.defineDriver(MyCustomDriver)
 
+  async ngOnInit() {
     this.platform.ready().then(async () => {
-      await this.storage.create();
+      await this.storage.init();
     });
   }
 }
