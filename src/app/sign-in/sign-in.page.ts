@@ -98,8 +98,8 @@ export class SignInPage implements OnInit {
       (user: User) => {
         if (user) {
           this.auth.setCurrentUser(user);
-          this.offlineDataPersister.persist(user).subscribe((res) => {
-            // TODO entender se faz sentido
+          this.offlineDataPersister.persist(user).subscribe((): void => {
+            // Necessário para iniciar a sincronização após o login
           });
 
           this.router.navigate([''], { queryParams: user });
