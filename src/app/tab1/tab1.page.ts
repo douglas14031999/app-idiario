@@ -74,7 +74,6 @@ export class Tab1Page implements OnInit {
     this.currentDate = this.utilsService.getCurrentDate();
     this.currentDate.setHours(0, 0, 0, 0);
     this.storage.get('frequencies').then((frequencies) => {
-      //console.log(frequencies);
       if (frequencies) {
         this.lastFrequencyDays = this.lastTenFrequencies(
           frequencies.daily_frequencies,
@@ -88,17 +87,17 @@ export class Tab1Page implements OnInit {
   }
 
   newFrequency() {
-    this.utilsService.hasAvailableStorage().then((available) => {
+    this.utilsService.hasAvailableStorage().then(async (available) => {
       if (!available) {
-        this.messages.showError(
+        await this.messages.showError(
           this.messages.insuficientStorageErrorMessage(
             'lançar novas frequências',
           ),
         );
         return;
       }
+
       this.storage.get('unities').then((unities) => {
-        //console.log(unities)
         this.router.navigate(['/frequency']);
       });
     });
@@ -128,7 +127,7 @@ export class Tab1Page implements OnInit {
       });
       this.currentDate.setDate(this.currentDate.getDate() - 1);
     }
-    //console.log(lastDays)
+
     return lastDays;
   }
 
@@ -137,10 +136,15 @@ export class Tab1Page implements OnInit {
   }
 
   unitiesOfFrequency(frequencies: any[]) {
-    if (!frequencies) return null;
+    if (!frequencies) {
+      return null;
+    }
+
     const unities: { id: any; name: any; classroomDisciplines: any[] }[] = [];
+
     frequencies.forEach((frequency) => {
       if (
+        // TODO Lógica diferente
         unities.findIndex((unity) => unity.id === frequency.unity_id) === -1
       ) {
         unities.push({
@@ -169,6 +173,7 @@ export class Tab1Page implements OnInit {
     }[] = [];
 
     frequenciesOfUnity.forEach((frequency) => {
+      // TODO Lógica diferente
       const indexOfClassroomDiscipline = classroomDisciplines.findIndex(
         (cd) =>
           cd.classroomId === frequency.classroom_id &&
@@ -204,33 +209,36 @@ export class Tab1Page implements OnInit {
   loadMoreFrequencies() {
     this.utilsService.hasAvailableStorage().then(async (available) => {
       if (!available) {
-        this.messages.showError(
+        await this.messages.showError(
           this.messages.insuficientStorageErrorMessage(
             'carregar mais frequências',
           ),
         );
         return;
       }
+
       this.loadingSync = await this.loadingCtrl.create({
         message: 'Carregando...',
       });
-      this.loadingSync.present();
+
+      await this.loadingSync.present();
+
       this.storage.get('frequencies').then((frequencies) => {
-        //console.log(frequencies)
         if (frequencies) {
-          // Verifica se this.lastFrequencyDays está inicializado
           if (!this.lastFrequencyDays) {
             this.lastFrequencyDays = [];
           }
-          // Concatena apenas se houver frequências
+
           const newFrequencies = this.lastTenFrequencies(
             frequencies.daily_frequencies,
           );
+
           if (newFrequencies.length > 0) {
             this.lastFrequencyDays =
               this.lastFrequencyDays.concat(newFrequencies);
           }
         }
+
         this.loadingSync.dismiss();
       });
     });
@@ -244,13 +252,16 @@ export class Tab1Page implements OnInit {
     classes: number[],
   ) {
     const globalAbsence = !disciplineId;
+
     this.loadingSync = await this.loadingCtrl.create({
       message: 'Carregando...',
     });
-    this.loadingSync.present();
+
+    await this.loadingSync.present();
 
     this.auth.currentUser().subscribe((res) => {
       const usuario = res;
+
       this.dailyFrequencyService
         .getStudents({
           userId: usuario.id,
@@ -263,6 +274,7 @@ export class Tab1Page implements OnInit {
         })
         .subscribe(
           (result: any) => {
+            // TODO Lógica diferente
             const navigationExtras = {
               queryParams: {
                 //frequencies: result,

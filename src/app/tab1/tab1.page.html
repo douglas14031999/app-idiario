@@ -50,14 +50,16 @@
                 <ion-label
                   *ngIf="!classroomDiscipline.disciplineId"
                   class="view-eye"
-                  >{{classroomDiscipline.classroomName}}</ion-label
                 >
+                  {{classroomDiscipline.classroomName}}
+                </ion-label>
                 <ion-label
                   *ngIf="classroomDiscipline.disciplineId"
                   class="view-eye"
-                  >{{classroomDiscipline.disciplineName}} -
-                  {{classroomDiscipline.classroomName}}</ion-label
                 >
+                  {{classroomDiscipline.disciplineName}} -
+                  {{classroomDiscipline.classroomName}}
+                </ion-label>
               </ion-item>
             </div>
           </ion-list>
@@ -66,8 +68,8 @@
     </div>
   </div>
   <div style="text-align: center">
-    <ion-button (click)="loadMoreFrequencies()"
-      >Carregar mais frequências</ion-button
-    >
+    <ion-button (click)="loadMoreFrequencies()">
+      Carregar mais frequências
+    </ion-button>
   </div>
 </ion-content>
