@@ -1,5 +1,5 @@
-import { DailyFrequencyService } from './../daily_frequency';
-import { ClassroomsService } from './../classrooms';
+import { DailyFrequencyService } from '../daily_frequency';
+import { ClassroomsService } from '../classrooms';
 import { Observable, forkJoin, from, of } from 'rxjs';
 import { map, concatMap, catchError } from 'rxjs/operators';
 import { Storage } from '@ionic/storage-angular';
@@ -14,24 +14,22 @@ export class DisciplineFrequenciesPersisterService {
     private frequencies: DailyFrequencyService
   ) {
     this.storage.get('examRules').then(res => {
-      //console.log(res);
       this.examRules = res;
     })
   }
 
   private notEmptyDailyFrequencies(dailyFrequencies: any): boolean {
-    return dailyFrequencies.data && dailyFrequencies.data.daily_frequencies && dailyFrequencies.data.daily_frequencies.length > 0;
+    return dailyFrequencies && dailyFrequencies.data && dailyFrequencies.data.daily_frequencies && dailyFrequencies.data.daily_frequencies.length > 0;
   }
 
   persist(user: any, disciplines: any[]): Observable<any> {
     return from(this.examRules).pipe(
       concatMap((examRule: any) => {
-        //console.log(examRule)
         const frequenciesObservables = disciplines.flatMap(disciplineList =>
           disciplineList.data.map((discipline: { id: number; }) => {
 
             const currentExamRule = examRule;
-            //console.log(currentExamRule)
+
             if (currentExamRule && (currentExamRule.data.exam_rule.frequency_type === "2" || currentExamRule.data.exam_rule.allow_frequency_by_discipline)) {
               return this.frequencies.getFrequencies(disciplineList.classroomId, discipline.id, user.teacher_id);
             } else {
