@@ -13,7 +13,6 @@ import { ActivatedRoute, Router } from '@angular/router';
   selector: 'app-students-frequency-edit',
   templateUrl: './students-frequency-edit.page.html',
   styleUrls: ['./students-frequency-edit.page.scss'],
-
 })
 export class StudentsFrequencyEditPage implements OnInit {
   studentsFrequency: any;
@@ -47,8 +46,7 @@ export class StudentsFrequencyEditPage implements OnInit {
   ) {}
 
   async ngOnInit() {
-
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       this.globalAbsence = JSON.parse(params['global']);
       //console.log(this.globalAbsence)
       const state = this.router.getCurrentNavigation()?.extras.state;
@@ -56,19 +54,14 @@ export class StudentsFrequencyEditPage implements OnInit {
       if (this.globalAbsence) {
         this.studentsFrequency = state?.['result']['daily_frequency'];
         //console.log(this.globalAbsence)
-       } else {
+      } else {
         this.studentsFrequency = state?.['result']['daily_frequencies'];
         //console.log(this.studentsFrequency)
-       }
-
-    })
-
-
-
-
+      }
+    });
 
     this.classes = this.mountClassNumbers();
-    console.log(this.classes)
+    console.log(this.classes);
     this.setCurrentClassroom();
     this.setCurrentDiscipline();
     this.setCurrentUnity();
@@ -80,9 +73,13 @@ export class StudentsFrequencyEditPage implements OnInit {
     this.formatDate = this.utilsService.toBrazilianFormat(date);
   }
 
-  updateFrequency(frequency: any, classNumber: any = null, checked: boolean = false) {
+  updateFrequency(
+    frequency: any,
+    classNumber: any = null,
+    checked: boolean = false,
+  ) {
     frequency.present = checked; // Atualiza o valor de 'present' com o valor do checkbox
-    console.log(frequency)
+    console.log(frequency);
     this.auth.currentUser().subscribe((user) => {
       const params = {
         id: frequency.id,
@@ -102,39 +99,45 @@ export class StudentsFrequencyEditPage implements OnInit {
             const loadingCountLocal = this.loadingCount;
             this.isSavingFrequencies = true;
 
-            this.dailyFrequencyStudentsSynchronizer.sync(dailyFrequencyStudentsToSync).subscribe(
-              () => {
-                // Sucesso na sincronização
-              },
-              () => {
-                // Erro na sincronização
-              },
-              () => {
-                // Finalização da sincronização
-                if (this.loadingCount === loadingCountLocal) {
-                  this.isSavingFrequencies = false;
-                }
-              }
-            );
+            this.dailyFrequencyStudentsSynchronizer
+              .sync(dailyFrequencyStudentsToSync)
+              .subscribe(
+                () => {
+                  // Sucesso na sincronização
+                },
+                () => {
+                  // Erro na sincronização
+                },
+                () => {
+                  // Finalização da sincronização
+                  if (this.loadingCount === loadingCountLocal) {
+                    this.isSavingFrequencies = false;
+                  }
+                },
+              );
           }
         },
         (error) => {
           console.error('Erro ao atualizar frequência:', error);
-        }
+        },
       );
-    })
+    });
   }
-
-
 
   private sortStudents(studentA: any, studentB: any): number {
     if (studentA.sequence > studentB.sequence) {
       return 1;
     } else if (studentA.sequence < studentB.sequence) {
       return -1;
-    } else if ((studentA.name || studentA.student.name).toUpperCase() > (studentB.name || studentB.student.name).toUpperCase()) {
+    } else if (
+      (studentA.name || studentA.student.name).toUpperCase() >
+      (studentB.name || studentB.student.name).toUpperCase()
+    ) {
       return 1;
-    } else if ((studentA.name || studentA.student.name).toUpperCase() < (studentB.name || studentB.student.name).toUpperCase()) {
+    } else if (
+      (studentA.name || studentA.student.name).toUpperCase() <
+      (studentB.name || studentB.student.name).toUpperCase()
+    ) {
       return -1;
     } else {
       return 0;
@@ -154,13 +157,15 @@ export class StudentsFrequencyEditPage implements OnInit {
 
       students.forEach((student) => {
         const studentFrequencies: any[] = [];
-        this.studentsFrequency.forEach((dailyFrequency: { students: any[]; }) => {
-          dailyFrequency.students.map((dailyFrequencyStudent: any) => {
-            if (dailyFrequencyStudent.student.id === student.id) {
-              studentFrequencies.push(dailyFrequencyStudent);
-            }
-          });
-        });
+        this.studentsFrequency.forEach(
+          (dailyFrequency: { students: any[] }) => {
+            dailyFrequency.students.map((dailyFrequencyStudent: any) => {
+              if (dailyFrequencyStudent.student.id === student.id) {
+                studentFrequencies.push(dailyFrequencyStudent);
+              }
+            });
+          },
+        );
         student['frequencies'] = JSON.parse(JSON.stringify(studentFrequencies));
       });
     }
@@ -172,8 +177,10 @@ export class StudentsFrequencyEditPage implements OnInit {
     if (this.globalAbsence) {
       return [];
     }
-    console.log(this.studentsFrequency)
-    return this.studentsFrequency.map((studentFrequency: any) => studentFrequency.class_number);
+    console.log(this.studentsFrequency);
+    return this.studentsFrequency.map(
+      (studentFrequency: any) => studentFrequency.class_number,
+    );
   }
 
   private setCurrentDiscipline() {
@@ -197,7 +204,7 @@ export class StudentsFrequencyEditPage implements OnInit {
   }
 
   private setCurrentClassroom() {
-    console.log(this.globalAbsence)
+    console.log(this.globalAbsence);
     if (this.globalAbsence) {
       this.classroomId = this.studentsFrequency.classroom_id;
       this.classroomName = this.studentsFrequency.classroom_name;
@@ -216,6 +223,6 @@ export class StudentsFrequencyEditPage implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/tabs/tab1'])
+    this.router.navigate(['/tabs/tab1']);
   }
 }

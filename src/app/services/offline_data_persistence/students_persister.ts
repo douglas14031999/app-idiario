@@ -10,22 +10,26 @@ export class StudentsPersisterService {
   constructor(
     private classrooms: ClassroomsService,
     private storage: Storage,
-    private students: StudentsService
+    private students: StudentsService,
   ) {}
 
   persist(user: any, disciplines: any[]): Observable<any> {
     const studentsObservables = disciplines.flatMap((disciplineList): any =>
-      disciplineList.data.map((discipline: { id: number; }) =>
-        this.students.getStudents(disciplineList.classroomId, discipline.id, user.teacher_id)
-      )
+      disciplineList.data.map((discipline: { id: number }) =>
+        this.students.getStudents(
+          disciplineList.classroomId,
+          discipline.id,
+          user.teacher_id,
+        ),
+      ),
     );
 
     return forkJoin(studentsObservables).pipe(
-      concatMap(results => from(this.storage.set('students', results))),
-      catchError(error => {
+      concatMap((results) => from(this.storage.set('students', results))),
+      catchError((error) => {
         console.error(error);
         return [];
-      })
+      }),
     );
   }
 }

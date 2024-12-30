@@ -4,7 +4,6 @@ import { Storage } from '@ionic/storage-angular'; // Atualizado para Ionic Stora
 import { SyncProvider } from '../services/sync';
 import { Router } from '@angular/router';
 
-
 @Component({
   selector: 'app-tab4',
   templateUrl: './tab4.page.html',
@@ -17,16 +16,11 @@ export class Tab4Page implements OnInit {
   constructor(
     private router: Router,
     private sync: SyncProvider,
-    private storage: Storage
-  ) {
-
-  }
+    private storage: Storage,
+  ) {}
   ngOnInit(): void {
-
     this.updateTeachingPlans();
   }
-
-
 
   ionViewDidLoad() {
     this.updateTeachingPlans();
@@ -42,13 +36,15 @@ export class Tab4Page implements OnInit {
   async updateTeachingPlans() {
     const teachingPlans = await this.storage.get('teachingPlans');
     if (!teachingPlans) return;
-    this.unities = teachingPlans.unities.map((unity: { plans: any[]; unity_name: any; }) => {
-      const teachingPlans = unity.plans.map(plan => ({
-        id: plan.id,
-        description: `${plan.description} - ${plan.grade_name}`
-      }));
-      return { name: unity.unity_name, teachingPlans: teachingPlans };
-    });
+    this.unities = teachingPlans.unities.map(
+      (unity: { plans: any[]; unity_name: any }) => {
+        const teachingPlans = unity.plans.map((plan) => ({
+          id: plan.id,
+          description: `${plan.description} - ${plan.grade_name}`,
+        }));
+        return { name: unity.unity_name, teachingPlans: teachingPlans };
+      },
+    );
   }
 
   toggleGroup(group: any) {

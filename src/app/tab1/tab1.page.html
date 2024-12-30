@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar mode="md">
-    <ion-title >Frequência</ion-title>
+    <ion-title>Frequência</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="doRefresh()">
         <ion-icon slot="icon-only" name="sync"></ion-icon>
@@ -27,18 +27,37 @@
       <div *ngIf="frequencyDay.exists">
         <h3 class="frequency-day">{{frequencyDay.format_date}}</h3>
         <div class="accordion-list-border">
-          <ion-list class="accordion-list"
-                    *ngFor="let unity of frequencyDay.unities; let y=index">
-            <ion-item class="accordion-list-header"
-                               (click)="toggleGroup(i+''+y)"
-                               [ngClass]="{active: isGroupShown(i+''+y)}">
+          <ion-list
+            class="accordion-list"
+            *ngFor="let unity of frequencyDay.unities; let y=index"
+          >
+            <ion-item
+              class="accordion-list-header"
+              (click)="toggleGroup(i+''+y)"
+              [ngClass]="{active: isGroupShown(i+''+y)}"
+            >
               <p>{{unity.name}}</p>
             </ion-item>
 
-            <div *ngFor="let classroomDiscipline of unity.classroomDisciplines;">
-              <ion-item (click)="editFrequency(unity.id, classroomDiscipline.classroomId, frequencyDay.date, classroomDiscipline.disciplineId, classroomDiscipline.classNumbers)" *ngIf="isGroupShown(i+''+y)" class="accordion-list-item accordion-list-item-frequency-index" >
-                <ion-label *ngIf="!classroomDiscipline.disciplineId" class="view-eye">{{classroomDiscipline.classroomName}}</ion-label>
-                <ion-label *ngIf="classroomDiscipline.disciplineId" class="view-eye">{{classroomDiscipline.disciplineName}} - {{classroomDiscipline.classroomName}}</ion-label>
+            <div
+              *ngFor="let classroomDiscipline of unity.classroomDisciplines;"
+            >
+              <ion-item
+                (click)="editFrequency(unity.id, classroomDiscipline.classroomId, frequencyDay.date, classroomDiscipline.disciplineId, classroomDiscipline.classNumbers)"
+                *ngIf="isGroupShown(i+''+y)"
+                class="accordion-list-item accordion-list-item-frequency-index"
+              >
+                <ion-label
+                  *ngIf="!classroomDiscipline.disciplineId"
+                  class="view-eye"
+                  >{{classroomDiscipline.classroomName}}</ion-label
+                >
+                <ion-label
+                  *ngIf="classroomDiscipline.disciplineId"
+                  class="view-eye"
+                  >{{classroomDiscipline.disciplineName}} -
+                  {{classroomDiscipline.classroomName}}</ion-label
+                >
               </ion-item>
             </div>
           </ion-list>
@@ -46,7 +65,9 @@
       </div>
     </div>
   </div>
-  <div style="text-align: center;">
-    <ion-button (click)="loadMoreFrequencies()">Carregar mais frequências</ion-button>
+  <div style="text-align: center">
+    <ion-button (click)="loadMoreFrequencies()"
+      >Carregar mais frequências</ion-button
+    >
   </div>
 </ion-content>

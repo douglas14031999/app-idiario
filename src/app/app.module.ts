@@ -49,13 +49,19 @@ import { DailyFrequencyStudentService } from './services/daily_frequency_student
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, IonicStorageModule.forRoot()],
+  imports: [
+    BrowserModule,
+    IonicModule.forRoot(),
+    AppRoutingModule,
+    HttpClientModule,
+    IonicStorageModule.forRoot(),
+  ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: InterceptService,
-      multi: true
+      multi: true,
     },
     ApiService,
     ConnectionService,
@@ -93,7 +99,8 @@ import { DailyFrequencyStudentService } from './services/daily_frequency_student
     ContentRecordsService,
     TeachingPlansPersisterService,
     TeachingPlansService,
-    DailyFrequencyStudentService],
+    DailyFrequencyStudentService,
+  ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

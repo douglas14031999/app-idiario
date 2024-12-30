@@ -13,37 +13,42 @@ export class DisciplinesService {
     private http: HttpClient,
     private storage: Storage,
     private connection: ConnectionService,
-    private api: ApiService
+    private api: ApiService,
   ) {}
 
-  getOnlineDisciplines(teacherId: number, classroomId: number): Observable<{ data: any, classroomId: number }> {
+  getOnlineDisciplines(
+    teacherId: number,
+    classroomId: number,
+  ): Observable<{ data: any; classroomId: number }> {
     const params = new HttpParams()
       .set('teacher_id', teacherId.toString())
       .set('classroom_id', classroomId.toString());
 
-    return this.http.get<any>(this.api.getTeacherDisciplinesUrl(), { params }).pipe(
-      map(response => ({
-        data: response,
-        classroomId
-      }))
-    );
+    return this.http
+      .get<any>(this.api.getTeacherDisciplinesUrl(), { params })
+      .pipe(
+        map((response) => ({
+          data: response,
+          classroomId,
+        })),
+      );
   }
 
-  getOfflineDisciplines(classroomId: number){
+  getOfflineDisciplines(classroomId: number) {
     return new Observable((observer) => {
       this.storage.get('disciplines').then((disciplines) => {
-        if (!disciplines){
+        if (!disciplines) {
           observer.complete();
           return;
         }
 
         disciplines.forEach((discipline: any) => {
-          if(discipline.classroomId == classroomId){
-            observer.next(discipline)
-            observer.complete()
+          if (discipline.classroomId == classroomId) {
+            observer.next(discipline);
+            observer.complete();
           }
-        })
-      })
-    })
+        });
+      });
+    });
   }
 }

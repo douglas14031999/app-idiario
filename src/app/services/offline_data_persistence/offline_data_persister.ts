@@ -27,7 +27,7 @@ export class OfflineDataPersisterService {
     private contentLessonPlansPersister: ContentLessonPlansPersisterService,
     private contentRecordsPersister: ContentRecordsPersisterService,
     private teachingPlansPersister: TeachingPlansPersisterService,
-    private connectionService: ConnectionService
+    private connectionService: ConnectionService,
   ) {}
 
   private clearStorage(): void {
@@ -43,22 +43,30 @@ export class OfflineDataPersisterService {
 
   persist(user: User): Observable<void> {
     //console.log(user)
-   if (this.connectionService.isOnline) {
+    if (this.connectionService.isOnline) {
       this.clearStorage();
     }
 
     return concat(
       this.unitiesPersister.persist(user).pipe(catchError(() => of(void 0))),
-      this.lessonPlansPersister.persist(user).pipe(catchError(() => of(void 0))),
-      this.contentRecordsPersister.persist(user).pipe(catchError(() => of(void 0))),
-      this.contentLessonPlansPersister.persist(user).pipe(catchError(() => of(void 0))),
-      this.teachingPlansPersister.persist(user).pipe(catchError(() => of(void 0)))
+      this.lessonPlansPersister
+        .persist(user)
+        .pipe(catchError(() => of(void 0))),
+      this.contentRecordsPersister
+        .persist(user)
+        .pipe(catchError(() => of(void 0))),
+      this.contentLessonPlansPersister
+        .persist(user)
+        .pipe(catchError(() => of(void 0))),
+      this.teachingPlansPersister
+        .persist(user)
+        .pipe(catchError(() => of(void 0))),
     ).pipe(
       concatMap(() => of(void 0)), // Emit a single void value to complete the observable
-      catchError(error => {
+      catchError((error) => {
         console.error(error);
         return of(void 0);
-      })
+      }),
     );
   }
 }

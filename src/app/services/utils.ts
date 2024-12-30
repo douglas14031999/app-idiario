@@ -9,7 +9,7 @@ export class UtilsService {
   constructor(
     private _connectionService: ConnectionService,
     private messages: MessagesService,
-  ) { }
+  ) {}
 
   private viewSubject: Subject<boolean> = new Subject<boolean>();
 
@@ -22,9 +22,13 @@ export class UtilsService {
   }
 
   public toStringWithoutTime(date: Date) {
-    return date.getFullYear() +
-      '-' + this.pad(date.getMonth() + 1) +
-      '-' + this.pad(date.getDate());
+    return (
+      date.getFullYear() +
+      '-' +
+      this.pad(date.getMonth() + 1) +
+      '-' +
+      this.pad(date.getDate())
+    );
   }
 
   public compareStrings(string1: string, string2: string) {
@@ -32,7 +36,11 @@ export class UtilsService {
   }
 
   public comparableString(string: string) {
-    return string.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, "").toUpperCase();
+    return string
+      .trim()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toUpperCase();
   }
 
   private pad(number: number): string {
@@ -43,43 +51,45 @@ export class UtilsService {
   }
 
   public toExtensiveFormat(date: Date): string {
-    return date.toLocaleDateString('pt-BR', { month: "short", day: "numeric" });
+    return date.toLocaleDateString('pt-BR', { month: 'short', day: 'numeric' });
   }
 
   public toBrazilianFormat(date: Date): string {
-    return date.toLocaleDateString('pt-BR', { year: "numeric", month: "numeric", day: "numeric" });
+    return date.toLocaleDateString('pt-BR', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+    });
   }
 
   public showRefreshPageError(): void {
-    let offlineMessage = "";
+    let offlineMessage = '';
 
     if (!this._connectionService.isOnline) {
-      offlineMessage = " Parece que você está offline";
+      offlineMessage = ' Parece que você está offline';
     }
 
-    this.messages.showToast('Não foi possível completar a atualização.' + offlineMessage);
+    this.messages.showToast(
+      'Não foi possível completar a atualização.' + offlineMessage,
+    );
   }
 
   public convertTextToHtml(text: string): string {
     if (!text) return '';
-    return text.replace(new RegExp('\n', 'g'), "<br />");
+    return text.replace(new RegExp('\n', 'g'), '<br />');
   }
 
   public forceCapitalize(text: string): string {
-    return text.toLowerCase().replace(/\b(\w)/g, s => s.toUpperCase());
+    return text.toLowerCase().replace(/\b(\w)/g, (s) => s.toUpperCase());
   }
 
   public async openUrl(url: string): Promise<void> {
-
     await Browser.open({ url });
-
   }
 
   public getDate(date?: string | number | Date): Date {
-    if (date)
-      return new Date(date);
-    else
-      return new Date();
+    if (date) return new Date(date);
+    else return new Date();
   }
 
   public getCurrentDate(): Date {
@@ -87,7 +97,7 @@ export class UtilsService {
   }
 
   public dateToTimezone(date: Date): Date {
-    const currentTimezone = (this.getCurrentDate().getTimezoneOffset()) / 60;
+    const currentTimezone = this.getCurrentDate().getTimezoneOffset() / 60;
     return new Date(new Date(date).setUTCHours(currentTimezone));
   }
 

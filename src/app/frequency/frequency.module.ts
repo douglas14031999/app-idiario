@@ -9,12 +9,7 @@ import { FrequencyPageRoutingModule } from './frequency-routing.module';
 import { FrequencyPage } from './frequency.page';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    FrequencyPageRoutingModule
-  ],
-  declarations: [FrequencyPage]
+  imports: [CommonModule, FormsModule, IonicModule, FrequencyPageRoutingModule],
+  declarations: [FrequencyPage],
 })
 export class FrequencyPageModule {}

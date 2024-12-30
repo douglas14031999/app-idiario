@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'i-diario-ap-v2',
   webDir: 'www',
   server: {
-    androidScheme: 'https'
+    androidScheme: 'https',
   },
   cordova: {
     preferences: {
@@ -24,9 +24,9 @@ const config: CapacitorConfig = {
       WKWebViewOnly: 'true',
       CordovaWebViewEngine: 'CDVWKWebViewEngine',
       icon_folder: 'mipmap',
-      icon_name: 'ic_launcher'
-    }
-  }
+      icon_name: 'ic_launcher',
+    },
+  },
 };
 
 export default config;

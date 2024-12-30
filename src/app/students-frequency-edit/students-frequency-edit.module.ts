@@ -14,8 +14,8 @@ import { StudentsFrequencyEditPage } from './students-frequency-edit.page';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    StudentsFrequencyEditPageRoutingModule
+    StudentsFrequencyEditPageRoutingModule,
   ],
-  declarations: [StudentsFrequencyEditPage]
+  declarations: [StudentsFrequencyEditPage],
 })
 export class StudentsFrequencyEditPageModule {}

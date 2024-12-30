@@ -8,16 +8,16 @@ import { Storage } from '@ionic/storage-angular';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor( private storage: Storage,   private platform: Platform) {
-
-  }
+  constructor(
+    private storage: Storage,
+    private platform: Platform,
+  ) {}
   async OnInit() {
     // If using a custom driver:
     // await this.storage.defineDriver(MyCustomDriver)
 
     this.platform.ready().then(async () => {
-     await this.storage.create();
-
+      await this.storage.create();
     });
   }
 }

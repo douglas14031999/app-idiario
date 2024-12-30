@@ -8,20 +8,22 @@ import { catchError, concatMap } from 'rxjs/operators';
 export class SchoolCalendarsPersisterService {
   constructor(
     private storage: Storage,
-    private schoolCalendars: SchoolCalendarsService
+    private schoolCalendars: SchoolCalendarsService,
   ) {}
 
   persist(user: any, unities: any[]): Observable<any> {
-    const schoolCalendarObservables = unities.map(unity =>
-      this.schoolCalendars.getOnlineSchoolCalendar(unity.id)
+    const schoolCalendarObservables = unities.map((unity) =>
+      this.schoolCalendars.getOnlineSchoolCalendar(unity.id),
     );
 
     return forkJoin(schoolCalendarObservables).pipe(
-      concatMap(results => from(this.storage.set('schoolCalendars', results))),
-      catchError(error => {
+      concatMap((results) =>
+        from(this.storage.set('schoolCalendars', results)),
+      ),
+      catchError((error) => {
         console.error(error);
         return [];
-      })
+      }),
     );
   }
 }

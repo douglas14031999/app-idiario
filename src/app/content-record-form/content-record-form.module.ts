@@ -13,8 +13,8 @@ import { ContentRecordFormPage } from './content-record-form.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    ContentRecordFormPageRoutingModule
+    ContentRecordFormPageRoutingModule,
   ],
-  declarations: [ContentRecordFormPage]
+  declarations: [ContentRecordFormPage],
 })
 export class ContentRecordFormPageModule {}

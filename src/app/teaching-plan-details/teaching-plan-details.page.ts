@@ -10,7 +10,6 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./teaching-plan-details.page.scss'],
 })
 export class TeachingPlanDetailsPage implements OnInit {
-
   teachingPlanId!: number;
   description!: string;
   unity_name!: string;
@@ -28,10 +27,8 @@ export class TeachingPlanDetailsPage implements OnInit {
     //public navParams: NavParams,
     private route: ActivatedRoute,
     private storage: Storage,
-    private utilsService: UtilsService
-  ) {
-
-  }
+    private utilsService: UtilsService,
+  ) {}
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -54,9 +51,15 @@ export class TeachingPlanDetailsPage implements OnInit {
         this.year = details.year;
 
         this.objectives = details.objectives || [];
-        this.evaluation = this.utilsService.convertTextToHtml(details.evaluation);
-        this.bibliography = this.utilsService.convertTextToHtml(details.bibliography);
-        this.activities = this.utilsService.convertTextToHtml(details.activities);
+        this.evaluation = this.utilsService.convertTextToHtml(
+          details.evaluation,
+        );
+        this.bibliography = this.utilsService.convertTextToHtml(
+          details.bibliography,
+        );
+        this.activities = this.utilsService.convertTextToHtml(
+          details.activities,
+        );
       }
     });
   }
@@ -79,11 +82,3 @@ export class TeachingPlanDetailsPage implements OnInit {
     //this.navCtrl.back(); // Atualizado para o método correto em Ionic 5+
   }
 }
-
-
-
-
-
-
-
-

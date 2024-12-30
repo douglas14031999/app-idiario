@@ -7,7 +7,6 @@ Aplicativo para o professor com lançamento de frequência e registro de conteú
 - node.js (20+)
 - npm
 
-
 ## Instalação
 
 - Instalar a biblioteca do ionic
@@ -45,7 +44,6 @@ Seguir os passos na [documentação](https://ionicframework.com/docs/angular/you
 - Realizar login com o professor no aplicativo
 - Clicar no ícone de sincronização
 
-
 # Build Capacitor
 
 ```bash
@@ -58,4 +56,5 @@ $  ionic cap sync
 $  ionic cap open ios
 $  ionic cap open android
 ```
-O projeto foi atualizado para   `@ionic/angular": "^7.0.0"` e `"@angular/common": "^17.0.2"`.
+
+O projeto foi atualizado para `@ionic/angular": "^7.0.0"` e `"@angular/common": "^17.0.2"`.

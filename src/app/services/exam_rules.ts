@@ -14,37 +14,40 @@ export class ExamRulesService {
     private http: HttpClient,
     private storage: StorageService,
     private connection: ConnectionService,
-    private api: ApiService
+    private api: ApiService,
   ) {}
 
-  getOnlineExamRules(teacherId: number, classroomId: number): Observable<{ data: any, classroomId: number }> {
+  getOnlineExamRules(
+    teacherId: number,
+    classroomId: number,
+  ): Observable<{ data: any; classroomId: number }> {
     const params = new HttpParams()
       .set('teacher_id', teacherId.toString())
       .set('classroom_id', classroomId.toString());
 
     return this.http.get<any>(this.api.getExamRulesUrl(), { params }).pipe(
-      map(response => ({
+      map((response) => ({
         data: response,
-        classroomId
-      }))
+        classroomId,
+      })),
     );
   }
 
-  getOfflineExamRules(classroomId: number){
+  getOfflineExamRules(classroomId: number) {
     return new Observable((observer) => {
       this.storage.get('examRules').then((examRules) => {
-        if (!examRules){
+        if (!examRules) {
           observer.complete();
           return;
         }
 
         examRules.forEach((examRule: any) => {
-          if(examRule.classroomId == classroomId){
-            observer.next(examRule)
-            observer.complete()
+          if (examRule.classroomId == classroomId) {
+            observer.next(examRule);
+            observer.complete();
           }
-        })
-      })
-    })
+        });
+      });
+    });
   }
 }

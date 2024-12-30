@@ -1,5 +1,5 @@
 export interface DailyFrequency {
-  student_id: number,
-  student_name: string,
-  frequencies: any[]
+  student_id: number;
+  student_name: string;
+  frequencies: any[];
 }

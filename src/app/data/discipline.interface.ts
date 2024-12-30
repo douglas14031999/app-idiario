@@ -1,4 +1,4 @@
 export interface Discipline {
-  id: number,
-  description: string
+  id: number;
+  description: string;
 }

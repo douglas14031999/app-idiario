@@ -9,11 +9,13 @@ export class TeachingPlansService {
   constructor(
     private http: HttpClient,
     private storage: Storage,
-    private api: ApiService
-  ){}
+    private api: ApiService,
+  ) {}
 
-  getTeachingPlans(teacherId: number){
-    const request = this.http.get(this.api.getTeacherTeachingPlansUrl(), { params: { teacher_id: teacherId } } );
+  getTeachingPlans(teacherId: number) {
+    const request = this.http.get(this.api.getTeacherTeachingPlansUrl(), {
+      params: { teacher_id: teacherId },
+    });
     return request;
   }
 }

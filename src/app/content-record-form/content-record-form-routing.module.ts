@@ -6,8 +6,8 @@ import { ContentRecordFormPage } from './content-record-form.page';
 const routes: Routes = [
   {
     path: '',
-    component: ContentRecordFormPage
-  }
+    component: ContentRecordFormPage,
+  },
 ];
 
 @NgModule({

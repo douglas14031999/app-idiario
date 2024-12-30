@@ -6,8 +6,8 @@ import { FrequencyPage } from './frequency.page';
 const routes: Routes = [
   {
     path: '',
-    component: FrequencyPage
-  }
+    component: FrequencyPage,
+  },
 ];
 
 @NgModule({

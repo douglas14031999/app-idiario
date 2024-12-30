@@ -10,16 +10,18 @@ export class UnitiesService {
   constructor(
     private http: HttpClient,
     private storage: Storage,
-    private api: ApiService
-  ) {} 
+    private api: ApiService,
+  ) {}
 
   getOnlineUnities(teacherId: number): Observable<any> {
-    const request = this.http.get(this.api.getTeacherUnitiesUrl(), { params: { teacher_id: teacherId } });
+    const request = this.http.get(this.api.getTeacherUnitiesUrl(), {
+      params: { teacher_id: teacherId },
+    });
     return request.pipe(
       map((response: any) => {
-       // console.log(response)
+        // console.log(response)
         return response;
-      })
+      }),
     );
   }
 

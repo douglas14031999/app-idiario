@@ -9,16 +9,19 @@ export class ContentRecordsSynchronizer {
   constructor(
     private http: HttpClient,
     private api: ApiService,
-    private storage: Storage
-  ){}
+    private storage: Storage,
+  ) {}
 
   public sync(contentRecords: any[], teacherId: number): Observable<any> {
     //console.log(contentRecords)
-    return new Observable(observer => {
+    return new Observable((observer) => {
       if (contentRecords && contentRecords.length) {
-        let contentRecordObservables = contentRecords.map(contentRecord => {
+        let contentRecordObservables = contentRecords.map((contentRecord) => {
           contentRecord['teacher_id'] = teacherId;
-          return this.http.post(this.api.getContentRecordsSyncUrl(), contentRecord);
+          return this.http.post(
+            this.api.getContentRecordsSyncUrl(),
+            contentRecord,
+          );
         });
 
         concat(...contentRecordObservables).subscribe(
@@ -26,12 +29,12 @@ export class ContentRecordsSynchronizer {
             this.destroyPendingSyncRecord(result);
             observer.next(result);
           },
-          error => {
+          (error) => {
             observer.error(error);
           },
           () => {
             observer.complete();
-          }
+          },
         );
       } else {
         observer.complete();
@@ -40,13 +43,17 @@ export class ContentRecordsSynchronizer {
   }
 
   private destroyPendingSyncRecord(contentRecord: any) {
-    from(this.storage.get('contentRecordsToSync')).subscribe(contentRecords => {
-      const updatedRecords = contentRecords.filter((cr: any) => {
-        return contentRecord.classroom_id !== cr.classroom_id ||
-          contentRecord.discipline_id !== cr.discipline_id ||
-          contentRecord.record_date !== cr.record_date;
-      });
-      this.storage.set('contentRecordsToSync', updatedRecords);
-    });
+    from(this.storage.get('contentRecordsToSync')).subscribe(
+      (contentRecords) => {
+        const updatedRecords = contentRecords.filter((cr: any) => {
+          return (
+            contentRecord.classroom_id !== cr.classroom_id ||
+            contentRecord.discipline_id !== cr.discipline_id ||
+            contentRecord.record_date !== cr.record_date
+          );
+        });
+        this.storage.set('contentRecordsToSync', updatedRecords);
+      },
+    );
   }
 }

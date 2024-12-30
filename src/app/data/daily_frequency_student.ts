@@ -1,4 +1,4 @@
 export interface DailyFrequencyStudent {
-  id: number,
-  description: boolean
+  id: number;
+  description: boolean;
 }

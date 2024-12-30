@@ -14,36 +14,34 @@ export class UnitiesPersisterService {
     private unities: UnitiesService,
     private classroomsPersister: ClassroomsPersisterService,
     private schoolCalendarsPersister: SchoolCalendarsPersisterService,
-    private storage: StorageService
+    private storage: StorageService,
   ) {
-    this.storage.get('user').then(res => {
+    this.storage.get('user').then((res) => {
       //console.log(res)
       if (res) {
-        this.unities.getOnlineUnities(res.teacher_id).subscribe(res => {
+        this.unities.getOnlineUnities(res.teacher_id).subscribe((res) => {
           //console.log(res)
-          this.storage.set('unities', res)
-        })
+          this.storage.set('unities', res);
+        });
       }
-    })
-
+    });
   }
 
   persist(user: User): Observable<any> {
     //console.log(user)
-    return this.unities.getOnlineUnities(user.teacher_id)
-      .pipe(
-        concatMap((unities) =>
-          forkJoin([
-            this.classroomsPersister.persist(user, unities),
-            this.schoolCalendarsPersister.persist(user, unities)
-          ]).pipe(
-            concatMap(() => this.storage.set('unities', unities)!),
-            catchError(error => {
-              console.error(error);
-              throw error; // Propaga o erro para o Observable principal
-            })
-          )
-        )
-      );
+    return this.unities.getOnlineUnities(user.teacher_id).pipe(
+      concatMap((unities) =>
+        forkJoin([
+          this.classroomsPersister.persist(user, unities),
+          this.schoolCalendarsPersister.persist(user, unities),
+        ]).pipe(
+          concatMap(() => this.storage.set('unities', unities)!),
+          catchError((error) => {
+            console.error(error);
+            throw error; // Propaga o erro para o Observable principal
+          }),
+        ),
+      ),
+    );
   }
 }

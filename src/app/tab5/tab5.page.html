@@ -1,7 +1,6 @@
 <ion-header>
   <ion-toolbar mode="md">
-    <ion-title >Usuário</ion-title>
-  
+    <ion-title>Usuário</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content fullscreen class="ion-padding">
@@ -26,18 +25,25 @@
 
     <div class="detail">
       <h3 class="detail-title">Sistema operacional</h3>
-     
-      <p class="detail-text">{{ this.device.operatingSystem }} {{ this.device.osVersion }}</p>
+
+      <p class="detail-text">
+        {{ this.device.operatingSystem }} {{ this.device.osVersion }}
+      </p>
     </div>
 
     <div class="detail">
       <h3 class="detail-title">Marca e modelo</h3>
-     
-      <p class="detail-text">{{ this.device.manufacturer }} {{ this.device.model }}</p>
+
+      <p class="detail-text">
+        {{ this.device.manufacturer }} {{ this.device.model }}
+      </p>
     </div>
   </div>
-  <ion-button class="button-exit" expand="full" (click)="logout()">Sair</ion-button>
-  <br>
-  <br>
-  <br>  <br>
+  <ion-button class="button-exit" expand="full" (click)="logout()"
+    >Sair</ion-button
+  >
+  <br />
+  <br />
+  <br />
+  <br />
 </ion-content>

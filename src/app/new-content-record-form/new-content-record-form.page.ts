@@ -22,13 +22,16 @@ export class NewContentRecordFormPage implements OnInit {
   disciplineId: number | null = null;
   emptyUnities: boolean = true;
 
-  constructor(private route: ActivatedRoute, private classroomsService: ClassroomsService,
+  constructor(
+    private route: ActivatedRoute,
+    private classroomsService: ClassroomsService,
     private disciplinesService: DisciplinesService,
     private router: Router,
-    private utilsService: UtilsService) { }
+    private utilsService: UtilsService,
+  ) {}
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       //console.log(params)
       this.unityId = params['unityId'];
       this.date = params['date'];
@@ -44,7 +47,6 @@ export class NewContentRecordFormPage implements OnInit {
     }
   }
 
-
   onChangeUnity() {
     if (!this.unityId) return;
 
@@ -54,7 +56,7 @@ export class NewContentRecordFormPage implements OnInit {
       },
       (error) => {
         //console.log(error);
-      }
+      },
     );
   }
 
@@ -70,22 +72,25 @@ export class NewContentRecordFormPage implements OnInit {
       },
       (error) => {
         //console.log(error);
-      }
+      },
     );
   }
 
   submitNewContentRecord(form: NgForm) {
     const unityId = form.value.unity;
-    const unityName = this.unities.find(d => d.id === unityId)?.description || '';
+    const unityName =
+      this.unities.find((d) => d.id === unityId)?.description || '';
     const classroomId = form.value.classroom;
-    const selectedClassroom = this.classrooms.find(d => d.id === classroomId);
+    const selectedClassroom = this.classrooms.find((d) => d.id === classroomId);
     const gradeId = selectedClassroom?.grade_id;
     const classroomDescription = selectedClassroom?.description || '';
     const date = this.utilsService.dateToTimezone(form.value.date);
     const stringDate = this.utilsService.toStringWithoutTime(date);
     const disciplineId = form.value.discipline;
     //console.log(this.disciplines)
-    const disciplineDescription = this.disciplines.find((d: { id: any; }) => d.id === disciplineId)?.description || '';
+    const disciplineDescription =
+      this.disciplines.find((d: { id: any }) => d.id === disciplineId)
+        ?.description || '';
 
     const navigationExtras = {
       queryParams: {
@@ -97,7 +102,7 @@ export class NewContentRecordFormPage implements OnInit {
         description: disciplineDescription,
         classroomName: classroomDescription,
         unityName: unityName,
-      }
+      },
     };
 
     // Navegar para a próxima página, passando parâmetros via queryParams
@@ -112,5 +117,4 @@ export class NewContentRecordFormPage implements OnInit {
   goBack() {
     this.router.navigate(['/tabs/tab2']);
   }
-
 }

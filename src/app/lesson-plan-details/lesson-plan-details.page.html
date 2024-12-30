@@ -3,10 +3,13 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
-    
   </ion-toolbar>
   <div class="multiple-lines">
-    <img class="lessos-plan-img edit-img" src="assets/img/lesson-plan/ilustraPlanoAula@2x.png" alt="Lesson Plan">
+    <img
+      class="lessos-plan-img edit-img"
+      src="assets/img/lesson-plan/ilustraPlanoAula@2x.png"
+      alt="Lesson Plan"
+    />
     <p class="title-lesson-plan">Plano de aula</p>
     <p class="unity-name">{{ unity_name }}</p>
     <p class="description">{{ description }}</p>
@@ -18,14 +21,19 @@
     <div *ngIf="knowledge_areas" class="detail">
       <h3 class="detail-title">Áreas de conhecimento</h3>
       <ul class="contents-list">
-        <li *ngFor="let knowledge_area of knowledge_areas" class="contents-list-item">
+        <li
+          *ngFor="let knowledge_area of knowledge_areas"
+          class="contents-list-item"
+        >
           {{ "- " + knowledge_area.description }}
         </li>
       </ul>
     </div>
     <div class="detail">
       <h3 class="detail-title">Período escolar</h3>
-      <p class="detail-text">{{ start_at | date: 'dd/MM/yyyy' }} a {{ end_at | date: 'dd/MM/yyyy' }}</p>
+      <p class="detail-text">
+        {{ start_at | date: 'dd/MM/yyyy' }} a {{ end_at | date: 'dd/MM/yyyy' }}
+      </p>
     </div>
     <div class="detail">
       <h3 class="detail-title">Conteúdos</h3>
@@ -65,4 +73,3 @@
     </div>
   </div>
 </ion-content>
-

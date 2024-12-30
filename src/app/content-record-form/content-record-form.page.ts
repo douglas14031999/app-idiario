@@ -35,10 +35,9 @@ export class ContentRecordFormPage implements OnInit {
     private contentRecordService: ContentRecordsService,
     private route: ActivatedRoute,
     private router: Router,
-  ) { }
+  ) {}
   ngOnInit(): void {
-
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       // console.log(params)
       this.baseContents = {};
       this.contentRecord = {};
@@ -55,8 +54,6 @@ export class ContentRecordFormPage implements OnInit {
       this.callback = params['callback'];
       this.classroomName = params['classroomName'];
       this.unityName = params['unityName'];
-
-
 
       forkJoin({
         contentLessonPlans: this.storage.get('contentLessonPlans'),
@@ -89,11 +86,7 @@ export class ContentRecordFormPage implements OnInit {
 
         this.loadContents();
       });
-
-
     });
-
-
 
     const state = this.router.getCurrentNavigation()?.extras.state;
     if (state && state['unities']) {
@@ -112,13 +105,15 @@ export class ContentRecordFormPage implements OnInit {
 
     if (JSON.stringify(oldContents) !== JSON.stringify(currentContents)) {
       this.contentRecord['contents'] = this.contents.filter(
-        (x: any) => x.checked
+        (x: any) => x.checked,
       );
-      this.contentRecordService.createOrUpdate(this.contentRecord).subscribe(() => {
-        if (typeof this.callback === 'function') {
-          this.callback();
-        }
-      });
+      this.contentRecordService
+        .createOrUpdate(this.contentRecord)
+        .subscribe(() => {
+          if (typeof this.callback === 'function') {
+            this.callback();
+          }
+        });
     }
   }
 
@@ -127,7 +122,7 @@ export class ContentRecordFormPage implements OnInit {
       .concat(this.contentRecord['contents'] || [])
       .filter(
         (c1: any, i: number, self: any[]) =>
-          self.findIndex((c2) => c2.description === c1.description) === i
+          self.findIndex((c2) => c2.description === c1.description) === i,
       );
     (this.contentRecord['contents'] || []).forEach((content: any) => {
       const index = this.contents
@@ -141,12 +136,11 @@ export class ContentRecordFormPage implements OnInit {
 
   async ionViewDidLoad() {
     //await this.storage.create(); // Needed for initializing the storage
-
   }
 
   addContent() {
     const indexFound = this.contents.findIndex((c) =>
-      this.utilsService.compareStrings(c.description, this.newContent)
+      this.utilsService.compareStrings(c.description, this.newContent),
     );
 
     if (indexFound >= 0) {

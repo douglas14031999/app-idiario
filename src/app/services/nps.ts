@@ -6,10 +6,8 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class NpsService {
   private user: User | undefined;
-  constructor(
-    private storage: Storage
-  ){}
-/*
+  constructor(private storage: Storage) {}
+  /*
   public startNps(user: User) {
     this.user = user;
     this.setWootricSettings(() => {

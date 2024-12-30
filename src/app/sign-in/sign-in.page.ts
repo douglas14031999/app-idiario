@@ -22,14 +22,13 @@ export class SignInPage implements OnInit {
     { name: 'i-Diário', url: 'http://localhost:3000', support_url: '' },
   ];
   anyError: boolean = false;
-  errorMessage: string = "";
+  errorMessage: string = '';
   selectedCity: Customer | undefined;
   isOnline: boolean = true;
-  supportUrl: string = "";
+  supportUrl: string = '';
 
-  credentials: string = "";
-  password: string = "";
-
+  credentials: string = '';
+  password: string = '';
 
   constructor(
     private auth: AuthService,
@@ -42,20 +41,18 @@ export class SignInPage implements OnInit {
     private messages: MessagesService,
     private cdr: ChangeDetectorRef,
     private router: Router,
-    private offlineDataPersister: OfflineDataPersisterService
-  ) { }
+    private offlineDataPersister: OfflineDataPersisterService,
+  ) {}
 
   async ngOnInit(): Promise<void> {
     this.isOnline = this.connection.isOnline;
-    await this.connection.eventOnline.subscribe((online: boolean) =>{
+    await this.connection.eventOnline.subscribe((online: boolean) => {
       //console.log(online)
-      this.changeInputMunicipios(online)
-    } );
+      this.changeInputMunicipios(online);
+    });
   }
 
-  ionViewWillEnter() {
-
-  }
+  ionViewWillEnter() {}
 
   changeInputMunicipios(online: boolean) {
     //console.log(online)
@@ -72,17 +69,18 @@ export class SignInPage implements OnInit {
     if (this.selectedCity != undefined)
       this.api.setServerUrl(this.selectedCity.url);
 
-    const defaultSupport = "https://portabilis.freshdesk.com/";
-    this.supportUrl = this.selectedCity ? this.selectedCity.support_url || defaultSupport : "";
+    const defaultSupport = 'https://portabilis.freshdesk.com/';
+    this.supportUrl = this.selectedCity
+      ? this.selectedCity.support_url || defaultSupport
+      : '';
   }
 
   getCustomers() {
-    this.customersService.getCustomers().subscribe(
-      (data: Customer[]) => {
-        //console.log(data)
-        this.cities = data;
-        this.cdr.detectChanges();
-      });
+    this.customersService.getCustomers().subscribe((data: Customer[]) => {
+      //console.log(data)
+      this.cities = data;
+      this.cdr.detectChanges();
+    });
   }
 
   async loginForm(form: NgForm) {
@@ -102,27 +100,27 @@ export class SignInPage implements OnInit {
         //console.log(user);
         if (user) {
           this.auth.setCurrentUser(user);
-          this.offlineDataPersister.persist(user).subscribe(res => {
+          this.offlineDataPersister.persist(user).subscribe((res) => {
             //console.log(res);
-          })
+          });
 
           this.router.navigate([''], { queryParams: user });
-        }else{
+        } else {
           this.anyError = true;
-          this.errorMessage = " ";
+          this.errorMessage = ' ';
           loading.dismiss();
         }
-
       },
       (error: any) => {
         //console.log(error)
         this.anyError = true;
-        this.errorMessage = "Não foi possível efetuar login.";
+        this.errorMessage = 'Não foi possível efetuar login.';
         loading.dismiss();
       },
       () => {
         loading.dismiss();
-      });
+      },
+    );
   }
 
   greetingText() {
@@ -130,7 +128,7 @@ export class SignInPage implements OnInit {
     let split_evening = 17;
     let currentHour = this.utilsService.getCurrentDate().getHours();
 
-    let greeting = "bom dia";
+    let greeting = 'bom dia';
 
     if (currentHour >= split_afternoon && currentHour <= split_evening) {
       greeting = 'boa tarde';

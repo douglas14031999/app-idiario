@@ -11,44 +11,57 @@ export class DisciplineFrequenciesPersisterService {
   constructor(
     private classrooms: ClassroomsService,
     private storage: Storage,
-    private frequencies: DailyFrequencyService
+    private frequencies: DailyFrequencyService,
   ) {
-    this.storage.get('examRules').then(res => {
+    this.storage.get('examRules').then((res) => {
       this.examRules = res;
-    })
+    });
   }
 
   private notEmptyDailyFrequencies(dailyFrequencies: any): boolean {
-    return dailyFrequencies && dailyFrequencies.data && dailyFrequencies.data.daily_frequencies && dailyFrequencies.data.daily_frequencies.length > 0;
+    return (
+      dailyFrequencies &&
+      dailyFrequencies.data &&
+      dailyFrequencies.data.daily_frequencies &&
+      dailyFrequencies.data.daily_frequencies.length > 0
+    );
   }
 
   persist(user: any, disciplines: any[]): Observable<any> {
     return from(this.examRules).pipe(
       concatMap((examRule: any) => {
-        const frequenciesObservables = disciplines.flatMap(disciplineList =>
-          disciplineList.data.map((discipline: { id: number; }) => {
-
+        const frequenciesObservables = disciplines.flatMap((disciplineList) =>
+          disciplineList.data.map((discipline: { id: number }) => {
             const currentExamRule = examRule;
 
-            if (currentExamRule && (currentExamRule.data.exam_rule.frequency_type === "2" || currentExamRule.data.exam_rule.allow_frequency_by_discipline)) {
-              return this.frequencies.getFrequencies(disciplineList.classroomId, discipline.id, user.teacher_id);
+            if (
+              currentExamRule &&
+              (currentExamRule.data.exam_rule.frequency_type === '2' ||
+                currentExamRule.data.exam_rule.allow_frequency_by_discipline)
+            ) {
+              return this.frequencies.getFrequencies(
+                disciplineList.classroomId,
+                discipline.id,
+                user.teacher_id,
+              );
             } else {
               return of(null); // Return an observable that emits null when no frequencies are needed
             }
-          })
+          }),
         );
 
         return forkJoin(frequenciesObservables);
       }),
       concatMap((results: any[]) =>
         from(this.storage.get('frequencies')).pipe(
-          map((frequencies: any) => ({ results, frequencies }))
-        )
+          map((frequencies: any) => ({ results, frequencies })),
+        ),
       ),
       map(({ results, frequencies }) => {
         const notEmptyResults = results.filter(this.notEmptyDailyFrequencies);
-        const newFrequencies = notEmptyResults
-          .flatMap((result: any) => result.data.daily_frequencies);
+        const newFrequencies = notEmptyResults.flatMap(
+          (result: any) => result.data.daily_frequencies,
+        );
 
         if (frequencies) {
           newFrequencies.push(...frequencies.daily_frequencies);
@@ -56,10 +69,10 @@ export class DisciplineFrequenciesPersisterService {
 
         this.storage.set('frequencies', { daily_frequencies: newFrequencies });
       }),
-      catchError(error => {
+      catchError((error) => {
         console.error(error);
         return of(null); // Return a null observable in case of error
-      })
+      }),
     );
   }
 }

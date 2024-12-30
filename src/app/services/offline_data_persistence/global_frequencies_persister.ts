@@ -10,69 +10,91 @@ export class GlobalFrequenciesPersisterService {
   constructor(
     private classrooms: ClassroomsService,
     private storage: Storage,
-    private frequencies: DailyFrequencyService
+    private frequencies: DailyFrequencyService,
   ) {
     console.log('GlobalFrequenciesPersisterService');
   }
 
   async persist(user: any, classrooms: any[]): Promise<Observable<any>> {
-    await this.storage.get('examRules').then(res => {
+    await this.storage.get('examRules').then((res) => {
       // TODO comportamento removido
       // Entender se é para ser o acionável para cachear examRules
-    })
+    });
 
     return from(this.storage.get('examRules')).pipe(
-      concatMap(examRule => {
+      concatMap((examRule) => {
         // Flatten o array de classrooms se for necessário
-        const frequenciesObservables = classrooms.flatMap(classroomList => {
-          return classroomList.data[0].map((classroom: any): Observable<any> => {
-            const currentExamRule = examRule.find((rule: any) => rule.classroomId === classroom.id);
+        const frequenciesObservables = classrooms.flatMap((classroomList) => {
+          return classroomList.data[0].map(
+            (classroom: any): Observable<any> => {
+              const currentExamRule = examRule.find(
+                (rule: any) => rule.classroomId === classroom.id,
+              );
 
-            if (currentExamRule) {
-              return this.frequencies.getFrequencies(classroom.id, 0, user.teacher_id);
-            } else {
-              return of(null); // Retorna um observable que emite null quando não há frequências necessárias
-            }
-          });
+              if (currentExamRule) {
+                return this.frequencies.getFrequencies(
+                  classroom.id,
+                  0,
+                  user.teacher_id,
+                );
+              } else {
+                return of(null); // Retorna um observable que emite null quando não há frequências necessárias
+              }
+            },
+          );
         });
 
         // TODO deprecated
         return forkJoin(frequenciesObservables).pipe(
-          concatMap((results: any[]): Observable<any[]> =>
-            from(this.storage.get('frequencies')).pipe(
-              map((frequencies: any): any[] => {
-                const notEmptyResults = results.filter(this.notEmptyDailyFrequencies).map((result: any) => result?.data?.daily_frequencies || []);
-                let newFrequencies = [];
+          concatMap(
+            (results: any[]): Observable<any[]> =>
+              from(this.storage.get('frequencies')).pipe(
+                map((frequencies: any): any[] => {
+                  const notEmptyResults = results
+                    .filter(this.notEmptyDailyFrequencies)
+                    .map(
+                      (result: any) => result?.data?.daily_frequencies || [],
+                    );
+                  let newFrequencies = [];
 
-                if (notEmptyResults.length > 0) {
-                  newFrequencies = notEmptyResults.reduce((a: any[], b: any[]) => a.concat(b), []);
-                  if (frequencies && frequencies.daily_frequencies) {
-                    newFrequencies = newFrequencies.concat(frequencies.daily_frequencies);
+                  if (notEmptyResults.length > 0) {
+                    newFrequencies = notEmptyResults.reduce(
+                      (a: any[], b: any[]) => a.concat(b),
+                      [],
+                    );
+                    if (frequencies && frequencies.daily_frequencies) {
+                      newFrequencies = newFrequencies.concat(
+                        frequencies.daily_frequencies,
+                      );
+                    }
+                    this.storage.set('frequencies', {
+                      daily_frequencies: newFrequencies,
+                    });
                   }
-                  this.storage.set('frequencies', { daily_frequencies: newFrequencies });
-                }
-                return newFrequencies; // Garante que retornamos as novas frequências
-              }),
-              catchError(error => {
-                console.error(error);
-                return of([]); // Retorna um array vazio em caso de erro para continuar a cadeia de observables
-              })
-            )
-          )
+                  return newFrequencies; // Garante que retornamos as novas frequências
+                }),
+                catchError((error) => {
+                  console.error(error);
+                  return of([]); // Retorna um array vazio em caso de erro para continuar a cadeia de observables
+                }),
+              ),
+          ),
         );
       }),
-      catchError(error => {
+      catchError((error) => {
         console.error(error);
         return of([]); // Retorna um array vazio em caso de erro para continuar a cadeia de observables
-      })
+      }),
     );
   }
 
   // TODO lógica modificada
   private notEmptyDailyFrequencies(dailyFrequencies: any): boolean {
-    return dailyFrequencies
-      && dailyFrequencies.data
-      && dailyFrequencies.data.daily_frequencies
-      && dailyFrequencies.data.daily_frequencies.length > 0;
+    return (
+      dailyFrequencies &&
+      dailyFrequencies.data &&
+      dailyFrequencies.data.daily_frequencies &&
+      dailyFrequencies.data.daily_frequencies.length > 0
+    );
   }
 }
