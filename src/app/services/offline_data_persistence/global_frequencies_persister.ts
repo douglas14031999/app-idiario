@@ -1,10 +1,9 @@
-import { DailyFrequencyService } from './../daily_frequency';
-import { ClassroomsService } from './../classrooms';
+import { DailyFrequencyService } from '../daily_frequency';
+import { ClassroomsService } from '../classrooms';
 import { Observable, forkJoin, from, of } from 'rxjs';
 import { concatMap, map, catchError } from 'rxjs/operators';
 import { Storage } from '@ionic/storage-angular';
 import { Injectable } from '@angular/core';
-import { StorageService } from '../storage.service';
 
 @Injectable()
 export class GlobalFrequenciesPersisterService {
@@ -12,36 +11,22 @@ export class GlobalFrequenciesPersisterService {
     private classrooms: ClassroomsService,
     private storage: Storage,
     private frequencies: DailyFrequencyService
-  ) { }
+  ) {
+    console.log('GlobalFrequenciesPersisterService');
+  }
 
   async persist(user: any, classrooms: any[]): Promise<Observable<any>> {
-    //console.log(user);
-    //console.log(classrooms);
-
-    // Verifique se 'classrooms' é um array e se contém arrays aninhados como esperado
-    /*if (!Array.isArray(classrooms)) {
-      console.error('Expected classrooms to be an array');
-      return of([]); // Retorna um observable vazio caso não seja um array
-    }*/
     await this.storage.get('examRules').then(res => {
-      //console.log(res)
+      // TODO comportamento removido
+      // Entender se é para ser o acionável para cachear examRules
     })
+
     return from(this.storage.get('examRules')).pipe(
       concatMap(examRule => {
-        //console.log(examRule);
-
-        // Flatte o array de classrooms se for necessário
+        // Flatten o array de classrooms se for necessário
         const frequenciesObservables = classrooms.flatMap(classroomList => {
-          //console.log(classroomList)
-          /*if (!Array.isArray(classroomList)) {
-            console.error('Expected classroomList to be an array');
-            return []; // Retorna um array vazio se não for um array
-          }*/
-
           return classroomList.data[0].map((classroom: any): Observable<any> => {
-            //console.log(classroom)
             const currentExamRule = examRule.find((rule: any) => rule.classroomId === classroom.id);
-            //console.log(currentExamRule);
 
             if (currentExamRule) {
               return this.frequencies.getFrequencies(classroom.id, 0, user.teacher_id);
@@ -51,6 +36,7 @@ export class GlobalFrequenciesPersisterService {
           });
         });
 
+        // TODO deprecated
         return forkJoin(frequenciesObservables).pipe(
           concatMap((results: any[]): Observable<any[]> =>
             from(this.storage.get('frequencies')).pipe(
@@ -82,8 +68,11 @@ export class GlobalFrequenciesPersisterService {
     );
   }
 
-
+  // TODO lógica modificada
   private notEmptyDailyFrequencies(dailyFrequencies: any): boolean {
-    return dailyFrequencies && dailyFrequencies.data && dailyFrequencies.data.daily_frequencies && dailyFrequencies.data.daily_frequencies.length > 0;
+    return dailyFrequencies
+      && dailyFrequencies.data
+      && dailyFrequencies.data.daily_frequencies
+      && dailyFrequencies.data.daily_frequencies.length > 0;
   }
 }
