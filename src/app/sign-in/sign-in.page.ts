@@ -1,16 +1,16 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { AuthService } from '../services/auth';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { LoadingController, NavController } from '@ionic/angular';
+import { Customer } from '../data/customer.interface';
+import { User } from '../data/user.interface';
 import { ApiService } from '../services/api';
+import { AuthService } from '../services/auth';
 import { ConnectionService } from '../services/connection';
 import { CustomersService } from '../services/customers';
 import { MessagesService } from '../services/messages';
-import { UtilsService } from '../services/utils';
-import { Router } from '@angular/router';
-import { User } from '../data/user.interface';
-import { Customer } from '../data/customer.interface';
 import { OfflineDataPersisterService } from '../services/offline_data_persistence/offline_data_persister';
+import { UtilsService } from '../services/utils';
 
 @Component({
   selector: 'app-sign-in',
@@ -47,30 +47,30 @@ export class SignInPage implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.isOnline = this.connection.isOnline;
-    await this.connection.eventOnline.subscribe((online: boolean) => {
-      //console.log(online)
+    this.connection.eventOnline.subscribe((online: boolean) => {
       this.changeInputMunicipios(online);
     });
   }
 
-  ionViewWillEnter() {}
-
-  changeInputMunicipios(online: boolean) {
-    //console.log(online)
+  async changeInputMunicipios(online: boolean) {
     this.isOnline = online;
-    if (!this.isOnline) {
-      this.selectedCity = undefined;
-      this.messages.showToast('Sem conexão!', 1000, 'top');
+
+    if (this.isOnline) {
+      // TODO reativar a busca dos clientes disponíveis
+      // this.getCustomers();
     } else {
-      //this.getCustomers();
+      this.selectedCity = undefined;
+      await this.messages.showToast('Sem conexão!', 1000, 'top');
     }
   }
 
   updateSupportUrl() {
-    if (this.selectedCity != undefined)
+    if (this.selectedCity != undefined) {
       this.api.setServerUrl(this.selectedCity.url);
+    }
 
     const defaultSupport = 'https://portabilis.freshdesk.com/';
+
     this.supportUrl = this.selectedCity
       ? this.selectedCity.support_url || defaultSupport
       : '';
@@ -78,45 +78,40 @@ export class SignInPage implements OnInit {
 
   getCustomers() {
     this.customersService.getCustomers().subscribe((data: Customer[]) => {
-      //console.log(data)
       this.cities = data;
       this.cdr.detectChanges();
     });
   }
 
   async loginForm(form: NgForm) {
-    //console.log(form);
     const credential = this.credentials;
     const password = this.password;
-    //console.log(credential);
     const loading = await this.loadingCtrl.create({
       message: 'Carregando ...',
       duration: 3000,
     });
 
-    loading.present();
+    await loading.present();
 
+    // TODO modificar o uso do método
     this.auth.signIn(credential, password).subscribe(
       (user: User) => {
-        //console.log(user);
         if (user) {
           this.auth.setCurrentUser(user);
           this.offlineDataPersister.persist(user).subscribe((res) => {
-            //console.log(res);
+            // TODO entender se faz sentido
           });
 
           this.router.navigate([''], { queryParams: user });
         } else {
           this.anyError = true;
           this.errorMessage = ' ';
-          loading.dismiss();
         }
       },
       (error: any) => {
-        console.log(error)
+        console.log(error);
         this.anyError = true;
         this.errorMessage = 'Não foi possível efetuar login.';
-        loading.dismiss();
       },
       () => {
         loading.dismiss();
@@ -140,7 +135,7 @@ export class SignInPage implements OnInit {
     return `Olá, ${greeting}!`;
   }
 
-  openSupportUrl() {
-    this.utilsService.openUrl(this.supportUrl);
+  async openSupportUrl() {
+    await this.utilsService.openUrl(this.supportUrl);
   }
 }

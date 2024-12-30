@@ -6,15 +6,14 @@
   background-image: url("../../assets/img/login/ilusta@3x.png") !important;
   background-repeat: no-repeat;
   background-size: 100%;
-  background-color: none !important;
-  margin: 0 auto;
+  background-color: transparent !important;
   max-width: 320pt;
   width: 90.6%;
   min-height: 41.7%;
-  margin-top: 11%;
+  margin: 11% auto 0;
 }
 
-.background-content .saudacao {
+.background-content .greetings {
   color: white;
   text-align: center;
   font-size: 32pt;
@@ -50,7 +49,7 @@ ion-grid.form-errors {
       font-size: 14pt;
       padding-left: 20%;
       padding-right: 7%;
-      margin: 0px;
+      margin: 0;
     }
   }
 }
@@ -109,7 +108,7 @@ ion-content form ion-img {
   height: 50pt;
   color: #3f3d4d;
   font-size: 14pt;
-  padding: 0pt;
+  padding: 0;
   --ion-background-color: #fff !important;
 }
 
@@ -144,11 +143,11 @@ ion-content form ion-img {
 }
 
 .input-login-img {
-  margin-right: 0px !important;
+  margin-right: 0 !important;
 }
 
 .background-content .contato {
-  font-family: "NunitoLight";
+  font-family: "NunitoLight", serif;
   color: white;
   font-size: 14pt;
   text-align: center;

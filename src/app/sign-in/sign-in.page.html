@@ -1,6 +1,6 @@
-<ion-content class="login-background" padding>
+<ion-content class="login-background">
   <div class="background-content">
-    <h2 class="saudacao">{{ greetingText() }}</h2>
+    <h2 class="greetings">{{ greetingText() }}</h2>
     <ion-grid class="form-errors" *ngIf="anyError">
       <ion-row>
         <ion-col class="form-errors-content">
@@ -28,7 +28,6 @@
         </ion-item>
 
         <ion-item class="inputs">
-          <!-- Adicionamos o ngModel para vincular o valor do input a uma propriedade do componente -->
           <ion-input
             [(ngModel)]="credentials"
             type="text"
@@ -40,7 +39,6 @@
         </ion-item>
 
         <ion-item class="inputs">
-          <!-- Adicionamos o ngModel para vincular o valor do input a uma propriedade do componente -->
           <ion-input
             [(ngModel)]="password"
             type="password"
@@ -52,9 +50,9 @@
         </ion-item>
       </ion-list>
 
-      <ion-button class="button-login" expand="block" (click)="loginForm(f)"
-        >Entrar</ion-button
-      >
+      <ion-button class="button-login" expand="block" (click)="loginForm(f)">
+        Entrar
+      </ion-button>
     </form>
     <h3 class="contato">
       Você não lembra o acesso?<br />
