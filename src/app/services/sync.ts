@@ -3,16 +3,14 @@ import { AlertController, LoadingController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { Observable, from, interval, concat, forkJoin, of } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
-
+import { AuthService } from './auth';
 import { ConnectionService } from './connection';
 import { UtilsService } from './utils';
-import { AuthService } from './auth';
 import { ContentRecordsSynchronizer } from './offline_data_synchronization/content_records_synchronizer';
 import { DailyFrequencyStudentsSynchronizer } from './offline_data_synchronization/daily_frequency_students_synchronizer';
 import { DailyFrequenciesSynchronizer } from './offline_data_synchronization/daily_frequencies_synchronizer';
 import { OfflineDataPersisterService } from './offline_data_persistence/offline_data_persister';
 import { MessagesService } from './messages';
-import { StorageService } from './storage.service';
 
 @Injectable()
 export class SyncProvider {
@@ -58,7 +56,7 @@ export class SyncProvider {
   async completeSync() {
     this.isSyncingStatus = false;
     await this.hideLoading();
-    this.messages.showAlert(
+    await this.messages.showAlert(
       'Sincronização concluída com sucesso.',
       'Fim da sincronização',
     );
@@ -67,7 +65,7 @@ export class SyncProvider {
   async handleError(errorMessage?: string) {
     this.isSyncingStatus = false;
     await this.hideLoading();
-    this.messages.showError(
+    await this.messages.showError(
       errorMessage || 'Não foi possível concluir a sincronização.',
     );
   }
@@ -107,7 +105,7 @@ export class SyncProvider {
     });
   }
 
-  private getLastSyncDate(): Promise<Date> {
+  private async getLastSyncDate(): Promise<Date> {
     return this.storage
       .get('lastSyncDate')
       .then(
@@ -115,7 +113,7 @@ export class SyncProvider {
       );
   }
 
-  public isSyncDelayed() {
+  public async isSyncDelayed() {
     return this.getLastSyncDate()
       .then((lastSyncDate) => {
         const daysDifference = Math.round(
@@ -204,7 +202,6 @@ export class SyncProvider {
                   ),
                 }).pipe(
                   switchMap((results) => {
-                    //console.log(results);
                     if (!results) {
                       observer.error('Nenhum resultado retornado.');
                       return of(null);

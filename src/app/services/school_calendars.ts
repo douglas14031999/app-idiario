@@ -1,9 +1,9 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Storage } from '@ionic/storage-angular';
 import { Observable, from } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiService } from './api';
-import { Storage } from '@ionic/storage-angular';
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class SchoolCalendarsService {
@@ -36,7 +36,6 @@ export class SchoolCalendarsService {
         }
 
         schoolCalendars.forEach((schoolCalendar: any) => {
-          //console.log(schoolCalendar)
           if (schoolCalendar.unityId == unityId) {
             observer.next(schoolCalendar);
             observer.complete();

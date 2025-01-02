@@ -16,7 +16,6 @@ export class DailyFrequencyStudentsSynchronizer {
   ) {}
 
   public sync(dailyFrequencyStudents: any[]): Observable<any> {
-    //console.log(dailyFrequencyStudents);
     if (!dailyFrequencyStudents || dailyFrequencyStudents.length === 0) {
       return new Observable((observer) => observer.complete());
     }
