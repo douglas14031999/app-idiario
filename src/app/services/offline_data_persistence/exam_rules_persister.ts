@@ -1,16 +1,15 @@
-import { ExamRulesService } from '../exam_rules';
-import { ClassroomsService } from '../classrooms';
-import { Observable, concatMap, forkJoin, from, map } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
-import { UnitiesService } from '../unities';
+import { Observable, concatMap, forkJoin, from, map } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
+import { DisciplinesPersisterService } from './disciplines_persister';
+import { ExamRulesService } from '../exam_rules';
 
 @Injectable()
 export class ExamRulesPersisterService {
   constructor(
-    private classrooms: ClassroomsService,
-    private unities: UnitiesService,
     private storage: Storage,
+    private disciplinesPersister: DisciplinesPersisterService,
     private examRules: ExamRulesService,
   ) {}
 
@@ -28,6 +27,9 @@ export class ExamRulesPersisterService {
             from(this.storage.set('examRules', results)).pipe(
               map(() => results),
             ),
+          ),
+          mergeMap(() =>
+            forkJoin([this.disciplinesPersister.persist(user, classrooms)]),
           ),
         )
         .subscribe(

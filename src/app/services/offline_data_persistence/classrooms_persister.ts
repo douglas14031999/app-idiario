@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
 import { catchError, tap, mergeMap } from 'rxjs/operators';
-import { DisciplinesPersisterService } from './disciplines_persister';
 import { ExamRulesPersisterService } from './exam_rules_persister';
 import { ClassroomsService } from '../classrooms';
 import { User } from 'src/app/data/user.interface';
@@ -12,7 +11,6 @@ export class ClassroomsPersisterService {
   constructor(
     private classrooms: ClassroomsService,
     private examRulesPersister: ExamRulesPersisterService,
-    private disciplinesPersister: DisciplinesPersisterService,
     private storage: StorageService,
   ) {}
 
@@ -35,10 +33,7 @@ export class ClassroomsPersisterService {
             this.storage.set('classrooms', classes);
           }),
           mergeMap((classrooms: any) =>
-            forkJoin([
-              this.examRulesPersister.persist(user, classrooms),
-              this.disciplinesPersister.persist(user, classrooms),
-            ]),
+            forkJoin([this.examRulesPersister.persist(user, classrooms)]),
           ),
           catchError((error: any) => {
             console.error(error);

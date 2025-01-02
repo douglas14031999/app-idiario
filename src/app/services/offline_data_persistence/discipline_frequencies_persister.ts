@@ -12,11 +12,7 @@ export class DisciplineFrequenciesPersisterService {
     private classrooms: ClassroomsService,
     private storage: Storage,
     private frequencies: DailyFrequencyService,
-  ) {
-    this.storage.get('examRules').then((res) => {
-      this.examRules = res;
-    });
-  }
+  ) {}
 
   private notEmptyDailyFrequencies(dailyFrequencies: any): boolean {
     return (
@@ -27,7 +23,9 @@ export class DisciplineFrequenciesPersisterService {
     );
   }
 
-  persist(user: any, disciplines: any[]): Observable<any> {
+  async persist(user: any, disciplines: any[]): Promise<Observable<any>> {
+    this.examRules = await this.storage.get('examRules');
+
     return from(this.examRules).pipe(
       concatMap((examRule: any) => {
         const frequenciesObservables = disciplines.flatMap((disciplineList) =>
