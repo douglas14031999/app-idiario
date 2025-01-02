@@ -39,10 +39,9 @@ export class ClassroomsService {
             observer.complete();
             return;
           }
-          //var currentYear = '2023';
-          var currentYear = this.utilsService.getCurrentDate().getFullYear();
-          //console.log(currentYear)
-          //console.log(classrooms)
+          let currentYear = '2024'; // TODO problema
+          // var currentYear = this.utilsService.getCurrentDate().getFullYear();
+
           classrooms.forEach((classroom: { unityId: number; data: any[] }) => {
             this.schoolCalendarsService
               .getOfflineSchoolCalendar(unityId)
