@@ -16,9 +16,11 @@ export class UnitiesPersisterService {
     private storage: StorageService,
   ) {
     this.storage.get('user').then((user) => {
-      this.unities.getOnlineUnities(user.teacher_id).subscribe((unities) => {
-        this.storage.set('unities', unities);
-      });
+      if (user) {
+        this.unities.getOnlineUnities(user.teacher_id).subscribe((unities) => {
+          this.storage.set('unities', unities);
+        });
+      }
     });
   }
 
