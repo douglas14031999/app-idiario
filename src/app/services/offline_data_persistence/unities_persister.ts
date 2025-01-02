@@ -14,13 +14,7 @@ export class UnitiesPersisterService {
     private classroomsPersister: ClassroomsPersisterService,
     private schoolCalendarsPersister: SchoolCalendarsPersisterService,
     private storage: StorageService,
-  ) {
-    this.storage.get('user').then((user) => {
-      this.unities.getOnlineUnities(user.teacher_id).subscribe((unities) => {
-        this.storage.set('unities', unities);
-      });
-    });
-  }
+  ) {}
 
   persist(user: User): Observable<any> {
     return this.unities.getOnlineUnities(user.teacher_id).pipe(
