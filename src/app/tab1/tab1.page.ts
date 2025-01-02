@@ -37,24 +37,16 @@ export class Tab1Page implements OnInit {
   ) {}
 
   async ngOnInit() {
-    //this.storage.set('dailyFrequencyStudentsToSync', []);
-    const classroms = this.storage.get('classrooms');
+    const classrooms = this.storage.get('classrooms');
 
-    this.storage.get('user').then(async (res) => {
-      //console.log(res);
-      if (res) {
-        const user = res;
-
-        (await this.global.persist(await user, await classroms)).subscribe(
-          (res) => {
-            //console.log(res)
-          },
-        );
+    this.storage.get('user').then(async (user) => {
+      if (user) {
+        await this.global.persist(await user, await classrooms);
         this.loadFrequencies();
         this.frequenciesLoaded = true;
         await this.sync.isSyncDelayed();
       } else {
-        this.router.navigate(['/sign-in']);
+        await this.router.navigate(['/sign-in']);
       }
     });
   }
