@@ -14,11 +14,6 @@ export class GlobalFrequenciesPersisterService {
   ) {}
 
   async persist(user: any, classrooms: any[]): Promise<Observable<any>> {
-    await this.storage.get('examRules').then((res) => {
-      // TODO comportamento removido
-      // Entender se é para ser o acionável para cachear examRules
-    });
-
     return from(this.storage.get('examRules')).pipe(
       concatMap((examRule) => {
         // Flatten o array de classrooms se for necessário
