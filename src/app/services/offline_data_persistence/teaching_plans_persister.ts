@@ -1,9 +1,9 @@
-import { User } from './../../data/user.interface';
-import { Observable, from } from 'rxjs';
-import { Storage } from '@ionic/storage-angular';
-import { TeachingPlansService } from './../teaching_plans';
 import { Injectable } from '@angular/core';
-import { catchError, concatMap } from 'rxjs/operators';
+import { Storage } from '@ionic/storage-angular';
+import { Observable, forkJoin } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { TeachingPlansService } from '../teaching_plans';
+import { User } from '../../data/user.interface';
 
 @Injectable()
 export class TeachingPlansPersisterService {
@@ -13,24 +13,14 @@ export class TeachingPlansPersisterService {
   ) {}
 
   persist(user: User): Observable<any> {
-    return new Observable((observer) => {
-      this.teachingPlans
-        .getTeachingPlans(user.teacher_id)
-        .pipe(
-          concatMap((teachingPlans) =>
-            from(this.storage.set('teachingPlans', teachingPlans)).pipe(
-              catchError((error) => {
-                observer.error(error);
-                console.error(error);
-                return [];
-              }),
-            ),
-          ),
-        )
-        .subscribe(
-          () => observer.complete(),
-          (error) => observer.error(error),
-        );
-    });
+    const teachingPlansObservables = this.teachingPlans.getTeachingPlans(
+      user.teacher_id,
+    );
+
+    const setLessonPlansInStorage = tap((teachingPlans) =>
+      this.storage.set('teachingPlans', teachingPlans),
+    );
+
+    return forkJoin([teachingPlansObservables]).pipe(setLessonPlansInStorage);
   }
 }

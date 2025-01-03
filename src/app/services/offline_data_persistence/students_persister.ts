@@ -12,14 +12,15 @@ export class StudentsPersisterService {
   ) {}
 
   persist(user: any, disciplines: any[]): Observable<any> {
-    const studentsObservables = disciplines.flatMap((disciplineList): Observable<any>[] =>
-      disciplineList.data.map((discipline: { id: number }) =>
-        this.students.getStudents(
-          disciplineList.classroomId,
-          discipline.id,
-          user.teacher_id,
+    const studentsObservables = disciplines.flatMap(
+      (disciplineList): Observable<any>[] =>
+        disciplineList.data.map((discipline: { id: number }) =>
+          this.students.getStudents(
+            disciplineList.classroomId,
+            discipline.id,
+            user.teacher_id,
+          ),
         ),
-      ),
     );
 
     return forkJoin(studentsObservables).pipe(

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import { Observable } from 'rxjs';
+import { forkJoin } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { ContentRecordsService } from '../content_records';
 import { User } from '../../data/user.interface';
 
@@ -12,29 +13,13 @@ export class ContentRecordsPersisterService {
   ) {}
 
   persist(user: User) {
-    return new Observable(
-      (observer: {
-        next: (arg0: Promise<any>) => void;
-        error: (arg0: any) => void;
-        complete: () => void;
-      }) => {
-        this.contentRecordsService.getContentRecords(user.teacher_id).subscribe(
-          (contentRecords: { [x: string]: any }) => {
-            observer.next(
-              this.storage.set(
-                'contentRecords',
-                contentRecords['content_records'] || [],
-              ),
-            );
-          },
-          (error: any) => {
-            observer.error(error);
-          },
-          () => {
-            observer.complete();
-          },
-        );
-      },
+    const contentRecordsObservables =
+      this.contentRecordsService.getContentRecords(user.teacher_id);
+
+    const setLessonPlansInStorage = tap((contentRecords) =>
+      this.storage.set('contentRecords', contentRecords),
     );
+
+    return forkJoin([contentRecordsObservables]).pipe(setLessonPlansInStorage);
   }
 }

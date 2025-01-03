@@ -1,15 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
-import {
-  Observable,
-  concat,
-  of,
-  from,
-  forkJoin,
-  switchMap,
-  mergeMap,
-} from 'rxjs';
-import { catchError, concatMap, map } from 'rxjs/operators';
+import { Observable, of, forkJoin, switchMap } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { ClassroomsPersisterService } from './classrooms_persister';
 import { ContentLessonPlansPersisterService } from './content_lesson_plans_persister';
 import { ContentRecordsPersisterService } from './content_records_persister';
@@ -34,7 +26,6 @@ export class OfflineDataPersisterService {
     private examRulesPersister: ExamRulesPersisterService,
     private schoolCalendarsPersister: SchoolCalendarsPersisterService,
     private disciplinesPersister: DisciplinesPersisterService,
-    private disciplinePersister: DisciplinesPersisterService,
     private lessonPlansPersister: LessonPlansPersisterService,
     private contentLessonPlansPersister: ContentLessonPlansPersisterService,
     private contentRecordsPersister: ContentRecordsPersisterService,
@@ -55,11 +46,13 @@ export class OfflineDataPersisterService {
     this.storage.remove('contentRecords').then();
     this.storage.remove('disciplines').then();
     this.storage.remove('examRules').then();
-    this.storage.remove('frequencies').then(); // TODO
-    this.storage.remove('lessonPlans').then(); // TODO
     this.storage.remove('schoolCalendars').then();
-    this.storage.remove('teachingPlans').then(); // TODO
-    this.storage.remove('unities').then();
+
+    // Não deve ser removida essas chaves senão os dados ainda não sincronizados serão apagados
+    // this.storage.remove('unities').then();
+    // this.storage.remove('frequencies').then();
+    // this.storage.remove('lessonPlans').then();
+    // this.storage.remove('teachingPlans').then();
   }
 
   persist(user: User): Observable<any> {
@@ -70,12 +63,25 @@ export class OfflineDataPersisterService {
     return of(user).pipe(
       map((user) => ({ user })),
 
+      // Passo 1
+      // Sincronizar as unidades (escolas)
+      // Sincronizar os planos de ensinos
+      // Sincronizar os conteúdos dos planos de ensinos
+      // Sincronizar os conteúdos
+      // Sincronizar os planos de aula
       switchMap((payload) =>
         forkJoin({
           unities: this.unitiesPersister.persist(user),
+          lessonPlans: this.lessonPlansPersister.persist(user),
+          contentRecords: this.contentRecordsPersister.persist(user),
+          contentLessonPlans: this.contentLessonPlansPersister.persist(user),
+          teachingPlans: this.teachingPlansPersister.persist(user),
         }).pipe(map((result) => ({ ...payload, ...result }))),
       ),
 
+      // Passo 2
+      // Sincronizar os calendários letivos: depende das unidades
+      // Sincronizar as turmas: depende das unidades
       switchMap((payload) =>
         forkJoin({
           schoolCalendars: this.schoolCalendarsPersister.persist(
@@ -86,14 +92,12 @@ export class OfflineDataPersisterService {
         }).pipe(map((result) => ({ ...payload, ...result }))),
       ),
 
+      // Passo 3
+      // Sincronizar as regras de avaliação: depende das turmas
+      // Sincronizar as disciplinas: depende das turmas
       switchMap((payload) =>
         forkJoin({
           examRules: this.examRulesPersister.persist(user, payload.classrooms),
-        }).pipe(map((result) => ({ ...payload, ...result }))),
-      ),
-
-      switchMap((payload) =>
-        forkJoin({
           disciplines: this.disciplinesPersister.persist(
             user,
             payload.classrooms,
@@ -101,6 +105,9 @@ export class OfflineDataPersisterService {
         }).pipe(map((result) => ({ ...payload, ...result }))),
       ),
 
+      // Passo 4
+      // Sincronizar as frequências: depende das turmas e da regra de avaliação
+      // Sincronizar os alunos: depende das turmas (dentro de disciplina) e das disciplinas
       switchMap((payload) =>
         forkJoin({
           globalFrequencies: this.globalFrequenciesPersister.persist(
@@ -113,34 +120,11 @@ export class OfflineDataPersisterService {
         }).pipe(map((result) => ({ ...payload, ...result }))),
       ),
 
+      // Manipulador de erros global
       catchError((error) => {
         console.error(error);
         throw error;
       }),
     );
-
-    // return this.unitiesPersister.persist(user);
-
-    // return concat(
-    //   this.unitiesPersister.persist(user).pipe(catchError(() => of(void 0))),
-    //   // this.lessonPlansPersister
-    //   //   .persist(user)
-    //   //   .pipe(catchError(() => of(void 0))),
-    //   // this.contentRecordsPersister
-    //   //   .persist(user)
-    //   //   .pipe(catchError(() => of(void 0))),
-    //   // this.contentLessonPlansPersister
-    //   //   .persist(user)
-    //   //   .pipe(catchError(() => of(void 0))),
-    //   // this.teachingPlansPersister
-    //   //   .persist(user)
-    //   //   .pipe(catchError(() => of(void 0))),
-    // ).pipe(
-    //   concatMap(() => of(void 0)), // Emit a single void value to complete the observable
-    //   catchError((error) => {
-    //     console.error(error);
-    //     return of(void 0);
-    //   }),
-    // );
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { LessonPlansService } from '../lesson_plans';
 import { User } from '../../data/user.interface';
@@ -13,10 +13,14 @@ export class LessonPlansPersisterService {
   ) {}
 
   persist(user: User): Observable<any> {
-    return this.lessonPlans.getLessonPlans(user.teacher_id).pipe(
-      tap((lessonPlans) => {
-        this.storage.set('lessonPlans', lessonPlans).then(() => {});
-      }),
+    const lessonPlansObservables = this.lessonPlans.getLessonPlans(
+      user.teacher_id,
     );
+
+    const setLessonPlansInStorage = tap((lessonPlans) =>
+      this.storage.set('lessonPlans', lessonPlans),
+    );
+
+    return forkJoin([lessonPlansObservables]).pipe(setLessonPlansInStorage);
   }
 }
