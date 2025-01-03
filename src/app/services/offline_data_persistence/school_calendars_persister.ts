@@ -1,8 +1,8 @@
-import { SchoolCalendarsService } from '../school_calendars';
-import { Observable, forkJoin } from 'rxjs';
-import { Storage } from '@ionic/storage-angular';
 import { Injectable } from '@angular/core';
+import { Storage } from '@ionic/storage-angular';
+import { Observable, forkJoin } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { SchoolCalendarsService } from '../school_calendars';
 
 @Injectable()
 export class SchoolCalendarsPersisterService {

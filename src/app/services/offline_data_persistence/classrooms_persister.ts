@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
-import { User } from 'src/app/data/user.interface';
 import { ClassroomsService } from '../classrooms';
 import { StorageService } from '../storage.service';
+import { User } from '../../data/user.interface';
 
 @Injectable()
 export class ClassroomsPersisterService {

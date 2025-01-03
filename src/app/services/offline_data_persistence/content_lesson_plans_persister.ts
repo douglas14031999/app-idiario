@@ -1,9 +1,8 @@
-import { User } from './../../data/user.interface';
-import { Observable } from 'rxjs';
-import { Storage } from '@ionic/storage';
-import { ContentLessonPlansService } from './../content_lesson_plans';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ContentLessonPlansService } from '../content_lesson_plans';
 import { StorageService } from '../storage.service';
+import { User } from '../../data/user.interface';
 
 @Injectable()
 export class ContentLessonPlansPersisterService {

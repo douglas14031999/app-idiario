@@ -1,8 +1,8 @@
-import { DailyFrequencyService } from '../daily_frequency';
+import { Injectable } from '@angular/core';
+import { Storage } from '@ionic/storage-angular';
 import { Observable, forkJoin, from, of } from 'rxjs';
 import { concatMap, map, catchError } from 'rxjs/operators';
-import { Storage } from '@ionic/storage-angular';
-import { Injectable } from '@angular/core';
+import { DailyFrequencyService } from '../daily_frequency';
 
 @Injectable()
 export class GlobalFrequenciesPersisterService {
