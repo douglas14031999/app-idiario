@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Platform } from '@ionic/angular';
-import { StorageService } from "./services/storage.service";
+import { StorageService } from './services/storage.service';
 
 @Component({
   selector: 'app-root',

@@ -17,8 +17,7 @@ export class LessonPlansPersisterService {
   persist(user: User): Observable<any> {
     return this.lessonPlans.getLessonPlans(user.teacher_id).pipe(
       tap((lessonPlans) => {
-        this.storage.set('lessonPlans', lessonPlans).then(() => {
-        });
+        this.storage.set('lessonPlans', lessonPlans).then(() => {});
         this.unities.getOnlineUnities(user.teacher_id).subscribe((res) => {
           //console.log(res)
           this.storage.set('unities', res);

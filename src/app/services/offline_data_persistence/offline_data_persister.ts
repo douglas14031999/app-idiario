@@ -30,13 +30,11 @@ export class OfflineDataPersisterService {
     private connectionService: ConnectionService,
   ) {}
 
+  // TODO confirmar
+  // Entender se deve ser apagado o storage se o usuário for o mesmo, pois
+  // caso a sessão do usuário tenha se expirado, talvez os dados existentes
+  // ainda não tenham sido sincronizados
   private clearStorage(): void {
-
-    // TODO confirmar
-    // Entender se deve ser apagado o storage se o usuário for o mesmo, pois
-    // caso a sessão do usuário tenha se expirado, talvez os dados existentes
-    // ainda não tenham sido sincronizados
-
     this.storage.remove('classrooms').then();
     this.storage.remove('contentLessonPlans').then();
     this.storage.remove('contentRecords').then();

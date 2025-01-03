@@ -19,11 +19,9 @@ export class StorageService {
     await this.initializeDefaultData();
   }
 
+  // TODO verificar
+  // Algumas das estruturas abaixo não condizem com uma listagem (array)
   private async initializeDefaultData() {
-
-    // TODO verificar
-    // Algumas das estruturas abaixo não condizem com uma listagem (array)
-
     const defaults = {
       classrooms: [],
       contentLessonPlans: [],
