@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { LoadingController, NavController } from '@ionic/angular';
-import { AuthService } from '../services/auth';
 import { Router } from '@angular/router';
-import { UtilsService } from '../services/utils';
-import { SyncProvider } from '../services/sync';
-import { MessagesService } from '../services/messages';
-import { OfflineDataPersisterService } from '../services/offline_data_persistence/offline_data_persister';
+import { LoadingController } from '@ionic/angular';
+import { AuthService } from '../services/auth';
 import { DailyFrequencyService } from '../services/daily_frequency';
-import { StorageService } from '../services/storage.service';
 import { GlobalFrequenciesPersisterService } from '../services/offline_data_persistence/global_frequencies_persister';
+import { MessagesService } from '../services/messages';
+import { StorageService } from '../services/storage.service';
+import { SyncProvider } from '../services/sync';
+import { UtilsService } from '../services/utils';
 
 @Component({
   selector: 'app-tab1',
@@ -37,26 +36,22 @@ export class Tab1Page implements OnInit {
   ) {}
 
   async ngOnInit() {
-    //this.storage.set('dailyFrequencyStudentsToSync', []);
-    const classroms = this.storage.get('classrooms');
+    // this.storage.set('dailyFrequencyStudentsToSync', []);
 
-    this.storage.get('user').then(async (res) => {
-      //console.log(res);
-      if (res) {
-        const user = res;
+    const user = await this.storage.get('user');
+    const classrooms = await this.storage.get('classrooms');
 
-        (await this.global.persist(await user, await classroms)).subscribe(
-          (res) => {
-            //console.log(res)
-          },
-        );
-        this.loadFrequencies();
-        this.frequenciesLoaded = true;
-        await this.sync.isSyncDelayed();
-      } else {
-        this.router.navigate(['/sign-in']);
-      }
-    });
+    // Na primeira vez que é feita a sincronização ainda não existe dados de classrooms e é retornado null, desta forma
+    // as frequências já lançadas nunca são carregadas e precisa ser feito logout e novo login.
+
+    if (user) {
+      await this.global.persist(user, classrooms);
+      this.loadFrequencies();
+      this.frequenciesLoaded = true;
+      await this.sync.isSyncDelayed();
+    } else {
+      await this.router.navigate(['/sign-in']);
+    }
   }
 
   ionViewWillEnter() {
