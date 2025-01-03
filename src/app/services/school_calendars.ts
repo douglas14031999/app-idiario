@@ -17,6 +17,7 @@ export class SchoolCalendarsService {
     const request = this.http.get(this.api.getSchoolCalendarUrl(), {
       params: { unity_id: unityId.toString() },
     });
+
     return request.pipe(
       map((response: any) => {
         return {

@@ -1,15 +1,12 @@
-import { DailyFrequencyService } from '../daily_frequency';
-import { ClassroomsService } from '../classrooms';
+import { Injectable } from '@angular/core';
+import { Storage } from '@ionic/storage-angular';
 import { Observable, forkJoin, from, of } from 'rxjs';
 import { map, concatMap, catchError } from 'rxjs/operators';
-import { Storage } from '@ionic/storage-angular';
-import { Injectable } from '@angular/core';
+import { DailyFrequencyService } from '../daily_frequency';
 
 @Injectable()
 export class DisciplineFrequenciesPersisterService {
-  examRules: any;
   constructor(
-    private classrooms: ClassroomsService,
     private storage: Storage,
     private frequencies: DailyFrequencyService,
   ) {}
@@ -23,10 +20,12 @@ export class DisciplineFrequenciesPersisterService {
     );
   }
 
-  async persist(user: any, disciplines: any[]): Promise<Observable<any>> {
-    this.examRules = await this.storage.get('examRules');
-
-    return from(this.examRules).pipe(
+  async persist(
+    user: any,
+    disciplines: any[],
+    examRules: any[],
+  ): Promise<Observable<any>> {
+    return from(examRules).pipe(
       concatMap((examRule: any) => {
         const frequenciesObservables = disciplines.flatMap((disciplineList) =>
           disciplineList.data.map((discipline: { id: number }) => {

@@ -1,10 +1,7 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, from } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Storage } from '@ionic/storage-angular';
-
-import { ConnectionService } from './connection';
 import { ApiService } from './api';
 import { StorageService } from './storage.service';
 
@@ -13,7 +10,6 @@ export class ExamRulesService {
   constructor(
     private http: HttpClient,
     private storage: StorageService,
-    private connection: ConnectionService,
     private api: ApiService,
   ) {}
 
@@ -22,8 +18,8 @@ export class ExamRulesService {
     classroomId: number,
   ): Observable<{ data: any; classroomId: number }> {
     const params = new HttpParams()
-      .set('teacher_id', teacherId.toString())
-      .set('classroom_id', classroomId.toString());
+      .set('teacher_id', teacherId)
+      .set('classroom_id', classroomId);
 
     return this.http.get<any>(this.api.getExamRulesUrl(), { params }).pipe(
       map((response) => ({

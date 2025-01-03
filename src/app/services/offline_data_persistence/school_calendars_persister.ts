@@ -1,8 +1,8 @@
-import { SchoolCalendarsService } from './../school_calendars';
-import { Observable, forkJoin, from } from 'rxjs';
+import { SchoolCalendarsService } from '../school_calendars';
+import { Observable, forkJoin } from 'rxjs';
 import { Storage } from '@ionic/storage-angular';
 import { Injectable } from '@angular/core';
-import { catchError, concatMap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
 @Injectable()
 export class SchoolCalendarsPersisterService {
@@ -16,14 +16,12 @@ export class SchoolCalendarsPersisterService {
       this.schoolCalendars.getOnlineSchoolCalendar(unity.id),
     );
 
+    const setSchoolCalendarsInStorage = tap((schoolCalendars) =>
+      this.storage.set('schoolCalendars', schoolCalendars),
+    );
+
     return forkJoin(schoolCalendarObservables).pipe(
-      concatMap((results) =>
-        from(this.storage.set('schoolCalendars', results)),
-      ),
-      catchError((error) => {
-        console.error(error);
-        return [];
-      }),
+      setSchoolCalendarsInStorage,
     );
   }
 }

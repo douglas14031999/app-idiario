@@ -1,43 +1,25 @@
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin } from 'rxjs';
-import { catchError, concatMap } from 'rxjs/operators';
-import { ClassroomsPersisterService } from './classrooms_persister';
-import { SchoolCalendarsPersisterService } from './school_calendars_persister';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { StorageService } from '../storage.service';
 import { UnitiesService } from '../unities';
 import { User } from '../../data/user.interface';
+import { Unity } from '../../data/unity.interface';
 
 @Injectable()
 export class UnitiesPersisterService {
   constructor(
     private unities: UnitiesService,
-    private classroomsPersister: ClassroomsPersisterService,
-    private schoolCalendarsPersister: SchoolCalendarsPersisterService,
     private storage: StorageService,
-  ) {
-    this.storage.get('user').then((user) => {
-      if (user) {
-        this.unities.getOnlineUnities(user.teacher_id).subscribe((unities) => {
-          this.storage.set('unities', unities);
-        });
-      }
-    });
-  }
+  ) {}
 
   persist(user: User): Observable<any> {
-    return this.unities.getOnlineUnities(user.teacher_id).pipe(
-      concatMap((unities) =>
-        forkJoin([
-          this.classroomsPersister.persist(user, unities),
-          this.schoolCalendarsPersister.persist(user, unities),
-        ]).pipe(
-          concatMap(() => this.storage.set('unities', unities)!),
-          catchError((error) => {
-            console.error(error);
-            throw error; // Propaga o erro para o Observable principal
-          }),
-        ),
-      ),
+    const unities = this.unities.getOnlineUnities(user.teacher_id);
+
+    const setUnitiesInStorage = tap((unities: Unity[]) =>
+      this.storage.set('unities', unities),
     );
+
+    return unities.pipe(setUnitiesInStorage);
   }
 }

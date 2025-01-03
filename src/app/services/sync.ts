@@ -247,7 +247,6 @@ export class SyncProvider {
                         forkJoin([
                           this.storage.remove('dailyFrequencyStudentsToSync'),
                           this.storage.remove('dailyFrequenciesToSync'),
-                          this.offlineDataPersister.persist(user),
                         ]),
                       ),
                       catchError((error) => {
@@ -266,12 +265,14 @@ export class SyncProvider {
         )
         .subscribe({
           next: () => {
+            console.log('next');
             this.completeSync();
             this.setSyncDate();
             observer.next(); // Notifica o sucesso
             observer.complete(); // Conclui o observable
           },
           error: (error) => {
+            console.log(error);
             this.handleError(error);
             observer.error(error); // Notifica o erro
           },

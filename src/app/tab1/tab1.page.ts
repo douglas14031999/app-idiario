@@ -8,6 +8,7 @@ import { MessagesService } from '../services/messages';
 import { StorageService } from '../services/storage.service';
 import { SyncProvider } from '../services/sync';
 import { UtilsService } from '../services/utils';
+import { OfflineDataPersisterService } from '../services/offline_data_persistence/offline_data_persister';
 
 @Component({
   selector: 'app-tab1',
@@ -33,35 +34,35 @@ export class Tab1Page implements OnInit {
     private storage: StorageService,
     private messages: MessagesService,
     private global: GlobalFrequenciesPersisterService,
+    private offlineDataPersister: OfflineDataPersisterService,
   ) {}
 
   async ngOnInit() {
     // this.storage.set('dailyFrequencyStudentsToSync', []);
-
-    const user = await this.storage.get('user');
-    const classrooms = await this.storage.get('classrooms');
-
-    // Na primeira vez que é feita a sincronização ainda não existe dados de classrooms e é retornado null, desta forma
-    // as frequências já lançadas nunca são carregadas e precisa ser feito logout e novo login.
-
-    if (user) {
-      await this.global.persist(user, classrooms);
-      this.loadFrequencies();
-      this.frequenciesLoaded = true;
-      await this.sync.isSyncDelayed();
-    } else {
-      await this.router.navigate(['/sign-in']);
-    }
+    // const user = await this.storage.get('user');
+    // const classrooms = await this.storage.get('classrooms');
+    //
+    // // Na primeira vez que é feita a sincronização ainda não existe dados de classrooms e é retornado null, desta forma
+    // // as frequências já lançadas nunca são carregadas e precisa ser feito logout e novo login.
+    //
+    // if (user) {
+    //   await this.global.persist(user, classrooms);
+    //   this.loadFrequencies();
+    //   this.frequenciesLoaded = true;
+    //   await this.sync.isSyncDelayed();
+    // } else {
+    //   await this.router.navigate(['/sign-in']);
+    // }
   }
 
   ionViewWillEnter() {
-    if (
-      !this.frequenciesLoaded &&
-      (!this.currentDate || this.router.url.includes('frequency'))
-    ) {
-      this.loadFrequencies();
-    }
-    this.frequenciesLoaded = false;
+    // if (
+    //   !this.frequenciesLoaded &&
+    //   (!this.currentDate || this.router.url.includes('frequency'))
+    // ) {
+    //   this.loadFrequencies();
+    // }
+    // this.frequenciesLoaded = false;
   }
 
   loadFrequencies() {
@@ -294,9 +295,14 @@ export class Tab1Page implements OnInit {
     });
   }
 
-  doRefresh() {
-    this.sync.syncAll().subscribe((res) => {
-      this.loadFrequencies();
+  async doRefresh() {
+    const user = await this.storage.get('user');
+
+    this.offlineDataPersister.persist(user).subscribe((res) => {
+      console.log(res);
     });
+    // this.sync.syncAll().subscribe((res) => {
+    //   this.loadFrequencies();
+    // });
   }
 }
