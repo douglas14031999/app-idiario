@@ -121,7 +121,7 @@ export class SyncProvider {
             lastSyncDate.getTime()) /
             (1000 * 60 * 60 * 24),
         );
-        //console.log(daysDifference)
+
         if (daysDifference >= 5) {
           this.callDelayedSyncAlert(daysDifference);
         }
@@ -265,7 +265,6 @@ export class SyncProvider {
         )
         .subscribe({
           next: () => {
-            console.log('next');
             this.completeSync();
             this.setSyncDate();
             observer.next(); // Notifica o sucesso

@@ -34,15 +34,13 @@ export class TeachingPlanDetailsPage implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.teachingPlanId = +id;
-      //console.log(this.teachingPlanId);
     } else {
       // Caso o id seja null ou undefined
-      //console.error('ID não encontrado na rota');
+      console.error('ID não encontrado na rota');
     }
 
     this.storage.get('teachingPlans').then((teachingPlans) => {
       const details = this.getTeachingPlanDetail(teachingPlans);
-      //console.log(details)
       if (details) {
         this.description = `${details.description} - ${details.grade_name}`;
         this.unity_name = details.unity_name;

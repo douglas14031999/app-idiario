@@ -175,7 +175,6 @@ export class StudentsFrequencyEditPage implements OnInit {
     if (this.globalAbsence) {
       return [];
     }
-    console.log(this.studentsFrequency);
     return this.studentsFrequency.map(
       (studentFrequency: any) => studentFrequency.class_number,
     );
@@ -202,7 +201,6 @@ export class StudentsFrequencyEditPage implements OnInit {
   }
 
   private setCurrentClassroom() {
-    console.log(this.globalAbsence);
     if (this.globalAbsence) {
       this.classroomId = this.studentsFrequency.classroom_id;
       this.classroomName = this.studentsFrequency.classroom_name;

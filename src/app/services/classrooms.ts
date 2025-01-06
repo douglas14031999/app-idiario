@@ -48,7 +48,6 @@ export class ClassroomsService {
               .subscribe((schoolCalendar: any) => {
                 const currentDate = new Date().toISOString().substr(0, 10);
                 //const currentDate = '2023-02-04'
-                //console.log(currentDate)
                 const hasStepOnCurrentDate =
                   schoolCalendar.data.steps.filter(
                     (step: {
@@ -64,7 +63,7 @@ export class ClassroomsService {
                       return startDate <= currentDate && endDate >= currentDate;
                     },
                   ).length >= 1;
-                //console.log(hasStepOnCurrentDate)
+
                 if (!hasStepOnCurrentDate) {
                   observer.error(
                     'Data atual está fora do período de postagem de faltas. Tente novamente.',
@@ -72,7 +71,7 @@ export class ClassroomsService {
                   observer.complete();
                   return;
                 }
-                //console.log(classroom)
+
                 if (classroom.unityId == unityId) {
                   classroom.data = classroom.data.filter(
                     (value: { year: any }) => {

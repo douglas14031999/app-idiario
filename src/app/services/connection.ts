@@ -13,11 +13,9 @@ export class ConnectionService {
   }
   async init() {
     this.status = await Network.getStatus();
-    //console.log(this.status)
     if (this.status.connectionType != 'none') {
       this.isOnline = true;
     }
-    //console.log(this.isOnline)
   }
   setStatus(online: boolean) {
     this.isOnline = online;

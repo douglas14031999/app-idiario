@@ -76,7 +76,6 @@ export class FrequencyPage implements OnInit {
     }
     if (!this.unities || !this.unities.length) {
       this.unities = await this.storage.get('unities');
-      //console.log(this.unities)
       this.emptyUnities = !this.unities || this.unities.length === 0;
     }
   }
@@ -98,7 +97,6 @@ export class FrequencyPage implements OnInit {
       this.auth.currentUser().subscribe((user: User) => {
         this.classroomsService.getOfflineClassrooms(this.unityId!).subscribe(
           (classrooms: any) => {
-            //console.log(classrooms)
             this.schoolCalendarsService
               .getOfflineSchoolCalendar(this.unityId!)
               .subscribe(
@@ -123,14 +121,12 @@ export class FrequencyPage implements OnInit {
                 (error) => {
                   loader.dismiss();
                   this.messages.showToast(error);
-                  //console.log(error)
                 },
               );
           },
           (error) => {
             loader.dismiss();
             this.messages.showToast(error);
-            //console.log(error)
           },
         );
       });
@@ -143,7 +139,6 @@ export class FrequencyPage implements OnInit {
     }
 
     this.disciplineId = undefined;
-    //console.log(this.classroomId);
 
     // Evitar ExpressionChangedAfterItHasBeenCheckedError
     let _classes = this.classes;
@@ -161,8 +156,6 @@ export class FrequencyPage implements OnInit {
       .getOfflineExamRules(this.classroomId)
       .pipe(
         tap((result: any) => {
-          //console.log(result);
-
           if (
             result.data.exam_rule &&
             result.data.exam_rule.allow_frequency_by_discipline
@@ -171,7 +164,6 @@ export class FrequencyPage implements OnInit {
               .getOfflineDisciplines(this.classroomId)
               .pipe(
                 tap((disciplineResult: any) => {
-                  //console.log(disciplineResult)
                   this.disciplines = disciplineResult.data;
                   this.globalAbsence = false;
                   this.cdr.detectChanges();

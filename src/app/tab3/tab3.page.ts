@@ -31,7 +31,6 @@ export class Tab3Page {
   doRefresh(event: any) {
     // Adicionado tipo para event
     this.sync.syncAll().subscribe((res) => {
-      //console.log(res);
       this.updateLessonPlans().finally(() => event.target.complete()); // Completa o evento de refresh
     });
   }
@@ -54,7 +53,6 @@ export class Tab3Page {
           }));
 
           this.unities.push({ name: unity.unity_name, lessonPlans });
-          //console.log(this.unities)
         },
       );
     } catch (error) {

@@ -16,7 +16,7 @@ export class LessonPlansService {
     const request = this.http.get(this.api.getTeacherLessonPlansUrl(), {
       params: { teacher_id: teacherId },
     });
-    //console.log(request)
+
     return request;
   }
 }

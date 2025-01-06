@@ -30,9 +30,7 @@ export class AuthService {
   }
 
   isSignedIn(): Observable<boolean> {
-    this.storage.get('user').then((res) => {
-      //console.log(res)
-    });
+    this.storage.get('user').then((res) => {});
 
     return from(this.storage.get('user')).pipe(
       map((result) => !!result), // Mapeia o resultado para true se houver usuário, caso contrário false

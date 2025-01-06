@@ -25,7 +25,6 @@ export class Tab5Page implements OnInit {
     private router: Router,
   ) {
     this.storage.get('user').then((user) => {
-      //console.log(user);
       this.user_email = user.email;
       this.user_full_name = user.first_name + ' ' + user.last_name;
     });
@@ -34,21 +33,18 @@ export class Tab5Page implements OnInit {
   async ngOnInit() {
     this.app_version = environment.appversion;
     await Device.getInfo().then((res) => {
-      //console.log(res);
       if (res) {
         this.device = res;
         this.carregou = true;
       }
     });
-
-    //console.log(this.device);
   }
 
   logout() {
     this.storage
       .clear()
       .then((res) => {
-        //console.log(res);
+        console.log(res);
       })
       .finally(() => {
         this.router.navigate(['/sign-in']);

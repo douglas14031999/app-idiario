@@ -14,7 +14,6 @@ export class ApiService {
       })
     }*/
     this.serverUrl = environment.cities.url;
-    //console.log(this.serverUrl)
   }
 
   async getServerUrl() {

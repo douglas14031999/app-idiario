@@ -53,7 +53,6 @@ export class DailyFrequencyStudentService {
       ]).subscribe((results) => {
         const existingDailyFrequencyStudentsToSync = results[0] || [];
         const frequencies: any = results[1] || [];
-        //console.log(existingDailyFrequencyStudentsToSync)
         const dailyFrequencyStudentsToSync =
           existingDailyFrequencyStudentsToSync.concat(frequency);
         this.storage.set(

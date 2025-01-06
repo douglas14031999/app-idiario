@@ -39,7 +39,6 @@ export class ContentRecordFormPage implements OnInit {
   ) {}
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
-      // console.log(params)
       this.baseContents = {};
       this.contentRecord = {};
       this.contents = [];
@@ -91,7 +90,7 @@ export class ContentRecordFormPage implements OnInit {
 
     const state = this.router.getCurrentNavigation()?.extras.state;
     if (state && state['unities']) {
-      // console.log(state)
+      console.log(state);
     }
   }
 

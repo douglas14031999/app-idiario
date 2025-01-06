@@ -58,7 +58,6 @@ export class LessonPlanDetailsPage implements OnInit {
 
   async ngOnInit() {
     const state = this.router.getCurrentNavigation()?.extras.state;
-    //console.log(state)
     this.lessonPlanId = state!['lessonPlanId'];
     await this.storage.create(); // Necessário para inicializar o storage
     const lessonPlans: { unities: Unity[] } =

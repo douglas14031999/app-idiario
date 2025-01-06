@@ -15,7 +15,6 @@ export class CustomersService {
   getCustomers(): Observable<Customer[]> {
     return this.http.get<any[]>(this.api.getallHostsUrl()).pipe(
       map((response: any) => {
-        //console.log(response)
         if (response && response.customers) {
           return response.customers.map((customer: Customer) => {
             return {
