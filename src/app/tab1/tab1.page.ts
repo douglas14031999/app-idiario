@@ -298,8 +298,11 @@ export class Tab1Page implements OnInit {
   async doRefresh() {
     const user = await this.storage.get('user');
 
+    await this.sync.startSyncProcess();
+
     this.offlineDataPersister.persist(user).subscribe((res) => {
       console.log(res);
+      this.sync.completeSync();
     });
     // this.sync.syncAll().subscribe((res) => {
     //   this.loadFrequencies();
