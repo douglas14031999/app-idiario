@@ -106,7 +106,8 @@ export class OfflineDataPersisterService {
       ),
 
       // Passo 4
-      // Sincronizar as frequências: depende das turmas e da regra de avaliação
+      // Sincronizar as frequências por dia: depende das turmas e da regra de avaliação
+      // Sincronizar as frequências por componente: depende das disciplinas e da regra de avaliação
       // Sincronizar os alunos: depende das turmas (dentro de disciplina) e das disciplinas
       switchMap((payload) =>
         forkJoin({
@@ -115,7 +116,11 @@ export class OfflineDataPersisterService {
             payload.classrooms,
             payload.examRules,
           ),
-          // disciplineFrequencies: this.disciplineFrequenciesPersister.persist(user, payload.disciplines, payload.examRules),
+          disciplineFrequencies: this.disciplineFrequenciesPersister.persist(
+            user,
+            payload.disciplines,
+            payload.examRules,
+          ),
           students: this.studentsPersister.persist(user, payload.disciplines),
         }).pipe(map((result) => ({ ...payload, ...result }))),
       ),

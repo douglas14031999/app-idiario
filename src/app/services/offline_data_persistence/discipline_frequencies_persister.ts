@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
-import { Observable, forkJoin, from, of } from 'rxjs';
-import { map, concatMap, catchError } from 'rxjs/operators';
+import { Observable, forkJoin, from } from 'rxjs';
+import { map, concatMap } from 'rxjs/operators';
 import { DailyFrequencyService } from '../daily_frequency';
 
 @Injectable()
@@ -20,35 +20,41 @@ export class DisciplineFrequenciesPersisterService {
     );
   }
 
-  async persist(
-    user: any,
-    disciplines: any[],
-    examRules: any[],
-  ): Promise<Observable<any>> {
-    return from(examRules).pipe(
-      concatMap((examRule: any) => {
-        const frequenciesObservables = disciplines.flatMap((disciplineList) =>
-          disciplineList.data.map((discipline: { id: number }) => {
-            const currentExamRule = examRule;
+  persist(user: any, disciplines: any[], examRules: any[]): Observable<any> {
+    const onlyFrequencyByDiscipline = (item: { classroomId: number }) => {
+      const currentExamRule = examRules.find(
+        (rule: any) => rule.classroomId === item.classroomId,
+      );
 
-            if (
-              currentExamRule &&
-              (currentExamRule.data.exam_rule.frequency_type === '2' ||
-                currentExamRule.data.exam_rule.allow_frequency_by_discipline)
-            ) {
-              return this.frequencies.getFrequencies(
-                disciplineList.classroomId,
-                discipline.id,
-                user.teacher_id,
-              );
-            } else {
-              return of(null); // Return an observable that emits null when no frequencies are needed
-            }
-          }),
-        );
+      if (!currentExamRule) {
+        return false;
+      }
 
-        return forkJoin(frequenciesObservables);
-      }),
+      const isSameClassroom = currentExamRule.classroomId == item.classroomId;
+      const allowFrequencyByDiscipline =
+        currentExamRule.data.exam_rule.frequency_type === '2' ||
+        currentExamRule.data.exam_rule.allow_frequency_by_discipline;
+
+      return isSameClassroom && allowFrequencyByDiscipline;
+    };
+    const mountObserversToFrequencies = (list: {
+      data: { id: number }[];
+      classroomId: number;
+    }) =>
+      list.data.flatMap((discipline: { id: any }) =>
+        this.frequencies.getFrequencies(
+          list.classroomId,
+          discipline.id,
+          user.teacher_id,
+        ),
+      );
+
+    const frequenciesObservables = disciplines
+      .filter(onlyFrequencyByDiscipline)
+      .flatMap(mountObserversToFrequencies);
+
+    // TODO continuar a partir daqui e entender lógica abaixo
+    return forkJoin(frequenciesObservables).pipe(
       concatMap((results: any[]) =>
         from(this.storage.get('frequencies')).pipe(
           map((frequencies: any) => ({ results, frequencies })),
@@ -65,10 +71,6 @@ export class DisciplineFrequenciesPersisterService {
         }
 
         this.storage.set('frequencies', { daily_frequencies: newFrequencies });
-      }),
-      catchError((error) => {
-        console.error(error);
-        return of(null); // Return a null observable in case of error
       }),
     );
   }
