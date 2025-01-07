@@ -1,21 +1,17 @@
-import { Injectable } from '@angular/core';
-//import 'rxjs/Rx';
-import { ApiService } from './api';
-import { StorageService } from './storage.service';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { ApiService } from './api';
 
 @Injectable()
 export class ContentLessonPlansService {
   constructor(
     private http: HttpClient,
-    private storage: StorageService,
     private api: ApiService,
   ) {}
 
   getContentLessonPlans(teacherId: number) {
-    const request = this.http.get(this.api.getContentLessonPlansUrl(), {
+    return this.http.get(this.api.getContentLessonPlansUrl(), {
       params: { teacher_id: teacherId },
     });
-    return request;
   }
 }

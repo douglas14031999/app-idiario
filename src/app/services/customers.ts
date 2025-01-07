@@ -1,8 +1,8 @@
-import { ApiService } from './api';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ApiService } from './api';
 import { Customer } from '../data/customer.interface';
 
 @Injectable()
@@ -24,7 +24,6 @@ export class CustomersService {
             };
           });
         } else {
-          // Caso a resposta não tenha a propriedade 'customers' ou seja nula, retorne um array vazio.
           return [];
         }
       }),

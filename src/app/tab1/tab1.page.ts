@@ -300,9 +300,13 @@ export class Tab1Page implements OnInit {
 
     await this.sync.startSyncProcess();
 
-    this.offlineDataPersister.persist(user).subscribe((res) => {
-      console.log(res);
-      this.sync.completeSync();
+    this.offlineDataPersister.persist(user).subscribe({
+      next: () => () => {
+        this.sync.completeSync();
+      },
+      error: (err: any) => {
+        this.sync.handleError(err.message);
+      },
     });
     // this.sync.syncAll().subscribe((res) => {
     //   this.loadFrequencies();
