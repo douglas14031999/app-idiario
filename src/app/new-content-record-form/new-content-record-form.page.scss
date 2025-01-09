@@ -51,7 +51,7 @@
 .form-item-radio-item.item.item-block.item-wp.item-radio:last-child,
 .form-item-radio-item.item.item-block.item-ios.item-radio:last-child,
 .form-item-radio-item.item.item-block.item-md.item-radio:last-child {
-  border-bottom: 0px !important;
+  border-bottom: 0 !important;
 }
 
 .form-item-radio-item.item.item-block.item-wp.item-radio.item-radio-checked:first-child,
@@ -68,10 +68,6 @@
   border-bottom-right-radius: 5px;
 }
 
-.form-item-radio-item.item.item-block.item-wp.item-radio.item-radio-checked
-  ion-label,
-.form-item-radio-item.item.item-block.item-ios.item-radio.item-radio-checked
-  ion-label,
 .form-item-radio-item.item.item-block.item-md.item-radio.item-radio-checked
   ion-label {
   font-size: 16px;
@@ -126,7 +122,6 @@
 
 .text-mudar {
   float: right;
-  padding-top: 8px;
   margin: 0;
   padding: 0;
   padding-top: 23px;
@@ -165,7 +160,7 @@
 .form-item-check-item.item.item-block.item-wp.item-checkbox,
 .form-item-check-item.item.item-block.item-ios.item-checkbox,
 .form-item-check-item.item.item-block.item-md.item-checkbox {
-  padding-left: 0px !important;
+  padding-left: 0 !important;
 }
 
 ion-checkbox.checkbox.checkbox-wp,

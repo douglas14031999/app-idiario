@@ -5,7 +5,7 @@
 .title-teaching-plan {
   font-size: 24px;
   color: white;
-  margin: 0px;
+  margin: 0;
 }
 
 .button-left {
@@ -43,7 +43,7 @@
 .toolbar-content.toolbar-content-wp,
 .toolbar-content.toolbar-content-ios,
 .toolbar-content.toolbar-content-md {
-  margin-left: 0px !important;
+  margin-left: 0 !important;
 }
 ion-back-button {
   --color: #fff;
@@ -83,13 +83,13 @@ ion-back-button {
 .detail-text {
   font-size: 14px;
   color: #3f3d4d;
-  margin: 0px;
+  margin: 0;
 }
 
 .contents-list-item {
   font-size: 14px;
   color: #3f3d4d;
-  margin: 0px;
+  margin: 0;
   list-style-type: none;
 }
 

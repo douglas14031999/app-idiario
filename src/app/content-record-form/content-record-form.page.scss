@@ -36,16 +36,15 @@
 .detail-title {
   font-size: 16px;
   color: #3f3d4d;
-  margin: 0;
-  margin-bottom: 2px;
+  margin: 0 0 2px;
 }
 
 #content-record-form {
   .item-inner {
-    border-bottom: 0px;
+    border-bottom: 0;
   }
   ion-item.item-input {
-    border-bottom: 0px;
+    border-bottom: 0;
   }
   ion-item.item-input.input-has-focus:last-child {
     box-shadow: none;

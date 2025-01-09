@@ -71,7 +71,7 @@
 
 .grid-row {
   border-bottom: 1px solid #dddce6;
-  margin: 0px;
+  margin: 0;
   padding: 5px 10px;
 }
 
@@ -89,7 +89,7 @@
   border-radius: 5px;
   background-color: white;
   margin-top: 5px;
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 
 ion-checkbox::part(container) {
@@ -147,7 +147,7 @@ ion-item.frequency-checkbox-item {
 .frequency-checkbox-item.item.item-block.item-wp.item-checkbox,
 .frequency-checkbox-item.item.item-block.item-ios.item-checkbox,
 .frequency-checkbox-item.item.item-block.item-md.item-checkbox {
-  padding-left: 0px !important;
+  padding-left: 0 !important;
 }
 
 ion-checkbox.checkbox.checkbox-wp,

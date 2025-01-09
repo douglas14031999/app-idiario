@@ -36,7 +36,7 @@ ion-icon {
   .form-item-radio-item {
     height: 60px;
 
-    font-family: "NunitoRegular";
+    font-family: "NunitoRegular", serif;
     font-size: 16px;
     color: #3f3e4d;
     background-color: transparent;
@@ -57,7 +57,7 @@ ion-icon {
   .form-item-radio-item.item.item-block.item-wp.item-radio:last-child,
   .form-item-radio-item.item.item-block.item-ios.item-radio:last-child,
   .form-item-radio-item.item.item-block.item-md.item-radio:last-child {
-    border-bottom: 0px !important;
+    border-bottom: 0 !important;
   }
 
   .form-item-radio-item.item.item-block.item-wp.item-radio.item-radio-checked:first-child,
@@ -109,7 +109,7 @@ ion-icon {
   .date-frequency {
     background-color: white;
     height: 70px;
-    font-family: "NunitoRegular";
+    font-family: "NunitoRegular", serif;
     font-size: 16px;
     color: #3f3d4d;
     border: 1px solid #dddce6 !important;
@@ -132,12 +132,9 @@ ion-icon {
 
   .text-mudar {
     float: right;
-    padding-top: 8px;
     margin: 0;
-    padding: 0;
-    padding-top: 23px;
-    padding-right: 20px;
-    font-family: "NunitoRegular";
+    padding: 23px 20px 0 0;
+    font-family: "NunitoRegular", serif;
     color: #6e00b5;
     position: absolute;
     z-index: 8;
@@ -180,7 +177,7 @@ ion-icon {
   ion-item.form-item-check-item.item.item-block.item-wp.item-checkbox,
   ion-item.form-item-check-item.item.item-block.item-ios.item-checkbox,
   ion-item.form-item-check-item.item.item-block.item-md.item-checkbox {
-    padding-left: 0px !important;
+    padding-left: 0 !important;
   }
 
   ion-checkbox.checkbox.checkbox-wp,
