@@ -301,7 +301,7 @@ export class Tab1Page implements OnInit {
     await this.sync.startSyncProcess();
 
     this.offlineDataPersister.persist(user).subscribe({
-      next: () => () => {
+      next: () => {
         this.sync.completeSync();
       },
       error: (err: any) => {

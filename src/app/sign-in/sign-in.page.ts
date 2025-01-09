@@ -10,6 +10,7 @@ import { ConnectionService } from '../services/connection';
 import { CustomersService } from '../services/customers';
 import { MessagesService } from '../services/messages';
 import { OfflineDataPersisterService } from '../services/offline_data_persistence/offline_data_persister';
+import { SyncProvider } from '../services/sync';
 import { UtilsService } from '../services/utils';
 
 @Component({
@@ -41,6 +42,7 @@ export class SignInPage implements OnInit {
     private utilsService: UtilsService,
     private messages: MessagesService,
     private cdr: ChangeDetectorRef,
+    private sync: SyncProvider,
     private router: Router,
     private offlineDataPersister: OfflineDataPersisterService,
   ) {}
@@ -98,8 +100,15 @@ export class SignInPage implements OnInit {
       (user: User) => {
         if (user) {
           this.auth.setCurrentUser(user);
-          this.offlineDataPersister.persist(user).subscribe((): void => {
-            // Necessário para iniciar a sincronização após o login
+          this.sync.startSyncProcess();
+
+          this.offlineDataPersister.persist(user).subscribe({
+            next: () => {
+              this.sync.completeSync();
+            },
+            error: (err: any) => {
+              this.sync.handleError(err.message);
+            },
           });
 
           this.router.navigate([''], { queryParams: user });
