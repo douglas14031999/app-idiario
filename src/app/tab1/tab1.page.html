@@ -20,7 +20,7 @@
     <div *ngFor="let frequencyDay of lastFrequencyDays; let i = index">
       <div *ngIf="i === 0 && !frequencyDay.exists">
         <h3 class="frequency-day">{{ frequencyDay.format_date }}</h3>
-        <div class="frequency-empty-today">
+        <div class="empty-results">
           <p>Ainda não há nenhuma chamada hoje.</p>
         </div>
       </div>
