@@ -29,15 +29,10 @@ export class AuthService {
       );
   }
 
-  isSignedIn(): Observable<boolean> {
-    this.storage.get('user').then((res) => {});
+  async isSignedIn(): Promise<boolean> {
+    const token = await this.storage.get('user');
 
-    return from(this.storage.get('user')).pipe(
-      map((result) => !!result), // Mapeia o resultado para true se houver usuário, caso contrário false
-      catchError((error) => {
-        return of(false); // Retorna um Observable de false em caso de erro
-      }),
-    );
+    return !!token;
   }
 
   currentUser(): Observable<User> {
