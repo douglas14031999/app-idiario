@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
-  appName: 'i-diario-ap-v2',
+  appName: 'i-diario',
   webDir: 'www',
   server: {
     androidScheme: 'https',
