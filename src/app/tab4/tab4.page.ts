@@ -36,8 +36,15 @@ export class Tab4Page implements OnInit {
 
   async updateTeachingPlans() {
     const teachingPlans = await this.storage.get('teachingPlans');
+
     if (!teachingPlans) return;
-    this.unities = teachingPlans.unities.map(
+
+    // TODO verificar
+    // O objeto armazenado em localStorage é uma array de objetos com a chave `content_records`, possivelmente é um
+    // efeito colateral da mudança da versão do Rails.
+    const all = teachingPlans.flatMap((result: { unities: any; }) => result.unities);
+
+    this.unities = all.map(
       (unity: { plans: any[]; unity_name: any }) => {
         const teachingPlans = unity.plans.map((plan) => ({
           id: plan.id,

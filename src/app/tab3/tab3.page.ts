@@ -41,7 +41,12 @@ export class Tab3Page {
       if (!lessonPlans) return;
       this.unities = [];
 
-      lessonPlans.unities.forEach(
+      // TODO verificar
+      // O objeto armazenado em localStorage é uma array de objetos com a chave `content_records`, possivelmente é um
+      // efeito colateral da mudança da versão do Rails.
+      const all = lessonPlans.flatMap((result: { unities: any; }) => result.unities);
+
+      all.forEach(
         (unity: { plans: any[]; unity_name: any }) => {
           if ((unity.plans || []).length === 0) {
             return;

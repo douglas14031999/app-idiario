@@ -57,10 +57,15 @@ export class Tab2Page {
       currentDate.setHours(0, 0, 0, 0);
       const numberOfDays = 7;
 
+      // TODO verificar
+      // O objeto armazenado em localStorage é uma array de objetos com a chave `content_records`, possivelmente é um
+      // efeito colateral da mudança da versão do Rails.
+      this.contentRecords = this.contentRecords.flatMap(record => record.content_records);
+
       for (let i = numberOfDays; i > 0; i--) {
         let unities: Array<any> = [];
 
-        (this.contentRecords || [])
+        this.contentRecords
           .filter((x) => x.contents.length)
           .forEach((contentRecord) => {
             let contentDate = this.utilsService.getDate(
@@ -68,34 +73,38 @@ export class Tab2Page {
             );
             contentDate.setHours(24, 0, 0, 0);
 
-            if (currentDate.getTime() === contentDate.getTime()) {
-              let unityIndex = unities
-                .map((d) => d['id'])
-                .indexOf(contentRecord.unity_id);
-              if (unityIndex < 0) {
-                unities.push({
-                  id: contentRecord.unity_id,
-                  name: contentRecord.unity_name,
-                  filledRecords: 0,
-                  totalRecords: 0,
-                  unityItems: [],
-                });
-                unityIndex = unities.length - 1;
-              }
+            // TODO retirar comentário após testes
+            // if (currentDate.getTime() !== contentDate.getTime()) {
+            //   return;
+            // }
 
-              unities[unityIndex].filledRecords++;
-              unities[unityIndex].totalRecords++;
-              unities[unityIndex].unityItems.push({
-                discipline_id: contentRecord.discipline_id,
-                classroom_id: contentRecord.classroom_id,
-                grade_id: contentRecord.grade_id,
-                description: contentRecord.description,
-                classroom_name: contentRecord.classroom_name,
-                contents: contentRecord.contents,
-                plannedContents: [],
-                type: 'contentRecord',
+            let unityIndex = unities
+              .map((d) => d['id'])
+              .indexOf(contentRecord.unity_id);
+
+            if (unityIndex < 0) {
+              unities.push({
+                id: contentRecord.unity_id,
+                name: contentRecord.unity_name,
+                filledRecords: 0,
+                totalRecords: 0,
+                unityItems: [],
               });
+              unityIndex = unities.length - 1;
             }
+
+            unities[unityIndex].filledRecords++;
+            unities[unityIndex].totalRecords++;
+            unities[unityIndex].unityItems.push({
+              discipline_id: contentRecord.discipline_id,
+              classroom_id: contentRecord.classroom_id,
+              grade_id: contentRecord.grade_id,
+              description: contentRecord.description,
+              classroom_name: contentRecord.classroom_name,
+              contents: contentRecord.contents,
+              plannedContents: [],
+              type: 'contentRecord',
+            });
           });
 
         this.processLessonPlans(unities, currentDate);
