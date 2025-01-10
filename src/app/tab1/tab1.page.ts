@@ -17,7 +17,6 @@ import { OfflineDataPersisterService } from '../services/offline_data_persistenc
   standalone: false,
 })
 export class Tab1Page implements OnInit {
-  shownGroup: any = null;
   lastFrequencyDays: any = null;
   emptyFrequencies: boolean = false;
   currentDate: Date = new Date();
@@ -66,7 +65,6 @@ export class Tab1Page implements OnInit {
   }
 
   loadFrequencies() {
-    this.shownGroup = null;
     this.currentDate = this.utilsService.getCurrentDate();
     this.currentDate.setHours(0, 0, 0, 0);
     this.storage.get('frequencies').then((frequencies) => {
@@ -97,14 +95,6 @@ export class Tab1Page implements OnInit {
         this.router.navigate(['/frequency']);
       });
     });
-  }
-
-  toggleGroup(group: any) {
-    this.shownGroup = this.isGroupShown(group) ? null : group;
-  }
-
-  isGroupShown(group: any) {
-    return this.shownGroup === group;
   }
 
   private lastTenFrequencies(frequencies: any[]) {
