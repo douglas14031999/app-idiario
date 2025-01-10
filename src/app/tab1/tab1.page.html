@@ -25,12 +25,12 @@
         </div>
       </div>
       <div *ngIf="frequencyDay.exists">
-        <h3 class="date-header">{{frequencyDay.format_date}}</h3>
+        <h3 class="date-header">{{ frequencyDay.format_date }}</h3>
         <ion-accordion-group>
           <ion-accordion
             *ngFor="let unity of frequencyDay.unities; let y = index"
           >
-            <ion-item slot="header" color="light">
+            <ion-item slot="header">
               <ion-label>{{ unity.name }}</ion-label>
             </ion-item>
             <div class="ion-padding" slot="content">
@@ -38,11 +38,10 @@
                 *ngFor="let classroomDiscipline of unity.classroomDisciplines;"
                 (click)="editFrequency(unity.id, classroomDiscipline.classroomId, frequencyDay.date, classroomDiscipline.disciplineId, classroomDiscipline.classNumbers)"
               >
-                <ion-label
-                  class="view-eye"
-                >
+                <ion-label class="view-eye">
                   <span *ngIf="classroomDiscipline.disciplineId">
-                    {{ classroomDiscipline.disciplineName }} - {{ classroomDiscipline.classroomName }}
+                    {{ classroomDiscipline.disciplineName }} - {{
+                    classroomDiscipline.classroomName }}
                   </span>
                   <span *ngIf="!classroomDiscipline.disciplineId">
                     {{ classroomDiscipline.classroomName }}

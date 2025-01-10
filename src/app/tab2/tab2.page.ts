@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from '@ionic/angular';
 import { MessagesService } from '../services/messages';
 import { SyncProvider } from '../services/sync';
 import { UtilsService } from '../services/utils';
@@ -7,6 +6,7 @@ import { forkJoin } from 'rxjs';
 import { StorageService } from '../services/storage.service';
 import { NewContentRecordFormPage } from '../new-content-record-form/new-content-record-form.page';
 import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
@@ -23,8 +23,6 @@ export class Tab2Page {
   classrooms: Array<any> = [];
 
   constructor(
-    public navCtrl: NavController,
-    //public navParams: NavParams,
     private sync: SyncProvider,
     private storage: StorageService,
     private utilsService: UtilsService,
