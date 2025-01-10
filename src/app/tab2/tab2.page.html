@@ -17,45 +17,35 @@
     <p>Nenhum conteúdo encontrado.</p>
   </div>
   <div *ngFor="let contentDay of contentDays; let i = index">
-    <h3 class="content-day">{{ contentDay.format_date }}</h3>
-    <div>
-      <ion-list *ngFor="let unity of contentDay.unities; let y = index">
-        <ion-item
-          lines="none"
-          (click)="toggleGroup(i + '' + y)"
-          [class.active]="isGroupShown(i + '' + y)"
-        >
-          <p>{{ unity.name }}</p>
+    <h3 class="date-header">{{ contentDay.format_date }}</h3>
+    <ion-accordion-group>
+      <ion-accordion *ngFor="let unity of contentDay.unities; let y = index">
+        <ion-item slot="header">
+          <ion-label>{{ unity.name }}</ion-label>
         </ion-item>
-
-        <ion-item
-          *ngIf="isGroupShown(i + '' + y)"
-          class="accordion-list-item accordion-list-new-content-record"
-        >
-          <ion-button
-            expand="block"
-            fill="clear"
-            (click)="newContentRecordForm(contentDay.date, unity.id)"
-          >
-            <ion-icon slot="start" name="add-circle-outline"></ion-icon>
-            Adicionar novo conteúdo
-          </ion-button>
-        </ion-item>
-
-        <div *ngFor="let unityItem of unity.unityItems;">
-          <ion-item
-            *ngIf="isGroupShown(i + '' + y)"
-            (click)="openContentRecordForm(contentDay.date, unity.id, unityItem.discipline_id, unityItem.classroom_id, unityItem.grade_id, unityItem.description, unityItem.classroom_name, unity.name)"
-            class="accordion-list-item accordion-list-content-record-index"
-          >
-            <p>{{ unityItem.description }} - {{ unityItem.classroom_name }}</p>
-            <ion-note slot="end"
-              >{{ unityItem.contents.length }}/{{
-              unityItem.uniqueContents.length }}</ion-note
+        <div class="ion-padding" slot="content">
+          <ion-item>
+            <ion-button
+              fill="clear"
+              size="default"
+              (click)="newContentRecordForm(contentDay.date, unity.id)"
             >
+              <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+              Adicionar novo conteúdo
+            </ion-button>
+          </ion-item>
+          <ion-item
+            *ngFor="let item of unity.unityItems;"
+            (click)="openContentRecordForm(contentDay.date, unity.id, item.discipline_id, item.classroom_id, item.grade_id, item.description, item.classroom_name, unity.name)"
+          >
+            <p>{{ item.description }} - {{ item.classroom_name }}</p>
+
+            <ion-badge slot="end">
+              {{ item.contents.length }}/{{ item.uniqueContents.length }}
+            </ion-badge>
           </ion-item>
         </div>
-      </ion-list>
-    </div>
+      </ion-accordion>
+    </ion-accordion-group>
   </div>
 </ion-content>
