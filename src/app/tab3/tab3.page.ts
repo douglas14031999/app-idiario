@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController } from '@ionic/angular';
-import { Storage } from '@ionic/storage-angular'; // Atualizado para Ionic Storage Angular
+import { Storage } from '@ionic/storage-angular';
 import { SyncProvider } from '../services/sync';
 
 @Component({
@@ -10,8 +10,7 @@ import { SyncProvider } from '../services/sync';
   standalone: false,
 })
 export class Tab3Page {
-  shownGroup: any = null; // Ajustado para tipagem adequada
-  unities: any[] = []; // Ajustado para tipagem adequada
+  unities: any[] = [];
 
   constructor(
     private navCtrl: NavController,
@@ -19,7 +18,6 @@ export class Tab3Page {
     private storage: Storage,
   ) {}
   ngOnInit(): void {
-    //throw new Error('Method not implemented.');
     this.updateLessonPlans();
   }
 
@@ -65,22 +63,10 @@ export class Tab3Page {
     }
   }
 
-  toggleGroup(group: any) {
-    // Ajustado para tipagem adequada
-    this.shownGroup = this.isGroupShown(group) ? null : group;
-  }
-
-  isGroupShown(group: any): boolean {
-    // Ajustado para tipagem adequada
-    return this.shownGroup === group;
-  }
-
   openDetail(lessonPlanId: number) {
     // Ajustado para tipagem adequada
     this.navCtrl.navigateForward('/lesson-plan-details', {
       state: { lessonPlanId },
     }); // Atualizado para navigateForward
   }
-
-  newFrequency() {}
 }
