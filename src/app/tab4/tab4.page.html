@@ -10,34 +10,27 @@
 </ion-header>
 
 <ion-content class="page-content">
-  <div *ngIf="unities.length && unities[0].teachingPlans.length">
-    <ion-list class="accordion-list" *ngFor="let unity of unities; let i=index">
-      <ion-list-header
-        (click)="toggleGroup(i)"
-        [ngClass]="{active: isGroupShown(i)}"
-      >
-        <p class="unity_name">{{unity.name}}</p>
-      </ion-list-header>
-
-      <div *ngFor="let teachingPlan of unity.teachingPlans;">
-        <ion-item
-          *ngIf="isGroupShown(i)"
-          class="accordion-list-item accordion-list-item-teaching"
-        >
-          <p text-capitalize class="item-teaching-text">
-            {{teachingPlan.description}}
-          </p>
-          <a (click)="openDetail(teachingPlan.id)" class="text-view"
-            >Ver plano</a
-          >
-        </ion-item>
-      </div>
-    </ion-list>
-  </div>
   <div
     *ngIf="!unities.length || (unities[0] && !unities[0].teachingPlans.length)"
     class="empty-results"
   >
     <p>Nenhum plano de ensino foi encontrado.</p>
   </div>
+  <ion-accordion-group *ngFor="let unity of unities; let i = index">
+    <ion-accordion>
+      <ion-item slot="header">
+        <ion-label>{{ unity.name }}</ion-label>
+      </ion-item>
+      <div class="ion-padding" slot="content">
+        <ion-item
+          *ngFor="let teachingPlan of unity.teachingPlans;"
+          (click)="openDetail(teachingPlan.id)"
+        >
+          <ion-label class="view-eye">
+            {{ teachingPlan.description }}
+          </ion-label>
+        </ion-item>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
 </ion-content>
