@@ -23,9 +23,7 @@
           *ngFor="let lessonPlan of unity.lessonPlans;"
           (click)="openDetail(lessonPlan.id)"
         >
-          <ion-label class="view-eye">
-            {{ lessonPlan.description }}
-          </ion-label>
+          <ion-label class="view-eye"> {{ lessonPlan.description }} </ion-label>
         </ion-item>
       </div>
     </ion-accordion>
