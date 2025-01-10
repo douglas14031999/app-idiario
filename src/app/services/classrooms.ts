@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { ConnectionService } from './connection';
 import { ApiService } from './api';
 //import { Response } from '@angular/http';
-import { Storage } from '@ionic/storage';
+import { Storage } from '@ionic/storage-angular';
 import { Injectable } from '@angular/core';
 import { SchoolCalendarsService } from '../services/school_calendars';
 //import 'rxjs/Rx';

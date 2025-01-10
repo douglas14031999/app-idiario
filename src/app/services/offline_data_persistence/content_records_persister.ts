@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Storage } from '@ionic/storage';
+import { Storage } from '@ionic/storage-angular';
 import { forkJoin } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ContentRecordsService } from '../content_records';

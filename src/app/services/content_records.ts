@@ -1,7 +1,7 @@
 import { Observable, of } from 'rxjs';
 import { forkJoin } from 'rxjs';
 import { from } from 'rxjs';
-import { Storage } from '@ionic/storage';
+import { Storage } from '@ionic/storage-angular';
 import { Injectable } from '@angular/core';
 import { ApiService } from './api';
 import { ConnectionService } from './connection';

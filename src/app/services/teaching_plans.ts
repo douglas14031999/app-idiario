@@ -1,4 +1,4 @@
-import { Storage } from '@ionic/storage';
+import { Storage } from '@ionic/storage-angular';
 import { Injectable } from '@angular/core';
 //import 'rxjs/Rx';
 import { ApiService } from './api';
