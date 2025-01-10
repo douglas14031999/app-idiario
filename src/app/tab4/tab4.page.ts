@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams } from '@ionic/angular';
-import { Storage } from '@ionic/storage-angular'; // Atualizado para Ionic Storage Angular
+import { Storage } from '@ionic/storage-angular';
 import { SyncProvider } from '../services/sync';
 import { Router } from '@angular/router';
 
@@ -11,7 +10,6 @@ import { Router } from '@angular/router';
   standalone: false,
 })
 export class Tab4Page implements OnInit {
-  shownGroup: any = null;
   unities: any[] = [];
 
   constructor(
@@ -53,14 +51,6 @@ export class Tab4Page implements OnInit {
       }));
       return { name: unity.unity_name, teachingPlans: teachingPlans };
     });
-  }
-
-  toggleGroup(group: any) {
-    this.shownGroup = this.isGroupShown(group) ? null : group;
-  }
-
-  isGroupShown(group: any) {
-    return this.shownGroup === group;
   }
 
   // Atualize o método openDetail
