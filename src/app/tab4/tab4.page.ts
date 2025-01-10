@@ -42,17 +42,17 @@ export class Tab4Page implements OnInit {
     // TODO verificar
     // O objeto armazenado em localStorage é uma array de objetos com a chave `content_records`, possivelmente é um
     // efeito colateral da mudança da versão do Rails.
-    const all = teachingPlans.flatMap((result: { unities: any; }) => result.unities);
-
-    this.unities = all.map(
-      (unity: { plans: any[]; unity_name: any }) => {
-        const teachingPlans = unity.plans.map((plan) => ({
-          id: plan.id,
-          description: `${plan.description} - ${plan.grade_name}`,
-        }));
-        return { name: unity.unity_name, teachingPlans: teachingPlans };
-      },
+    const all = teachingPlans.flatMap(
+      (result: { unities: any }) => result.unities,
     );
+
+    this.unities = all.map((unity: { plans: any[]; unity_name: any }) => {
+      const teachingPlans = unity.plans.map((plan) => ({
+        id: plan.id,
+        description: `${plan.description} - ${plan.grade_name}`,
+      }));
+      return { name: unity.unity_name, teachingPlans: teachingPlans };
+    });
   }
 
   toggleGroup(group: any) {

@@ -10,15 +10,12 @@
 </ion-header>
 
 <ion-content class="page-content">
-  <div
-    *ngIf="unities.length"
-    class="accordion-list-border accordion-lessons-plan"
-  >
+  <div *ngIf="!unities.length" class="empty-results">
+    <p>Nenhum plano de aula foi encontrado.</p>
+  </div>
+  <div *ngIf="unities.length">
     <ion-list class="accordion-list" *ngFor="let unity of unities; let i=index">
       <ion-list-header
-        class="accordion-list-header accordion-list-header-lessons"
-        no-lines
-        text-wrap
         (click)="toggleGroup(i)"
         [ngClass]="{active: isGroupShown(i)}"
       >
@@ -37,8 +34,5 @@
         </ion-item>
       </div>
     </ion-list>
-  </div>
-  <div *ngIf="!unities.length" class="empty-results">
-    <p>Nenhum plano de aula foi encontrado.</p>
   </div>
 </ion-content>

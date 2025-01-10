@@ -25,6 +25,15 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
+.page-content {
+  background-color: #f0ebf8;
+  height: 100%;
+  --padding-start: 15px;
+  --padding-end: 15px;
+  --padding-bottom: 15px;
+  --padding-top: 15px;
+}
+
 .empty-results {
   width: auto;
   height: 70px;

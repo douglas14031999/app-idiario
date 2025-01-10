@@ -9,16 +9,10 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="page-content" padding>
-  <div
-    *ngIf="unities.length && unities[0].teachingPlans.length"
-    class="accordion-list-border accordion-teaching-plan"
-  >
+<ion-content class="page-content">
+  <div *ngIf="unities.length && unities[0].teachingPlans.length">
     <ion-list class="accordion-list" *ngFor="let unity of unities; let i=index">
       <ion-list-header
-        class="accordion-list-header accordion-list-header-teaching"
-        no-lines
-        text-wrap
         (click)="toggleGroup(i)"
         [ngClass]="{active: isGroupShown(i)}"
       >

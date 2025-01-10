@@ -60,7 +60,9 @@ export class Tab2Page {
       // TODO verificar
       // O objeto armazenado em localStorage é uma array de objetos com a chave `content_records`, possivelmente é um
       // efeito colateral da mudança da versão do Rails.
-      this.contentRecords = this.contentRecords.flatMap(record => record.content_records);
+      this.contentRecords = this.contentRecords.flatMap(
+        (record) => record.content_records,
+      );
 
       for (let i = numberOfDays; i > 0; i--) {
         let unities: Array<any> = [];
