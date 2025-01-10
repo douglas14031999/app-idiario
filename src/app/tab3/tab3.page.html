@@ -13,26 +13,21 @@
   <div *ngIf="!unities.length" class="empty-results">
     <p>Nenhum plano de aula foi encontrado.</p>
   </div>
-  <div *ngIf="unities.length">
-    <ion-list class="accordion-list" *ngFor="let unity of unities; let i=index">
-      <ion-list-header
-        (click)="toggleGroup(i)"
-        [ngClass]="{active: isGroupShown(i)}"
-      >
-        <p class="unity_name">{{unity.name}}</p>
-      </ion-list-header>
-
-      <div *ngFor="let lessonPlan of unity.lessonPlans;">
+  <ion-accordion-group *ngFor="let unity of unities; let i=index">
+    <ion-accordion>
+      <ion-item slot="header">
+        <ion-label>{{ unity.name }}</ion-label>
+      </ion-item>
+      <div class="ion-padding" slot="content">
         <ion-item
-          *ngIf="isGroupShown(i)"
-          class="accordion-list-item accordion-list-item-lesson"
+          *ngFor="let lessonPlan of unity.lessonPlans;"
+          (click)="openDetail(lessonPlan.id)"
         >
-          <p text-capitalize class="item-lesson-text">
-            {{lessonPlan.description}}
-          </p>
-          <a (click)="openDetail(lessonPlan.id)" class="text-view">Ver plano</a>
+          <ion-label class="view-eye">
+            {{ lessonPlan.description }}
+          </ion-label>
         </ion-item>
       </div>
-    </ion-list>
-  </div>
+    </ion-accordion>
+  </ion-accordion-group>
 </ion-content>
