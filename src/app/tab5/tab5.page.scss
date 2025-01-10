@@ -1,21 +1,12 @@
-.button-exit {
-  font-family: "NunitoBold", serif;
-  font-size: 16px;
-  background-color: #3fd4b4;
-}
-
-.button-exit:hover {
-  background-color: #3fd4b4;
-}
 .details-panel {
   background-color: white;
-  margin: 10px 10px 20px 10px;
   border: 1px solid #e7e6f0 !important;
   border-radius: 5px;
+  margin-bottom: 15px;
 }
 
 .detail {
-  padding: 15px;
+  padding: 0 15px;
   background-color: transparent;
   border-bottom: 1px solid #e5deec !important;
 }
@@ -24,5 +15,9 @@
   font-family: "NunitoBold", serif;
   font-size: 16px;
   color: #3f3d4d;
-  margin: 0 0 2px;
+  margin-bottom: 0;
+}
+
+.detail-text {
+  margin: 15px 0;
 }

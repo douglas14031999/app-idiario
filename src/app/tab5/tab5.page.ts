@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Storage } from '@ionic/storage-angular';
 import { Device } from '@capacitor/device';
-import { environment } from '../../environments/environment';
 import { StorageService } from '../services/storage.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-tab5',
@@ -13,12 +12,10 @@ import { StorageService } from '../services/storage.service';
 })
 export class Tab5Page implements OnInit {
   app_version!: string;
-  binary_version!: string;
-  minor_version!: string;
   public user_email!: string;
   public user_full_name!: string;
   public device!: any;
-  public carregou: boolean = false;
+  public loaded: boolean = false;
 
   constructor(
     private storage: StorageService,
@@ -35,7 +32,7 @@ export class Tab5Page implements OnInit {
     await Device.getInfo().then((res) => {
       if (res) {
         this.device = res;
-        this.carregou = true;
+        this.loaded = true;
       }
     });
   }
