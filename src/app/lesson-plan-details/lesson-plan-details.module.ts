@@ -1,12 +1,9 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
 import { IonicModule } from '@ionic/angular';
-
-import { LessonPlanDetailsPageRoutingModule } from './lesson-plan-details-routing.module';
-
 import { LessonPlanDetailsPage } from './lesson-plan-details.page';
+import { LessonPlanDetailsPageRoutingModule } from './lesson-plan-details-routing.module';
 
 @NgModule({
   imports: [
