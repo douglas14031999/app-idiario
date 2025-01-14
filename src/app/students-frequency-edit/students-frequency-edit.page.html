@@ -45,13 +45,15 @@
             class="frequency-checkbox-item"
             lines="none"
           >
-            <ion-label class="frequency-checkbox-item-label"
-              >{{ classes[i] }}ª</ion-label
-            >
-            <ion-checkbox
-              [(ngModel)]="frequency.present"
-              (ionChange)="updateFrequency(frequency, classes[i], $event.detail.checked)"
-            ></ion-checkbox>
+            <label>
+              <ion-checkbox
+                [(ngModel)]="frequency.present"
+                (ionChange)="updateFrequency(frequency, classes[i], $event.detail.checked)"
+                [attr.aria-label]="classes[i]"
+              >
+                {{ classes[i] }}ª a
+              </ion-checkbox>
+            </label>
           </ion-item>
         </ion-list>
 

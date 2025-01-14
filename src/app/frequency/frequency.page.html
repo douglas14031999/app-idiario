@@ -1,7 +1,6 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Nova frequência</ion-title>
-
     <ion-buttons slot="end">
       <ion-button (click)="goBack()">
         <ion-icon slot="icon-only" name="close"></ion-icon>
@@ -22,22 +21,18 @@
             (ionChange)="onChangeUnity()"
             required
           >
-            <ion-item
-              class="form-item-radio-item"
-              *ngFor="let unity of unities"
-              lines="none"
-            >
-              <ion-label>{{ unity.description }}</ion-label>
+            <ion-item *ngFor="let unity of unities">
               <ion-radio
                 [attr.aria-label]="unity.description"
-                slot="start"
                 value="{{ unity.id }}"
-              ></ion-radio>
+              >
+                {{ unity.description }}
+              </ion-radio>
             </ion-item>
           </ion-radio-group>
         </ion-list>
       </div>
-      <div *ngIf="emptyUnities" class="empty-results">
+      <div *ngIf="!unities.length" class="empty-results">
         <p>Nenhuma escola encontrada.</p>
       </div>
 
@@ -50,21 +45,19 @@
         <ion-list>
           <ion-radio-group
             [(ngModel)]="classroomId"
-            name="classroom"
             (ionChange)="onChangeClassroom()"
+            name="classroom"
             required
           >
             <ion-item
-              class="form-item-radio-item"
               *ngFor="let classroom of classrooms"
-              lines="none"
             >
-              <ion-label>{{ classroom.description }}</ion-label>
               <ion-radio
                 [attr.aria-label]="classroom.description"
-                slot="start"
                 value="{{ classroom.id }}"
-              ></ion-radio>
+              >
+                {{ classroom.description }}
+              </ion-radio>
             </ion-item>
           </ion-radio-group>
         </ion-list>
@@ -79,16 +72,14 @@
             required
           >
             <ion-item
-              class="form-item-radio-item"
               *ngFor="let discipline of disciplines"
-              lines="none"
             >
-              <ion-label>{{ discipline.description }}</ion-label>
               <ion-radio
                 [attr.aria-label]="discipline.description"
-                slot="start"
                 value="{{ discipline.id }}"
-              ></ion-radio>
+              >
+                {{ discipline.description }}
+              </ion-radio>
             </ion-item>
           </ion-radio-group>
         </ion-list>
@@ -100,36 +91,28 @@
           <ion-item
             class="form-item-check-item"
             *ngFor="let classCss of classes;"
-            lines="none"
           >
-            <ion-label class="form-item-check-item-label"
-              >{{ classCss }}ª</ion-label
-            >
             <ion-checkbox
-              style="visibility: hidden"
               [checked]="selectedClasses.indexOf(classCss) > -1"
               (ionChange)="updateSelectedClasses(classCss)"
             >
+              {{ classCss }}ª
             </ion-checkbox>
           </ion-item>
         </ion-list>
       </div>
-      <!-- date timer escolha data-->
+
       <div
-        class="form-item"
-        *ngIf="classrooms"
-        id="frequency-date"
-        style="display: none"
+        *ngIf="classrooms.length"
       >
         <h3 class="form-item-title">Data</h3>
-        <div class="date-frequency">
-          <ion-datetime
-            displayFormat="DD/MM/YYYY"
-            [(ngModel)]="date"
-            name="date"
-          ></ion-datetime>
-          <p class="text-mudar">mudar</p>
-        </div>
+        <ion-datetime
+          [(ngModel)]="date"
+          name="date"
+          locale="pt-BR"
+          presentation="date"
+          [max]="currentDate.toISOString()"
+        ></ion-datetime>
       </div>
 
       <ion-button
@@ -137,7 +120,7 @@
         type="submit"
         class="button-frequency"
         [disabled]="!f.valid || (!globalAbsence && !selectedClasses.length)"
-        *ngIf="!emptyUnities"
+        *ngIf="unities.length"
       >
         Carregar lista de frequência
       </ion-button>

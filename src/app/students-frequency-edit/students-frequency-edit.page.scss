@@ -103,13 +103,16 @@ ion-item.frequency-checkbox-item {
   width: 48px;
   margin-right: 5px;
 
-  &.item-checkbox-checked {
+  &:has(.checkbox-checked) {
     --background: #3fd4b4;
   }
 
   label {
     max-height: 40px;
     line-height: 40px;
+    display: flex;
+    align-items: center;
+    color: white
   }
 }
 
@@ -129,8 +132,7 @@ ion-item.frequency-checkbox-item {
 .detail-title {
   font-size: 16px;
   color: #3f3d4d;
-  margin: 0;
-  margin-bottom: 2px;
+  margin: 0 0 2px;
 }
 
 .checkbox-icon {
@@ -203,25 +205,18 @@ ion-label.frequency-checkbox-item-label {
   border: 0 !important;
 }
 
-.global-frequency-present.item.item-block.item-wp.item-radio.item-radio-checked
-  ion-label,
-.global-frequency-present.item.item-block.item-ios.item-radio.item-radio-checked
-  ion-label,
-.global-frequency-present.item.item-block.item-md.item-radio.item-radio-checked
-  ion-label,
-.global-frequency-absent.item.item-block.item-wp.item-radio.item-radio-checked
-  ion-label,
-.global-frequency-absent.item.item-block.item-ios.item-radio.item-radio-checked
-  ion-label,
-.global-frequency-absent.item.item-block.item-md.item-radio.item-radio-checked
-  ion-label {
+.global-frequency-present.item.item-block.item-wp.item-radio.item-radio-checked ion-label,
+.global-frequency-present.item.item-block.item-ios.item-radio.item-radio-checked ion-label,
+.global-frequency-present.item.item-block.item-md.item-radio.item-radio-checked ion-label,
+.global-frequency-absent.item.item-block.item-wp.item-radio.item-radio-checked ion-label,
+.global-frequency-absent.item.item-block.item-ios.item-radio.item-radio-checked ion-label,
+.global-frequency-absent.item.item-block.item-md.item-radio.item-radio-checked ion-label {
   color: white !important;
 }
 
 .global-frequency-absent {
   width: 90px;
   height: 40px;
-
   margin-left: 10px;
 }
 

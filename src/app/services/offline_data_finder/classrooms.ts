@@ -17,12 +17,16 @@ export class OfflineClassroomFinder {
           });
         }
 
+        // TODO refatorar
+        // Essa estrutura de dados de armazenamento em localstorage está péssima, rever.
         if (params.classroomId) {
           allClassrooms.forEach((d: { data: { id: any }[] }) => {
-            d.data.forEach((classroom: { id: any }) => {
-              if (classroom.id == params.classroomId) {
-                classrooms.push(classroom);
-              }
+            d.data.forEach((classroom: any) => {
+              classroom.forEach((c:  { id: any }) => {
+                if (c.id == params.classroomId) {
+                  classrooms.push(c);
+                }
+              })
             });
           });
         }

@@ -39,15 +39,14 @@ export class FrequencyPage implements OnInit {
   classrooms: Classroom[] = [];
   classroomId: number;
   date: any;
+  currentDate: Date = new Date();
   globalAbsence = true;
   disciplines: any;
   disciplineId!: number | undefined;
   classes: any;
   selectedClasses: any[] = [];
-  emptyUnities = true;
 
   constructor(
-    private unitiesService: UnitiesService,
     private classroomsService: ClassroomsService,
     private auth: AuthService,
     private loadingCtrl: LoadingController,
@@ -55,14 +54,9 @@ export class FrequencyPage implements OnInit {
     private examRulesService: ExamRulesService,
     private disciplinesService: DisciplinesService,
     private schoolCalendarsService: SchoolCalendarsService,
-    private navCtrl: NavController,
-    private connectionService: ConnectionService,
-    private navParams: NavParams,
-    private offlineDataPersister: OfflineDataPersisterService,
     private utilsService: UtilsService,
     private cdr: ChangeDetectorRef,
     private messages: MessagesService,
-    private route: ActivatedRoute,
     private storage: StorageService,
     private router: Router,
   ) {
@@ -76,7 +70,6 @@ export class FrequencyPage implements OnInit {
     }
     if (!this.unities || !this.unities.length) {
       this.unities = await this.storage.get('unities');
-      this.emptyUnities = !this.unities || this.unities.length === 0;
     }
   }
 
@@ -221,14 +214,13 @@ export class FrequencyPage implements OnInit {
               console.log(result);
               const navigationExtras = {
                 queryParams: {
-                  frequencies: result,
                   global: this.globalAbsence,
                 },
                 state: {
                   result,
-                  //callback: this.refreshPage.bind(this)
                 },
               };
+
               this.router.navigate(
                 ['/students-frequency-edit'],
                 navigationExtras,
