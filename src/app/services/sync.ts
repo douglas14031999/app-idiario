@@ -2,7 +2,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { Observable, from, interval, concat, forkJoin, of } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from './auth';
 import { ConnectionService } from './connection';
 import { UtilsService } from './utils';
@@ -277,5 +277,20 @@ export class SyncProvider {
           },
         });
     });
+  }
+
+  execute() {
+    return from(this.storage.get('user')).pipe(
+      tap(() => this.startSyncProcess()),
+      switchMap((user) => this.offlineDataPersister.persist(user)),
+      tap(() => {
+        this.completeSync().then(() => {});
+        this.setSyncDate();
+      }),
+      catchError((err) => {
+        this.handleError(err.message).then(() => {});
+        throw err;
+      }),
+    );
   }
 }

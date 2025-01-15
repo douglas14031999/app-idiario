@@ -13,10 +13,10 @@
 </ion-header>
 
 <ion-content class="page-content">
-  <div *ngIf="emptyFrequencies" class="empty-results">
+  <div *ngIf="lastFrequencyDays.length === 0" class="empty-results">
     <p>Nenhuma frequência encontrada.</p>
   </div>
-  <div *ngIf="!emptyFrequencies">
+  <div *ngIf="lastFrequencyDays.length">
     <div *ngFor="let frequencyDay of lastFrequencyDays; let i = index">
       <div *ngIf="i === 0 && !frequencyDay.exists">
         <h3 class="date-header">{{ frequencyDay.format_date }}</h3>

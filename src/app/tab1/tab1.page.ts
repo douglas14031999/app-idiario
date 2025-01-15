@@ -8,7 +8,6 @@ import { MessagesService } from '../services/messages';
 import { StorageService } from '../services/storage.service';
 import { SyncProvider } from '../services/sync';
 import { UtilsService } from '../services/utils';
-import { OfflineDataPersisterService } from '../services/offline_data_persistence/offline_data_persister';
 
 @Component({
   selector: 'app-tab1',
@@ -17,10 +16,8 @@ import { OfflineDataPersisterService } from '../services/offline_data_persistenc
   standalone: false,
 })
 export class Tab1Page implements OnInit {
-  lastFrequencyDays: any = null;
-  emptyFrequencies: boolean = false;
+  lastFrequencyDays: any = [];
   currentDate: Date = new Date();
-  frequenciesLoaded: boolean = false;
   private loadingSync!: HTMLIonLoadingElement;
 
   constructor(
@@ -33,7 +30,6 @@ export class Tab1Page implements OnInit {
     private storage: StorageService,
     private messages: MessagesService,
     private global: GlobalFrequenciesPersisterService,
-    private offlineDataPersister: OfflineDataPersisterService,
   ) {}
 
   async ngOnInit() {
@@ -52,49 +48,15 @@ export class Tab1Page implements OnInit {
     // } else {
     //   await this.router.navigate(['/sign-in']);
     // }
+    await this.sync.isSyncDelayed();
   }
 
-  ionViewWillEnter() {
-    // if (
-    //   !this.frequenciesLoaded &&
-    //   (!this.currentDate || this.router.url.includes('frequency'))
-    // ) {
-    //   this.loadFrequencies();
-    // }
-    // this.frequenciesLoaded = false;
+  async ionViewWillEnter() {
+    console.log('ionViewWillEnter');
   }
 
-  loadFrequencies() {
-    this.currentDate = this.utilsService.getCurrentDate();
-    this.currentDate.setHours(0, 0, 0, 0);
-    this.storage.get('frequencies').then((frequencies) => {
-      if (frequencies) {
-        this.lastFrequencyDays = this.lastTenFrequencies(
-          frequencies.daily_frequencies,
-        );
-        this.emptyFrequencies = false;
-      } else {
-        this.emptyFrequencies = true;
-        this.currentDate = new Date();
-      }
-    });
-  }
-
-  newFrequency() {
-    this.utilsService.hasAvailableStorage().then(async (available) => {
-      if (!available) {
-        await this.messages.showError(
-          this.messages.insuficientStorageErrorMessage(
-            'lançar novas frequências',
-          ),
-        );
-        return;
-      }
-
-      this.storage.get('unities').then((unities) => {
-        this.router.navigate(['/frequency']);
-      });
-    });
+  async newFrequency() {
+    await this.router.navigate(['/frequency']);
   }
 
   private lastTenFrequencies(frequencies: any[]) {
@@ -111,6 +73,7 @@ export class Tab1Page implements OnInit {
         exists: frequenciesOfDay.length > 0,
         unities: this.unitiesOfFrequency(frequenciesOfDay),
       });
+
       this.currentDate.setDate(this.currentDate.getDate() - 1);
     }
 
@@ -192,42 +155,28 @@ export class Tab1Page implements OnInit {
     });
   }
 
-  loadMoreFrequencies() {
-    this.utilsService.hasAvailableStorage().then(async (available) => {
-      if (!available) {
-        await this.messages.showError(
-          this.messages.insuficientStorageErrorMessage(
-            'carregar mais frequências',
-          ),
-        );
-        return;
-      }
-
-      this.loadingSync = await this.loadingCtrl.create({
-        message: 'Carregando...',
-      });
-
-      await this.loadingSync.present();
-
-      this.storage.get('frequencies').then((frequencies) => {
-        if (frequencies) {
-          if (!this.lastFrequencyDays) {
-            this.lastFrequencyDays = [];
-          }
-
-          const newFrequencies = this.lastTenFrequencies(
-            frequencies.daily_frequencies,
-          );
-
-          if (newFrequencies.length > 0) {
-            this.lastFrequencyDays =
-              this.lastFrequencyDays.concat(newFrequencies);
-          }
-        }
-
-        this.loadingSync.dismiss();
-      });
+  async loadMoreFrequencies() {
+    this.loadingSync = await this.loadingCtrl.create({
+      message: 'Carregando...',
     });
+
+    console.log('loadMoreFrequencies');
+
+    await this.loadingSync.present();
+
+    const frequencies = await this.storage.get('frequencies');
+
+    if (frequencies) {
+      const newFrequencies = this.lastTenFrequencies(
+        frequencies.daily_frequencies,
+      );
+
+      if (newFrequencies.length > 0) {
+        this.lastFrequencyDays = this.lastFrequencyDays.concat(newFrequencies);
+      }
+    }
+
+    await this.loadingSync.dismiss();
   }
 
   async editFrequency(
@@ -286,20 +235,8 @@ export class Tab1Page implements OnInit {
   }
 
   async doRefresh() {
-    const user = await this.storage.get('user');
-
-    await this.sync.startSyncProcess();
-
-    this.offlineDataPersister.persist(user).subscribe({
-      next: () => {
-        this.sync.completeSync();
-      },
-      error: (err: any) => {
-        this.sync.handleError(err.message);
-      },
+    this.sync.execute().subscribe(() => {
+      this.loadMoreFrequencies();
     });
-    // this.sync.syncAll().subscribe((res) => {
-    //   this.loadFrequencies();
-    // });
   }
 }
