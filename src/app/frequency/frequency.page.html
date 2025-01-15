@@ -49,9 +49,7 @@
             name="classroom"
             required
           >
-            <ion-item
-              *ngFor="let classroom of classrooms"
-            >
+            <ion-item *ngFor="let classroom of classrooms">
               <ion-radio
                 [attr.aria-label]="classroom.description"
                 value="{{ classroom.id }}"
@@ -71,9 +69,7 @@
             name="discipline"
             required
           >
-            <ion-item
-              *ngFor="let discipline of disciplines"
-            >
+            <ion-item *ngFor="let discipline of disciplines">
               <ion-radio
                 [attr.aria-label]="discipline.description"
                 value="{{ discipline.id }}"
@@ -102,9 +98,7 @@
         </ion-list>
       </div>
 
-      <div
-        *ngIf="classrooms.length"
-      >
+      <div *ngIf="classrooms.length">
         <h3 class="form-item-title">Data</h3>
         <ion-datetime
           [(ngModel)]="date"

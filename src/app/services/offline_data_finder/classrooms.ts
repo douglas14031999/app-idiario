@@ -22,11 +22,11 @@ export class OfflineClassroomFinder {
         if (params.classroomId) {
           allClassrooms.forEach((d: { data: { id: any }[] }) => {
             d.data.forEach((classroom: any) => {
-              classroom.forEach((c:  { id: any }) => {
+              classroom.forEach((c: { id: any }) => {
                 if (c.id == params.classroomId) {
                   classrooms.push(c);
                 }
-              })
+              });
             });
           });
         }

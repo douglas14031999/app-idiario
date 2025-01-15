@@ -112,7 +112,7 @@ ion-item.frequency-checkbox-item {
     line-height: 40px;
     display: flex;
     align-items: center;
-    color: white
+    color: white;
   }
 }
 
@@ -205,12 +205,18 @@ ion-label.frequency-checkbox-item-label {
   border: 0 !important;
 }
 
-.global-frequency-present.item.item-block.item-wp.item-radio.item-radio-checked ion-label,
-.global-frequency-present.item.item-block.item-ios.item-radio.item-radio-checked ion-label,
-.global-frequency-present.item.item-block.item-md.item-radio.item-radio-checked ion-label,
-.global-frequency-absent.item.item-block.item-wp.item-radio.item-radio-checked ion-label,
-.global-frequency-absent.item.item-block.item-ios.item-radio.item-radio-checked ion-label,
-.global-frequency-absent.item.item-block.item-md.item-radio.item-radio-checked ion-label {
+.global-frequency-present.item.item-block.item-wp.item-radio.item-radio-checked
+  ion-label,
+.global-frequency-present.item.item-block.item-ios.item-radio.item-radio-checked
+  ion-label,
+.global-frequency-present.item.item-block.item-md.item-radio.item-radio-checked
+  ion-label,
+.global-frequency-absent.item.item-block.item-wp.item-radio.item-radio-checked
+  ion-label,
+.global-frequency-absent.item.item-block.item-ios.item-radio.item-radio-checked
+  ion-label,
+.global-frequency-absent.item.item-block.item-md.item-radio.item-radio-checked
+  ion-label {
   color: white !important;
 }
 
