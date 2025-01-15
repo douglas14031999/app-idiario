@@ -26,10 +26,9 @@ export class Tab3Page {
     await this.updateLessonPlans();
   }
 
-  doRefresh(event: any) {
-    // Adicionado tipo para event
-    this.sync.syncAll().subscribe((res) => {
-      this.updateLessonPlans().finally(() => event.target.complete()); // Completa o evento de refresh
+  doRefresh() {
+    this.sync.execute().subscribe({
+      next: () => this.updateLessonPlans(),
     });
   }
 

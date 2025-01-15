@@ -307,6 +307,8 @@ export class Tab2Page {
   }
 
   doRefresh() {
-    this.sync.syncAll().subscribe(() => this.loadContentDays());
+    this.sync.execute().subscribe({
+      next: () => this.loadContentDays(),
+    });
   }
 }

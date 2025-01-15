@@ -95,37 +95,26 @@ export class SignInPage implements OnInit {
 
     await loading.present();
 
-    // TODO modificar o uso do método
-    this.auth.signIn(credential, password).subscribe(
-      (user: User) => {
+    this.auth.signIn(credential, password).subscribe({
+      next: (user: User) => {
         if (user) {
           this.auth.setCurrentUser(user);
-          this.sync.startSyncProcess();
-
-          this.offlineDataPersister.persist(user).subscribe({
-            next: () => {
-              this.sync.completeSync();
-            },
-            error: (err: any) => {
-              this.sync.handleError(err.message);
-            },
-          });
-
+          this.sync.execute().subscribe();
           this.router.navigate([''], { queryParams: user });
         } else {
           this.anyError = true;
           this.errorMessage = ' ';
         }
       },
-      (error: any) => {
+      error: (error: any) => {
         console.log(error);
         this.anyError = true;
         this.errorMessage = 'Não foi possível efetuar login.';
       },
-      () => {
+      complete: () => {
         loading.dismiss();
       },
-    );
+    });
   }
 
   greetingText() {

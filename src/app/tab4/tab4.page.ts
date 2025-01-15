@@ -25,10 +25,9 @@ export class Tab4Page implements OnInit {
     this.updateTeachingPlans();
   }
 
-  doRefresh(event: any) {
-    this.sync.syncAll().subscribe(() => {
-      this.updateTeachingPlans();
-      event.target.complete(); // Finaliza a ação de refresh
+  doRefresh() {
+    this.sync.execute().subscribe({
+      next: () => this.updateTeachingPlans(),
     });
   }
 

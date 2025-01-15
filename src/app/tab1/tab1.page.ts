@@ -234,9 +234,9 @@ export class Tab1Page implements OnInit {
     });
   }
 
-  async doRefresh() {
-    this.sync.execute().subscribe(() => {
-      this.loadMoreFrequencies();
+  doRefresh() {
+    this.sync.execute().subscribe({
+      next: () => this.loadMoreFrequencies(),
     });
   }
 }
