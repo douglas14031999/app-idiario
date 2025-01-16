@@ -3,8 +3,6 @@ import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { AuthService } from '../services/auth';
 import { DailyFrequencyService } from '../services/daily_frequency';
-import { GlobalFrequenciesPersisterService } from '../services/offline_data_persistence/global_frequencies_persister';
-import { MessagesService } from '../services/messages';
 import { StorageService } from '../services/storage.service';
 import { SyncProvider } from '../services/sync';
 import { UtilsService } from '../services/utils';
@@ -28,31 +26,10 @@ export class Tab1Page implements OnInit {
     private auth: AuthService,
     private utilsService: UtilsService,
     private storage: StorageService,
-    private messages: MessagesService,
-    private global: GlobalFrequenciesPersisterService,
   ) {}
 
   async ngOnInit() {
-    // this.storage.set('dailyFrequencyStudentsToSync', []);
-    // const user = await this.storage.get('user');
-    // const classrooms = await this.storage.get('classrooms');
-    //
-    // // Na primeira vez que é feita a sincronização ainda não existe dados de classrooms e é retornado null, desta forma
-    // // as frequências já lançadas nunca são carregadas e precisa ser feito logout e novo login.
-    //
-    // if (user) {
-    //   await this.global.persist(user, classrooms);
-    //   this.loadFrequencies();
-    //   this.frequenciesLoaded = true;
-    //   await this.sync.isSyncDelayed();
-    // } else {
-    //   await this.router.navigate(['/sign-in']);
-    // }
     await this.sync.isSyncDelayed();
-  }
-
-  async ionViewWillEnter() {
-    console.log('ionViewWillEnter');
   }
 
   async newFrequency() {
@@ -86,7 +63,7 @@ export class Tab1Page implements OnInit {
 
   unitiesOfFrequency(frequencies: any[]) {
     if (!frequencies) {
-      return null;
+      return [];
     }
 
     const unities: { id: any; name: any; classroomDisciplines: any[] }[] = [];
@@ -160,8 +137,6 @@ export class Tab1Page implements OnInit {
       message: 'Carregando...',
     });
 
-    console.log('loadMoreFrequencies');
-
     await this.loadingSync.present();
 
     const frequencies = await this.storage.get('frequencies');
@@ -194,43 +169,35 @@ export class Tab1Page implements OnInit {
 
     await this.loadingSync.present();
 
-    this.auth.currentUser().subscribe((res) => {
-      const usuario = res;
-
+    this.auth.currentUser().subscribe((user) => {
       this.dailyFrequencyService
         .getStudents({
-          userId: usuario.id,
-          teacherId: usuario.teacher_id,
+          userId: user.id,
+          teacherId: user.teacher_id,
           unityId: unityId,
           classroomId: classroomId,
           frequencyDate: stringDate,
           disciplineId: disciplineId,
           classNumbers: classes ? classes.join() : '',
         })
-        .subscribe(
-          (result: any) => {
-            // TODO Lógica diferente
+        .subscribe({
+          next: (result: any) => {
             const navigationExtras = {
               queryParams: {
-                //frequencies: result,
                 global: globalAbsence,
               },
               state: {
                 result,
               },
             };
+
             this.router.navigate(
               ['/students-frequency-edit'],
               navigationExtras,
             );
           },
-          (error: any) => {
-            console.log(error);
-          },
-          () => {
-            this.loadingSync.dismiss();
-          },
-        );
+          complete: () => this.loadingSync.dismiss(),
+        });
     });
   }
 
