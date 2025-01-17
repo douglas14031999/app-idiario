@@ -3,7 +3,7 @@
     <ion-title>Novo conteúdo</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="goBack()">
-        <ion-icon name="close"></ion-icon>
+        <ion-icon slot="icon-only" name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -14,7 +14,11 @@
     <p>Nenhuma escola encontrada.</p>
   </div>
 
-  <form *ngIf="unities.length" #f="ngForm" (ngSubmit)="submitNewContentRecord(f)">
+  <form
+    *ngIf="unities.length"
+    #f="ngForm"
+    (ngSubmit)="submitNewContentRecord(f)"
+  >
     <div class="form-frequency">
       <!-- Escolha da Escola -->
       <div class="form-item">
@@ -82,11 +86,7 @@
       </div>
 
       <!-- Botão de Avançar -->
-      <ion-button
-        expand="block"
-        type="submit"
-        [disabled]="!f.valid"
-      >
+      <ion-button expand="block" type="submit" [disabled]="!f.valid">
         Avançar
       </ion-button>
     </div>

@@ -11,9 +11,7 @@
       src="assets/img/students-frequency-edit/ilustraFrequencia@2x.png"
     />
     <p class="title-students-frequency-edit">Lista de Frequência</p>
-    <p class="unity-name-students-frequency-edit">
-      {{ unityName }}
-    </p>
+    <p class="unity-name-students-frequency-edit">{{ unityName }}</p>
     <p class="date-students-frequency-edit">{{ formatDate }}</p>
   </div>
 </ion-header>
@@ -64,20 +62,14 @@
             (ionChange)="updateFrequency(student)"
             class="frequency-checkbox"
           >
-            <ion-item
-              class="frequency-item"
-              lines="none"
-            >
+            <ion-item class="frequency-item" lines="none">
               <label>
                 <ion-radio [value]="true" class="global-frequency-present">
                   Presente
                 </ion-radio>
               </label>
             </ion-item>
-            <ion-item
-              class="frequency-item"
-              lines="none"
-            >
+            <ion-item class="frequency-item" lines="none">
               <label>
                 <ion-radio [value]="false" class="global-frequency-absent">
                   Faltou

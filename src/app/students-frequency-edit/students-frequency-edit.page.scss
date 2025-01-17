@@ -162,6 +162,12 @@ ion-item.frequency-item {
   margin: 0 0 2px;
 }
 
+.detail-text {
+  font-size: 14px;
+  color: #3f3d4d;
+  margin: 0;
+}
+
 .checkbox-icon {
   visibility: hidden;
   position: absolute;
@@ -231,12 +237,18 @@ ion-label.frequency-item-label {
   border: 0 !important;
 }
 
-.global-frequency-present.item.item-block.item-wp.item-radio.item-radio-checked ion-label,
-.global-frequency-present.item.item-block.item-ios.item-radio.item-radio-checked ion-label,
-.global-frequency-present.item.item-block.item-md.item-radio.item-radio-checked ion-label,
-.global-frequency-absent.item.item-block.item-wp.item-radio.item-radio-checked ion-label,
-.global-frequency-absent.item.item-block.item-ios.item-radio.item-radio-checked ion-label,
-.global-frequency-absent.item.item-block.item-md.item-radio.item-radio-checked ion-label {
+.global-frequency-present.item.item-block.item-wp.item-radio.item-radio-checked
+  ion-label,
+.global-frequency-present.item.item-block.item-ios.item-radio.item-radio-checked
+  ion-label,
+.global-frequency-present.item.item-block.item-md.item-radio.item-radio-checked
+  ion-label,
+.global-frequency-absent.item.item-block.item-wp.item-radio.item-radio-checked
+  ion-label,
+.global-frequency-absent.item.item-block.item-ios.item-radio.item-radio-checked
+  ion-label,
+.global-frequency-absent.item.item-block.item-md.item-radio.item-radio-checked
+  ion-label {
   color: white !important;
 }
 
