@@ -38,13 +38,8 @@ export class Tab5Page implements OnInit {
   }
 
   logout() {
-    this.storage
-      .clear()
-      .then((res) => {
-        console.log(res);
-      })
-      .finally(() => {
-        this.router.navigate(['/sign-in']);
-      });
+    this.storage.clear().finally(async () => {
+      await this.router.navigate(['/sign-in']);
+    });
   }
 }

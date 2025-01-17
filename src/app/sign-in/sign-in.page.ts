@@ -98,9 +98,12 @@ export class SignInPage implements OnInit {
     this.auth.signIn(credential, password).subscribe({
       next: (user: User) => {
         if (user) {
-          this.auth.setCurrentUser(user);
-          this.sync.execute().subscribe();
-          this.router.navigate([''], { queryParams: user });
+          this.auth.setCurrentUser(user).subscribe({
+            next: () => {
+              this.sync.execute().subscribe();
+              this.router.navigate([''], { queryParams: user });
+            },
+          });
         } else {
           this.anyError = true;
           this.errorMessage = ' ';
