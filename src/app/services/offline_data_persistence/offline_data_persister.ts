@@ -36,26 +36,24 @@ export class OfflineDataPersisterService {
     private connectionService: ConnectionService,
   ) {}
 
-  // TODO confirmar
-  // Entender se deve ser apagado o storage se o usuário for o mesmo, pois
-  // caso a sessão do usuário tenha se expirado, talvez os dados existentes
-  // ainda não tenham sido sincronizados
   private clearStorage(): void {
     this.storage.remove('classrooms').then();
     this.storage.remove('contentLessonPlans').then();
     this.storage.remove('contentRecords').then();
     this.storage.remove('disciplines').then();
     this.storage.remove('examRules').then();
+    this.storage.remove('frequencies').then();
+    this.storage.remove('lessonPlans').then();
     this.storage.remove('schoolCalendars').then();
-
-    // Não deve ser removida essas chaves senão os dados ainda não sincronizados serão apagados
-    // this.storage.remove('unities').then();
-    // this.storage.remove('frequencies').then();
-    // this.storage.remove('lessonPlans').then();
-    // this.storage.remove('teachingPlans').then();
+    this.storage.remove('teachingPlans').then();
+    this.storage.remove('unities').then();
   }
 
   persist(user: User): Observable<any> {
+    // Antes de uma sincronização ser executada é necessário limpar o storage
+    // para evitar que os dados sejam duplicados. Isso acontecia com as
+    // frequências que apareciam duplicadas pelo número de sincronizações
+    // feitas.
     if (this.connectionService.isOnline) {
       this.clearStorage();
     }
