@@ -92,7 +92,8 @@
   margin-bottom: 0;
 }
 
-ion-checkbox::part(container) {
+ion-checkbox::part(container),
+ion-radio::part(container) {
   display: none;
 }
 
@@ -133,6 +134,7 @@ ion-item.frequency-item {
     &:has(.global-frequency-present),
     &:has(.global-frequency-absent) {
       color: #3f3d4d;
+      margin: -10px 0 0 5px;
     }
     &:has(.radio-checked.global-frequency-present),
     &:has(.radio-checked.global-frequency-absent) {
