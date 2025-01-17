@@ -30,6 +30,7 @@ export class Tab1Page implements OnInit {
 
   async ngOnInit() {
     await this.sync.isSyncDelayed();
+    await this.loadMoreFrequencies();
   }
 
   async newFrequency() {
