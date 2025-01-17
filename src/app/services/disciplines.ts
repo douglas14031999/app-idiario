@@ -2,16 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, from } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Storage } from '@ionic/storage-angular';
-
 import { ConnectionService } from './connection';
 import { ApiService } from './api';
+import { StorageService } from './storage.service';
 
 @Injectable()
 export class DisciplinesService {
   constructor(
     private http: HttpClient,
-    private storage: Storage,
+    private storage: StorageService,
     private connection: ConnectionService,
     private api: ApiService,
   ) {}

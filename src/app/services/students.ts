@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Storage } from '@ionic/storage-angular';
 import { ApiService } from './api';
 import { HttpClient } from '@angular/common/http';
+import { StorageService } from './storage.service';
 
 @Injectable()
 export class StudentsService {
   constructor(
     private http: HttpClient,
-    private storage: Storage,
+    private storage: StorageService,
     private api: ApiService,
   ) {}
 

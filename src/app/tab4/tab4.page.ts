@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Storage } from '@ionic/storage-angular';
 import { SyncProvider } from '../services/sync';
 import { Router } from '@angular/router';
+import { StorageService } from '../services/storage.service';
 
 @Component({
   selector: 'app-tab4',
@@ -15,7 +15,7 @@ export class Tab4Page implements OnInit {
   constructor(
     private router: Router,
     private sync: SyncProvider,
-    private storage: Storage,
+    private storage: StorageService,
   ) {}
   ngOnInit(): void {
     this.updateTeachingPlans();

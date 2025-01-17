@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Storage } from '@ionic/storage-angular';
 import { Injectable } from '@angular/core';
 import { Observable, from, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { ApiService } from './api';
+import { StorageService } from './storage.service';
 import { User } from '../data/user.interface';
 
 @Injectable({
@@ -12,7 +12,7 @@ import { User } from '../data/user.interface';
 export class AuthService {
   constructor(
     private http: HttpClient,
-    private storage: Storage,
+    private storage: StorageService,
     private api: ApiService,
   ) {}
 

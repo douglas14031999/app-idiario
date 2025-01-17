@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from '@ionic/angular';
-import { Storage } from '@ionic/storage-angular';
 import { SyncProvider } from '../services/sync';
+import { StorageService } from '../services/storage.service';
 
 @Component({
   selector: 'app-tab3',
@@ -15,7 +15,7 @@ export class Tab3Page {
   constructor(
     private navCtrl: NavController,
     private sync: SyncProvider,
-    private storage: Storage,
+    private storage: StorageService,
   ) {}
   ngOnInit(): void {
     this.updateLessonPlans();

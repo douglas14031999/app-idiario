@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, from, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Storage } from '@ionic/storage-angular';
-
 import { OfflineUnityFinder } from './offline_data_finder/unities';
 import { OfflineClassroomFinder } from './offline_data_finder/classrooms';
 import { OfflineDisciplineFinder } from './offline_data_finder/disciplines';
@@ -11,12 +9,13 @@ import { StudentsService } from './students';
 import { ConnectionService } from './connection';
 import { ApiService } from './api';
 import { DailyFrequenciesSynchronizer } from './offline_data_synchronization/daily_frequencies_synchronizer';
+import { StorageService } from './storage.service';
 
 @Injectable()
 export class DailyFrequencyService {
   constructor(
     private http: HttpClient,
-    private storage: Storage,
+    private storage: StorageService,
     private connection: ConnectionService,
     private api: ApiService,
     private studentsService: StudentsService,

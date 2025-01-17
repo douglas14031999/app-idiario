@@ -1,15 +1,15 @@
 import { ApiService } from './../api';
 import { Observable, from, concat } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { Storage } from '@ionic/storage-angular';
 import { HttpClient } from '@angular/common/http';
+import { StorageService } from '../storage.service';
 
 @Injectable()
 export class ContentRecordsSynchronizer {
   constructor(
     private http: HttpClient,
     private api: ApiService,
-    private storage: Storage,
+    private storage: StorageService,
   ) {}
 
   public sync(contentRecords: any[], teacherId: number): Observable<any> {

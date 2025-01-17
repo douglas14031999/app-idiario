@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams } from '@ionic/angular';
 import { UtilsService } from '../services/utils';
-import { Storage } from '@ionic/storage-angular'; // Atualizado para Ionic Storage Angular
 import { ActivatedRoute } from '@angular/router';
+import { StorageService } from '../services/storage.service';
 
 @Component({
   selector: 'app-teaching-plan-details',
@@ -27,7 +27,7 @@ export class TeachingPlanDetailsPage implements OnInit {
     //public navCtrl: NavController,
     //public navParams: NavParams,
     private route: ActivatedRoute,
-    private storage: Storage,
+    private storage: StorageService,
     private utilsService: UtilsService,
   ) {}
   ngOnInit(): void {

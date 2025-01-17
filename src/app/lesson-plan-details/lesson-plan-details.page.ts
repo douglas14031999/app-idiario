@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { StorageService } from '../services/storage.service';
 import { UtilsService } from '../services/utils';
-
-import { Storage } from '@ionic/storage-angular';
 
 interface LessonPlan {
   id: number;
@@ -52,14 +51,13 @@ export class LessonPlanDetailsPage implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private storage: Storage,
+    private storage: StorageService,
     private utilsService: UtilsService,
   ) {}
 
   async ngOnInit() {
     const state = this.router.getCurrentNavigation()?.extras.state;
     this.lessonPlanId = state!['lessonPlanId'];
-    await this.storage.create(); // Necessário para inicializar o storage
     const lessonPlans: { unities: Unity[] } =
       await this.storage.get('lessonPlans');
     const details = this.getLessonPlanDetail(lessonPlans);
