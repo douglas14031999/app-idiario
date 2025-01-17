@@ -21,7 +21,6 @@ export class NewContentRecordFormPage implements OnInit {
   date: any;
   disciplines: any;
   disciplineId: number | null = null;
-  emptyUnities: boolean = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -41,8 +40,6 @@ export class NewContentRecordFormPage implements OnInit {
     const state = this.router.getCurrentNavigation()?.extras.state;
     if (state && state['unities']) {
       this.unities = state['unities'];
-      this.emptyUnities = false;
-      // Utilize o array de unities conforme necessário
     }
   }
 

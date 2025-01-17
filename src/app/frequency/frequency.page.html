@@ -12,7 +12,7 @@
 <ion-content class="page-content" id="frequency-page">
   <form #f="ngForm" (ngSubmit)="frequencyForm(f)">
     <div class="form-frequency">
-      <div class="form-item" *ngIf="unities">
+      <div class="form-item" *ngIf="unities.length">
         <h3 class="form-item-title">Qual a escola?</h3>
         <ion-list>
           <ion-radio-group

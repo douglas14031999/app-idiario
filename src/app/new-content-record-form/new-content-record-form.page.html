@@ -9,11 +9,15 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="page-content" padding>
-  <form #f="ngForm" (ngSubmit)="submitNewContentRecord(f)">
+<ion-content class="page-content">
+  <div *ngIf="unities.length === 0" class="empty-results">
+    <p>Nenhuma escola encontrada.</p>
+  </div>
+
+  <form *ngIf="unities.length" #f="ngForm" (ngSubmit)="submitNewContentRecord(f)">
     <div class="form-frequency">
       <!-- Escolha da Escola -->
-      <div class="form-item" *ngIf="unities && unities.length > 0">
+      <div class="form-item">
         <h3 class="form-item-title">Qual a escola?</h3>
         <ion-list>
           <ion-radio-group
@@ -28,11 +32,6 @@
             </ion-item>
           </ion-radio-group>
         </ion-list>
-      </div>
-
-      <!-- Mensagem de Escolas Vazia -->
-      <div *ngIf="emptyUnities" class="empty-results">
-        <p>Nenhuma escola encontrada.</p>
       </div>
 
       <!-- Escolha da Turma -->
@@ -87,7 +86,6 @@
         expand="block"
         type="submit"
         [disabled]="!f.valid"
-        *ngIf="!emptyUnities"
       >
         Avançar
       </ion-button>
