@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { StorageService } from '../services/storage.service';
 import { UtilsService } from '../services/utils';
 
@@ -42,7 +42,6 @@ export class LessonPlanDetailsPage implements OnInit {
   bibliography!: string;
   contents: any[] = [];
   knowledge_areas!: any;
-  period_date!: string;
   start_at!: Date;
   end_at!: Date;
   opinion!: string;
@@ -50,7 +49,6 @@ export class LessonPlanDetailsPage implements OnInit {
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute,
     private storage: StorageService,
     private utilsService: UtilsService,
   ) {}
@@ -58,8 +56,9 @@ export class LessonPlanDetailsPage implements OnInit {
   async ngOnInit() {
     const state = this.router.getCurrentNavigation()?.extras.state;
     this.lessonPlanId = state!['lessonPlanId'];
-    const lessonPlans: { unities: Unity[] } =
+    const lessonPlans: { unities: Unity[] }[] =
       await this.storage.get('lessonPlans');
+
     const details = this.getLessonPlanDetail(lessonPlans);
 
     if (details) {
@@ -88,21 +87,17 @@ export class LessonPlanDetailsPage implements OnInit {
     }
   }
 
-  getLessonPlanDetail(lessonPlans: {
-    unities: Unity[];
-  }): LessonPlan | undefined {
-    let response: LessonPlan | undefined;
-    lessonPlans.unities.forEach((unity: Unity) => {
-      unity.plans.forEach((plan: LessonPlan) => {
-        if (plan.id === this.lessonPlanId) {
-          response = plan;
-        }
-      });
-    });
-    return response;
+  // TODO refactor
+  // A estrutura de armazenamento em localstorage está péssima, deve ser
+  // problemas da atualização do Rails e precisa ser modificada.
+  getLessonPlanDetail(lessonPlans: any[]): LessonPlan | undefined {
+    return lessonPlans
+      .map(a => a.unities.flatMap((b: any) => b.plans))
+      .flatMap((c) => c)
+      .find((plan) => plan.id === this.lessonPlanId)
   }
 
   goBack() {
-    this.router.navigate(['/previous-page']); // Ajuste conforme necessário
+    this.router.navigate(['/previous-page']);
   }
 }

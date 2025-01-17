@@ -6,7 +6,6 @@
   </ion-toolbar>
   <div class="multiple-lines">
     <img
-      class="lessos-plan-img edit-img"
       src="assets/img/lesson-plan/ilustraPlanoAula@2x.png"
       alt="Lesson Plan"
     />
@@ -25,21 +24,21 @@
           *ngFor="let knowledge_area of knowledge_areas"
           class="contents-list-item"
         >
-          {{ "- " + knowledge_area.description }}
+          - {{ knowledge_area.description }}
         </li>
       </ul>
     </div>
     <div class="detail">
       <h3 class="detail-title">Período escolar</h3>
       <p class="detail-text">
-        {{ start_at | date: 'dd/MM/yyyy' }} a {{ end_at | date: 'dd/MM/yyyy' }}
+        {{ start_at | date: 'dd/MM/yyyy' }} à {{ end_at | date: 'dd/MM/yyyy' }}
       </p>
     </div>
     <div class="detail">
       <h3 class="detail-title">Conteúdos</h3>
       <ul class="contents-list">
         <li *ngFor="let content of contents" class="contents-list-item">
-          {{ "- " + content.description }}
+          - {{ content.description }}
         </li>
       </ul>
     </div>
@@ -51,7 +50,7 @@
       <h3 class="detail-title">Objetivos</h3>
       <ul class="contents-list">
         <li *ngFor="let objective of objectives" class="contents-list-item">
-          {{ "- " + objective.description }}
+          - {{ objective.description }}
         </li>
       </ul>
     </div>
