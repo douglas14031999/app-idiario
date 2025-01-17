@@ -34,10 +34,10 @@ export class NewContentRecordFormPage implements OnInit {
     this.route.queryParams.subscribe((params) => {
       this.unityId = params['unityId'];
       this.date = params['date'];
-      // Use os parâmetros conforme necessário
     });
 
     const state = this.router.getCurrentNavigation()?.extras.state;
+
     if (state && state['unities']) {
       this.unities = state['unities'];
     }

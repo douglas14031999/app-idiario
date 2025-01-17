@@ -4,7 +4,6 @@ import { SyncProvider } from '../services/sync';
 import { UtilsService } from '../services/utils';
 import { forkJoin } from 'rxjs';
 import { StorageService } from '../services/storage.service';
-import { NewContentRecordFormPage } from '../new-content-record-form/new-content-record-form.page';
 import { Router } from '@angular/router';
 
 @Component({
