@@ -1,13 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
 import { TeachingPlanDetailsPage } from './teaching-plan-details.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: TeachingPlanDetailsPage
-  }
+    component: TeachingPlanDetailsPage,
+  },
 ];
 
 @NgModule({

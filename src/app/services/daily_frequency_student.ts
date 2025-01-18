@@ -15,8 +15,8 @@ export class DailyFrequencyStudentService {
     private http: HttpClient,
     private storage: Storage,
     private api: ApiService,
-    private connection: ConnectionService
-  ){}
+    private connection: ConnectionService,
+  ) {}
 
   obsQueue(frequency: any): Observable<any> {
     if (!this.trigger || this.trigger.closed) {
@@ -24,10 +24,10 @@ export class DailyFrequencyStudentService {
       return this.createObservable(this.trigger, frequency);
     } else {
       const lastTrigger = this.trigger;
-      const newTrigger = this.trigger = new Subject<any>();
+      const newTrigger = (this.trigger = new Subject<any>());
       return lastTrigger.pipe(
         last(),
-        mergeMap(() => this.createObservable(newTrigger, frequency))
+        mergeMap(() => this.createObservable(newTrigger, frequency)),
       );
     }
   }
@@ -37,7 +37,7 @@ export class DailyFrequencyStudentService {
       finalize(() => {
         trigger.next(frequency);
         trigger.complete();
-      })
+      }),
     );
   }
 
@@ -46,16 +46,19 @@ export class DailyFrequencyStudentService {
   }
 
   private _updateFrequency(frequency: any): Observable<any> {
-    return new Observable(observer => {
+    return new Observable((observer) => {
       forkJoin([
         from(this.storage.get('dailyFrequencyStudentsToSync')),
-        from(this.storage.get('frequencies'))
-      ]).subscribe(results => {
+        from(this.storage.get('frequencies')),
+      ]).subscribe((results) => {
         const existingDailyFrequencyStudentsToSync = results[0] || [];
         const frequencies: any = results[1] || [];
-        console.log(existingDailyFrequencyStudentsToSync)
-        const dailyFrequencyStudentsToSync = existingDailyFrequencyStudentsToSync.concat(frequency);
-        this.storage.set('dailyFrequencyStudentsToSync', dailyFrequencyStudentsToSync);
+        const dailyFrequencyStudentsToSync =
+          existingDailyFrequencyStudentsToSync.concat(frequency);
+        this.storage.set(
+          'dailyFrequencyStudentsToSync',
+          dailyFrequencyStudentsToSync,
+        );
         this.updateLocalFrequency(frequency, frequencies);
 
         setTimeout(() => {
@@ -75,28 +78,33 @@ export class DailyFrequencyStudentService {
       studentId: any;
       present: any;
     },
-    localFrequencies: { daily_frequencies: any[] }
+    localFrequencies: { daily_frequencies: any[] },
   ) {
-    localFrequencies.daily_frequencies.forEach((localFrequency, localFrequencyIndex) => {
-      if (
-        localFrequency.classroom_id === frequency.classroomId &&
-        localFrequency.frequency_date === frequency.frequencyDate &&
-        localFrequency.discipline_id === frequency.disciplineId &&
-        localFrequency.class_number === frequency.classNumber
-      ) {
-        const newLocalFrequency = this.clone(localFrequency);
+    localFrequencies.daily_frequencies.forEach(
+      (localFrequency, localFrequencyIndex) => {
+        if (
+          localFrequency.classroom_id === frequency.classroomId &&
+          localFrequency.frequency_date === frequency.frequencyDate &&
+          localFrequency.discipline_id === frequency.disciplineId &&
+          localFrequency.class_number === frequency.classNumber
+        ) {
+          const newLocalFrequency = this.clone(localFrequency);
 
-        newLocalFrequency.students.forEach((student: { student: { id: any; }; present: any; }) => {
-          if (student.student.id === frequency.studentId) {
-            student.present = frequency.present;
-          }
-        });
+          newLocalFrequency.students.forEach(
+            (student: { student: { id: any }; present: any }) => {
+              if (student.student.id === frequency.studentId) {
+                student.present = frequency.present;
+              }
+            },
+          );
 
-        localFrequencies.daily_frequencies[localFrequencyIndex] = newLocalFrequency;
+          localFrequencies.daily_frequencies[localFrequencyIndex] =
+            newLocalFrequency;
 
-        this.storage.set('frequencies', localFrequencies);
-      }
-    });
+          this.storage.set('frequencies', localFrequencies);
+        }
+      },
+    );
   }
 
   private clone(object: any) {

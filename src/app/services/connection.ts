@@ -3,24 +3,21 @@ import { Injectable, EventEmitter } from '@angular/core';
 
 @Injectable()
 export class ConnectionService {
-  public isOnline:boolean = false;
-  public eventOnline: EventEmitter<any> = new EventEmitter;
+  public isOnline: boolean = false;
+  public eventOnline: EventEmitter<any> = new EventEmitter();
   public status: any;
 
-  constructor(){
-    
+  constructor() {
     this.init();
     //this.isOnline = (this.network.type !== "none");
   }
-  async init(){
+  async init() {
     this.status = await Network.getStatus();
-    console.log(this.status)
-    if(this.status.connectionType != "none"){
+    if (this.status.connectionType != 'none') {
       this.isOnline = true;
     }
-    //console.log(this.isOnline)
   }
-  setStatus(online: boolean){
+  setStatus(online: boolean) {
     this.isOnline = online;
     this.eventOnline.emit(this.isOnline);
   }

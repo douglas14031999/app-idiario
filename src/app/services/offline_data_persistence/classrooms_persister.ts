@@ -1,57 +1,36 @@
-import { DisciplinesPersisterService } from './disciplines_persister';
-import { ExamRulesPersisterService } from './exam_rules_persister';
-import { ClassroomsService } from './../classrooms';
-import { Observable, forkJoin } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { User } from 'src/app/data/user.interface';
+import { Observable, forkJoin } from 'rxjs';
+import { tap, map } from 'rxjs/operators';
+import { ClassroomsService } from '../classrooms';
 import { StorageService } from '../storage.service';
-import { catchError, tap, mergeMap } from 'rxjs/operators';
+import { User } from '../../data/user.interface';
 
 @Injectable()
 export class ClassroomsPersisterService {
   constructor(
     private classrooms: ClassroomsService,
-    private examRulesPersister: ExamRulesPersisterService,
-    private disciplinesPersister: DisciplinesPersisterService,
-    private storage: StorageService
-  ) { }
+    private storage: StorageService,
+  ) {}
 
   persist(user: User, unities: any[]): Observable<any> {
-    console.log(unities)
-    return new Observable((observer) => {
-      const classroomsObservables = unities.map((unity) => {
-        // Retorna o Observable corretamente
-        return this.classrooms.getOnlineClassrooms(user.teacher_id, unity.id);
-      });
-      
-      forkJoin(classroomsObservables).pipe(
-        tap((classrooms: any) => {
-          console.log(classrooms)
-          let classes = [
-            {
-              data: classrooms,
-              unityId: unities[0].id
-            }
-          ]
-          console.log(classes)
-          this.storage.set('classrooms', classes);
-        }),
-        mergeMap((classrooms: any) =>
-          forkJoin([
-            this.examRulesPersister.persist(user, classrooms),
-            this.disciplinesPersister.persist(user, classrooms)
-          ])
-        ),
-        catchError((error: any) => {
-          console.error(error);
-          observer.error(error);
-          throw error;
-        })
-      ).subscribe({
-        next: () => {}, // Você pode tratar os valores aqui, se necessário
-        error: (error: any) => observer.error(error),
-        complete: () => observer.complete()
-      });
+    const classroomsObservables = unities.map((unity) => {
+      return this.classrooms.getOnlineClassrooms(user.teacher_id, unity.id);
     });
+
+    const transformClassrooms = map((classrooms) => [
+      {
+        data: classrooms,
+        unityId: unities[0].id,
+      },
+    ]);
+
+    const setClassroomsInStorage = tap((classrooms) =>
+      this.storage.set('classrooms', classrooms),
+    );
+
+    return forkJoin(classroomsObservables).pipe(
+      transformClassrooms,
+      setClassroomsInStorage,
+    );
   }
 }

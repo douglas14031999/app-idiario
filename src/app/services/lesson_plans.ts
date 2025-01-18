@@ -1,4 +1,4 @@
-import { Storage } from '@ionic/storage';
+import { Storage } from '@ionic/storage-angular';
 import { Injectable } from '@angular/core';
 //import 'rxjs/Rx';
 import { ApiService } from './api';
@@ -9,12 +9,14 @@ export class LessonPlansService {
   constructor(
     private http: HttpClient,
     private storage: Storage,
-    private api: ApiService
-  ){}
+    private api: ApiService,
+  ) {}
 
-  getLessonPlans(teacherId: number){
-    const request = this.http.get(this.api.getTeacherLessonPlansUrl(), { params: { teacher_id: teacherId } } );
-    //console.log(request) 
+  getLessonPlans(teacherId: number) {
+    const request = this.http.get(this.api.getTeacherLessonPlansUrl(), {
+      params: { teacher_id: teacherId },
+    });
+
     return request;
   }
 }

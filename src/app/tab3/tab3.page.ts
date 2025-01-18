@@ -1,36 +1,34 @@
 import { Component } from '@angular/core';
 import { NavController } from '@ionic/angular';
-import { Storage } from '@ionic/storage-angular'; // Atualizado para Ionic Storage Angular
+import { Storage } from '@ionic/storage-angular';
 import { SyncProvider } from '../services/sync';
 
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
-  styleUrls: ['tab3.page.scss']
+  styleUrls: ['tab3.page.scss'],
+  standalone: false,
 })
 export class Tab3Page {
-
-  shownGroup: any = null; // Ajustado para tipagem adequada
-  unities: any[] = []; // Ajustado para tipagem adequada
+  unities: any[] = [];
 
   constructor(
     private navCtrl: NavController,
     private sync: SyncProvider,
-    private storage: Storage
-  ) { }
+    private storage: Storage,
+  ) {}
   ngOnInit(): void {
-    //throw new Error('Method not implemented.');
     this.updateLessonPlans();
   }
 
-  async ionViewWillEnter() { // Atualizado para ionViewWillEnter
+  async ionViewWillEnter() {
+    // Atualizado para ionViewWillEnter
     await this.updateLessonPlans();
   }
- 
-  doRefresh(event: any) { // Adicionado tipo para event
-    this.sync.syncAll().subscribe(res => {
-      console.log(res);
-      this.updateLessonPlans().finally(() => event.target.complete()); // Completa o evento de refresh
+
+  doRefresh() {
+    this.sync.execute().subscribe({
+      next: () => this.updateLessonPlans(),
     });
   }
 
@@ -40,38 +38,34 @@ export class Tab3Page {
       if (!lessonPlans) return;
       this.unities = [];
 
-      lessonPlans.unities.forEach((unity: { plans: any[]; unity_name: any; }) => {
+      // TODO verificar
+      // O objeto armazenado em localStorage é uma array de objetos com a chave `content_records`, possivelmente é um
+      // efeito colateral da mudança da versão do Rails.
+      const all = lessonPlans.flatMap(
+        (result: { unities: any }) => result.unities,
+      );
+
+      all.forEach((unity: { plans: any[]; unity_name: any }) => {
         if ((unity.plans || []).length === 0) {
           return;
         }
 
-        const lessonPlans = unity.plans.map(plan => ({
+        const lessonPlans = unity.plans.map((plan) => ({
           id: plan.id,
-          description: `${plan.description} - ${plan.classroom_name}`
+          description: `${plan.description} - ${plan.classroom_name}`,
         }));
 
         this.unities.push({ name: unity.unity_name, lessonPlans });
-        console.log(this.unities)
       });
     } catch (error) {
       console.error('Error updating lesson plans:', error);
     }
   }
 
-  toggleGroup(group: any) { // Ajustado para tipagem adequada
-    this.shownGroup = this.isGroupShown(group) ? null : group;
+  openDetail(lessonPlanId: number) {
+    // Ajustado para tipagem adequada
+    this.navCtrl.navigateForward('/lesson-plan-details', {
+      state: { lessonPlanId },
+    }); // Atualizado para navigateForward
   }
-
-  isGroupShown(group: any): boolean { // Ajustado para tipagem adequada
-    return this.shownGroup === group;
-  }
-
-  openDetail(lessonPlanId: number) { // Ajustado para tipagem adequada
-    this.navCtrl.navigateForward('/lesson-plan-details', { state: { lessonPlanId } }); // Atualizado para navigateForward 
-  }
-
-  newFrequency() {
-
-  }
-
 }

@@ -24,3 +24,43 @@
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
+
+.page-content {
+  background-color: #f0ebf8;
+  height: 100%;
+  --padding-start: 15px;
+  --padding-end: 15px;
+  --padding-bottom: 15px;
+  --padding-top: 15px;
+}
+
+.empty-results {
+  width: auto;
+  height: 70px;
+  background-color: #e5deec;
+  border-radius: 5px;
+  margin: 0 10px 0 10px;
+
+  p {
+    font-size: 16px;
+    color: #87878c;
+    text-align: center;
+    padding-top: 24px;
+  }
+}
+
+.date-header {
+  font-size: 18px;
+  color: #868499;
+  padding-left: 12px;
+}
+
+.view-eye {
+  font-size: 16px;
+  text-transform: uppercase;
+  color: #3f3d4d;
+  padding-left: 15px;
+  background: url("./assets/img/iconView@2x.png") no-repeat right;
+  background-size: 19pt 14pt;
+  margin-right: 10px;
+}

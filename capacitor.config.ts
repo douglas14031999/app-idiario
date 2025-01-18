@@ -2,10 +2,10 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
-  appName: 'i-diario-ap-v2',
+  appName: 'i-diario',
   webDir: 'www',
   server: {
-    androidScheme: 'https'
+    androidScheme: 'https',
   },
   cordova: {
     preferences: {
@@ -24,9 +24,9 @@ const config: CapacitorConfig = {
       WKWebViewOnly: 'true',
       CordovaWebViewEngine: 'CDVWKWebViewEngine',
       icon_folder: 'mipmap',
-      icon_name: 'ic_launcher'
-    }
-  }
+      icon_name: 'ic_launcher',
+    },
+  },
 };
 
 export default config;

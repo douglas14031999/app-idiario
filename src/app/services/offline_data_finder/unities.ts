@@ -5,22 +5,19 @@ import { StorageService } from '../storage.service';
 
 @Injectable()
 export class OfflineUnityFinder {
-  constructor(
-    private storage: StorageService
-  ){}
+  constructor(private storage: StorageService) {}
 
-  find(params: { unityId: any; }){
+  find(params: { unityId: any }) {
     return new Observable((observer) => {
       this.storage.get('unities').then((unities) => {
-        console.log(unities)
         if (params.unityId) {
-          unities = unities.filter((unityId: { id: any; }) => {
-            return unityId.id == params.unityId
-          })
+          unities = unities.filter((unityId: { id: any }) => {
+            return unityId.id == params.unityId;
+          });
         }
-        observer.next(unities[0])
-        observer.complete()
-      })
-    })
+        observer.next(unities[0]);
+        observer.complete();
+      });
+    });
   }
 }

@@ -8,9 +8,9 @@ import { ActivatedRoute } from '@angular/router';
   selector: 'app-teaching-plan-details',
   templateUrl: './teaching-plan-details.page.html',
   styleUrls: ['./teaching-plan-details.page.scss'],
+  standalone: false,
 })
 export class TeachingPlanDetailsPage implements OnInit {
-
   teachingPlanId!: number;
   description!: string;
   unity_name!: string;
@@ -28,15 +28,12 @@ export class TeachingPlanDetailsPage implements OnInit {
     //public navParams: NavParams,
     private route: ActivatedRoute,
     private storage: Storage,
-    private utilsService: UtilsService
-  ) {
-
-  }
+    private utilsService: UtilsService,
+  ) {}
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.teachingPlanId = +id;
-      console.log(this.teachingPlanId);
     } else {
       // Caso o id seja null ou undefined
       console.error('ID não encontrado na rota');
@@ -44,7 +41,6 @@ export class TeachingPlanDetailsPage implements OnInit {
 
     this.storage.get('teachingPlans').then((teachingPlans) => {
       const details = this.getTeachingPlanDetail(teachingPlans);
-      console.log(details)
       if (details) {
         this.description = `${details.description} - ${details.grade_name}`;
         this.unity_name = details.unity_name;
@@ -54,9 +50,15 @@ export class TeachingPlanDetailsPage implements OnInit {
         this.year = details.year;
 
         this.objectives = details.objectives || [];
-        this.evaluation = this.utilsService.convertTextToHtml(details.evaluation);
-        this.bibliography = this.utilsService.convertTextToHtml(details.bibliography);
-        this.activities = this.utilsService.convertTextToHtml(details.activities);
+        this.evaluation = this.utilsService.convertTextToHtml(
+          details.evaluation,
+        );
+        this.bibliography = this.utilsService.convertTextToHtml(
+          details.bibliography,
+        );
+        this.activities = this.utilsService.convertTextToHtml(
+          details.activities,
+        );
       }
     });
   }
@@ -79,11 +81,3 @@ export class TeachingPlanDetailsPage implements OnInit {
     //this.navCtrl.back(); // Atualizado para o método correto em Ionic 5+
   }
 }
-
-
-
-
-
-
-
-

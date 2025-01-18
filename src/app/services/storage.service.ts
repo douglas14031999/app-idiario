@@ -1,41 +1,64 @@
 import { Injectable } from '@angular/core';
-import { Storage } from '@ionic/storage';
+import { Storage } from '@ionic/storage-angular';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StorageService {
-  private _storage: Storage | null = null;
-  constructor(private storage: Storage) { 
-      this.configDB();
+  private initialized = false;
+
+  constructor(private storage: Storage) {}
+
+  async init() {
+    if (this.initialized) {
+      return;
+    }
+
+    this.initialized = true;
+    await this.storage.create();
+    await this.initializeDefaultData();
   }
 
-  async configDB(){
-    const store = new Storage();
-    await store.create();
-    this._storage = store;
-    //console.log(this._storage)
-  }
-  public async set(key: string, value: any) {
-    if(!this._storage)
-      await this.configDB() ;
-      this._storage?.set(key, value);
-    
+  // TODO verificar
+  // Algumas das estruturas abaixo não condizem com uma listagem (array)
+  private async initializeDefaultData() {
+    const defaults = {
+      classrooms: [],
+      contentLessonPlans: [],
+      contentRecords: [],
+      disciplines: [],
+      examRules: [],
+      // frequencies: null,
+      // lessonPlans: null,
+      schoolCalendars: [],
+      students: [],
+      // teachingPlans: null,
+      unities: [],
+      user: null,
+    };
 
-  }
-  public async get(key: string) {
-    if(!this._storage)
-            await this.configDB() ;
-    return await this._storage?.get(key);
+    for (const [key, value] of Object.entries(defaults)) {
+      const existingValue = await this.storage.get(key);
+
+      if (existingValue === null) {
+        await this.storage.set(key, value);
+      }
+    }
   }
 
-  public async remove(key: string) {
-    if(!this._storage)
-            await this.configDB() ;
-    return await this._storage?.remove(key);
+  async set(key: string, value: any) {
+    await this.storage.set(key, value);
   }
 
-  public async clear() {
-    await this._storage?.clear();
+  async get(key: string) {
+    return await this.storage.get(key);
+  }
+
+  async remove(key: string) {
+    await this.storage.remove(key);
+  }
+
+  async clear() {
+    await this.storage.clear();
   }
 }

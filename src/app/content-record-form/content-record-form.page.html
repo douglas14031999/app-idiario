@@ -12,7 +12,9 @@
 
 <ion-content [fullscreen]="true">
   <div class="details-panel">
-    <p class="content-record-description">{{ contentRecord.description }} - {{ contentRecord.classroom_name }}</p>
+    <p class="content-record-description">
+      {{ contentRecord.description }} - {{ contentRecord.classroom_name }}
+    </p>
 
     <ion-list>
       <ion-item *ngFor="let content of contents">
@@ -25,7 +27,8 @@
           [(ngModel)]="newContent"
           name="newContent"
           placeholder="Adicionar item..."
-          (change)="addContent()" >
+          (change)="addContent()"
+        >
         </ion-input>
       </ion-item>
     </ion-list>

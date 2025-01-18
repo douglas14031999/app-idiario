@@ -18,7 +18,7 @@ interface LessonPlan {
   activities?: string;
   opinion?: string;
   resources?: string;
-  start_at: Date; 
+  start_at: Date;
   end_at: Date;
 }
 
@@ -30,13 +30,14 @@ interface Unity {
   selector: 'app-lesson-plan-details',
   templateUrl: './lesson-plan-details.page.html',
   styleUrls: ['./lesson-plan-details.page.scss'],
+  standalone: false,
 })
 export class LessonPlanDetailsPage implements OnInit {
   lessonPlanId!: number;
   description!: string;
   unity_name!: string;
   period!: string;
-  objectives:any[] = [];
+  objectives: any[] = [];
   activities!: string;
   evaluation!: string;
   bibliography!: string;
@@ -52,17 +53,15 @@ export class LessonPlanDetailsPage implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private storage: Storage,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
   ) {}
 
   async ngOnInit() {
-    
-
     const state = this.router.getCurrentNavigation()?.extras.state;
-    console.log(state)
     this.lessonPlanId = state!['lessonPlanId'];
-    await this.storage.create();  // Necessário para inicializar o storage
-    const lessonPlans: { unities: Unity[] } = await this.storage.get('lessonPlans');
+    await this.storage.create(); // Necessário para inicializar o storage
+    const lessonPlans: { unities: Unity[] } =
+      await this.storage.get('lessonPlans');
     const details = this.getLessonPlanDetail(lessonPlans);
 
     if (details) {
@@ -73,17 +72,27 @@ export class LessonPlanDetailsPage implements OnInit {
       this.knowledge_areas = details.knowledge_areas;
 
       this.objectives = details.objectives || [];
-      this.evaluation = this.utilsService.convertTextToHtml(details.evaluation || '');
-      this.bibliography = this.utilsService.convertTextToHtml(details.bibliography || '');
-      this.activities = this.utilsService.convertTextToHtml(details.activities || '');
+      this.evaluation = this.utilsService.convertTextToHtml(
+        details.evaluation || '',
+      );
+      this.bibliography = this.utilsService.convertTextToHtml(
+        details.bibliography || '',
+      );
+      this.activities = this.utilsService.convertTextToHtml(
+        details.activities || '',
+      );
       this.opinion = this.utilsService.convertTextToHtml(details.opinion || '');
-      this.resources = this.utilsService.convertTextToHtml(details.resources || '');
+      this.resources = this.utilsService.convertTextToHtml(
+        details.resources || '',
+      );
       this.start_at = details.start_at;
       this.end_at = details.end_at;
     }
   }
 
-  getLessonPlanDetail(lessonPlans: { unities: Unity[] }): LessonPlan | undefined {
+  getLessonPlanDetail(lessonPlans: {
+    unities: Unity[];
+  }): LessonPlan | undefined {
     let response: LessonPlan | undefined;
     lessonPlans.unities.forEach((unity: Unity) => {
       unity.plans.forEach((plan: LessonPlan) => {

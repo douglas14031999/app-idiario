@@ -1,4 +1,4 @@
 export interface Unity {
-  description: string,
-  id: number
+  description: string;
+  id: number;
 }

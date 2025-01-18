@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Storage } from '@ionic/storage';
+import { Storage } from '@ionic/storage-angular';
 import { ApiService } from './api';
 import { HttpClient } from '@angular/common/http';
 
@@ -10,19 +10,29 @@ export class StudentsService {
   constructor(
     private http: HttpClient,
     private storage: Storage,
-    private api: ApiService
+    private api: ApiService,
   ) {}
 
-  getStudents(classroomId: number, disciplineId: number, teacherId: number): Observable<any> {
-    const request = this.http.get(this.api.getClassroomStudentsUrl(), { params: { classroom_id: classroomId, discipline_id: disciplineId, teacher_id: teacherId } });
+  getStudents(
+    classroomId: number,
+    disciplineId: number,
+    teacherId: number,
+  ): Observable<any> {
+    const request = this.http.get(this.api.getClassroomStudentsUrl(), {
+      params: {
+        classroom_id: classroomId,
+        discipline_id: disciplineId,
+        teacher_id: teacherId,
+      },
+    });
     return request.pipe(
       map((response: any) => {
         return {
           data: response,
           classroomId: classroomId,
-          disciplineId: disciplineId
+          disciplineId: disciplineId,
         };
-      })
+      }),
     );
   }
 
@@ -34,7 +44,7 @@ export class StudentsService {
           return;
         }
 
-        students.forEach((student: { classroomId: number; }) => {
+        students.forEach((student: { classroomId: number }) => {
           if (student.classroomId == classroomId) {
             observer.next(student);
           }
@@ -44,7 +54,10 @@ export class StudentsService {
     });
   }
 
-  getOfflineDisciplineStudents(classroomId: number, disciplineId: number): Observable<any> {
+  getOfflineDisciplineStudents(
+    classroomId: number,
+    disciplineId: number,
+  ): Observable<any> {
     return new Observable((observer) => {
       this.storage.get('students').then((students) => {
         if (!students) {
@@ -52,11 +65,16 @@ export class StudentsService {
           return;
         }
 
-        students.forEach((student: { classroomId: number; disciplineId: number; }) => {
-          if (student.classroomId == classroomId && student.disciplineId == disciplineId) {
-            observer.next(student);
-          }
-        });
+        students.forEach(
+          (student: { classroomId: number; disciplineId: number }) => {
+            if (
+              student.classroomId == classroomId &&
+              student.disciplineId == disciplineId
+            ) {
+              observer.next(student);
+            }
+          },
+        );
         observer.complete();
       });
     });

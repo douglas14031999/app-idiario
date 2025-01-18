@@ -1,14 +1,22 @@
-import { HttpClient, HttpHeaders, HttpRequest, HttpEvent, HttpEventType } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpHeaders,
+  HttpRequest,
+  HttpEvent,
+  HttpEventType,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
- 
+
 import { Observable } from 'rxjs';
 
 @Injectable()
 export class CustomHttp {
-
   constructor(private http: HttpClient) {}
 
-  request(url: string | HttpRequest<any>, options?: any): Observable<HttpEvent<any>> {
+  request(
+    url: string | HttpRequest<any>,
+    options?: any,
+  ): Observable<HttpEvent<any>> {
     return this.http.request(url, this.addAccessToken(options));
   }
 
@@ -40,11 +48,12 @@ export class CustomHttp {
     return this.http.options(url, this.addAccessToken(options));
   }
 
-  private addAccessToken(options: { headers?: any; }) {
+  private addAccessToken(options: { headers?: any }) {
     if (!options) options = {};
 
-    if (options.headers) options.headers = options.headers.set('Access-Token', '@@ACCESSTOKEN');
-    else options.headers = new HttpHeaders({'Access-Token': '@@ACCESSTOKEN'}); 
+    if (options.headers)
+      options.headers = options.headers.set('Access-Token', '@@ACCESSTOKEN');
+    else options.headers = new HttpHeaders({ 'Access-Token': '@@ACCESSTOKEN' });
 
     return options;
   }

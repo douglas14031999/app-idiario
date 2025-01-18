@@ -12,28 +12,32 @@ export class DailyFrequenciesSynchronizer {
     private http: HttpClient,
     private api: ApiService,
     private storage: Storage,
-    private auth: AuthService
-  ){}
+    private auth: AuthService,
+  ) {}
 
   public sync(dailyFrequencies: any[]): Observable<any> {
-    console.log(dailyFrequencies)
-    return new Observable(observer => {
+    return new Observable((observer) => {
       if (dailyFrequencies) {
-        this.auth.currentUser().subscribe(user => {
-          let dailyFrequencyObservables = dailyFrequencies.map(dailyFrequency => {
-            return this.mountDailyFrequencyPostRequest(dailyFrequency, user.teacher_id);
-          });
+        this.auth.currentUser().subscribe((user) => {
+          let dailyFrequencyObservables = dailyFrequencies.map(
+            (dailyFrequency) => {
+              return this.mountDailyFrequencyPostRequest(
+                dailyFrequency,
+                user.teacher_id,
+              );
+            },
+          );
 
           concat(...dailyFrequencyObservables).subscribe(
-            result => {
+            (result) => {
               observer.next(result);
             },
-            error => {
+            (error) => {
               observer.error(error);
             },
             () => {
               observer.complete();
-            }
+            },
           );
         });
       } else {
@@ -42,18 +46,23 @@ export class DailyFrequenciesSynchronizer {
     });
   }
 
-  private mountDailyFrequencyPostRequest(dailyFrequency: any, teacherId: number): Observable<any> {
-    return this.http.post(this.api.getDailyFrequencyUrl(), {
-      unity_id: dailyFrequency.unity_id,
-      classroom_id: dailyFrequency.classroom_id,
-      frequency_date: dailyFrequency.frequency_date,
-      discipline_id: dailyFrequency.discipline_id,
-      class_number: dailyFrequency.class_number,
-      teacher_id: teacherId
-    }).pipe(
-      map((response: any) => {
-        return response;
+  private mountDailyFrequencyPostRequest(
+    dailyFrequency: any,
+    teacherId: number,
+  ): Observable<any> {
+    return this.http
+      .post(this.api.getDailyFrequencyUrl(), {
+        unity_id: dailyFrequency.unity_id,
+        classroom_id: dailyFrequency.classroom_id,
+        frequency_date: dailyFrequency.frequency_date,
+        discipline_id: dailyFrequency.discipline_id,
+        class_number: dailyFrequency.class_number,
+        teacher_id: teacherId,
       })
-    );
+      .pipe(
+        map((response: any) => {
+          return response;
+        }),
+      );
   }
 }

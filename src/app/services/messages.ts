@@ -6,15 +6,16 @@ export class MessagesService {
   constructor(
     private alertCtrl: AlertController,
     private toastCtrl: ToastController,
-  ) { }
+  ) {}
 
   public async showError(message: string) {
-
     let title = 'Erro';
-    let buttons = [{
-      text: 'OK',
-      handler: () => { }
-    }]
+    let buttons = [
+      {
+        text: 'OK',
+        handler: () => {},
+      },
+    ];
 
     const alert = await this.alertCtrl.create({
       header: title,
@@ -26,12 +27,16 @@ export class MessagesService {
     await alert.present();
   }
 
-  public async showAlert(message: string,
+  public async showAlert(
+    message: string,
     title = 'Mensagem',
-    buttons = [{
-      text: 'OK',
-      handler: () => { }
-    }]) {
+    buttons = [
+      {
+        text: 'OK',
+        handler: () => {},
+      },
+    ],
+  ) {
     const alert = await this.alertCtrl.create({
       header: title,
       message: message,
@@ -40,20 +45,20 @@ export class MessagesService {
     });
 
     await alert.present();
-  };
+  }
 
-  public async showToast(message: string,
+  public async showToast(
+    message: string,
     duration = 3000,
-    position = 'middle') {
+    position = 'middle',
+  ) {
+    const toast = await this.toastCtrl.create({
+      message: message,
+      duration: duration,
+      position: 'middle',
+    });
 
-      const toast = await this.toastCtrl.create({
-        message: message,
-        duration: duration,
-        position: 'middle',
-      });
-  
-      await toast.present();
-
+    await toast.present();
   }
 
   public insuficientStorageErrorMessage(action: string) {
