@@ -19,11 +19,11 @@
   <div *ngFor="let contentDay of contentDays; let i = index">
     <h3 class="date-header">{{ contentDay.format_date }}</h3>
     <ion-accordion-group>
-      <ion-accordion *ngFor="let unity of contentDay.unities; let y = index">
+      <ion-accordion *ngFor="let unity of contentDay.unities; let y = index" class="panel">
         <ion-item slot="header">
           <ion-label>{{ unity.name }}</ion-label>
         </ion-item>
-        <div class="ion-padding" slot="content">
+        <div slot="content">
           <ion-item>
             <ion-button
               fill="clear"

@@ -22,7 +22,7 @@
     <div class="form-frequency">
       <div class="form-item">
         <h3 class="form-item-title">Qual a escola?</h3>
-        <ion-list>
+        <ion-list class="panel">
           <ion-radio-group
             [(ngModel)]="unityId"
             (ionChange)="onChangeUnity()"
@@ -43,7 +43,7 @@
 
       <div class="form-item" *ngIf="classrooms && classrooms.length > 0">
         <h3 class="form-item-title">Turma</h3>
-        <ion-list>
+        <ion-list class="panel">
           <ion-radio-group
             [(ngModel)]="classroomId"
             (ionChange)="onChangeClassroom()"
@@ -64,7 +64,7 @@
 
       <div class="form-item" *ngIf="disciplines && disciplines.length > 0">
         <h3 class="form-item-title">Disciplina</h3>
-        <ion-list>
+        <ion-list class="panel">
           <ion-radio-group
             [(ngModel)]="disciplineId"
             name="discipline"
@@ -89,6 +89,7 @@
           name="date"
           locale="pt-BR"
           presentation="date"
+          class="panel"
         ></ion-datetime>
       </div>
 

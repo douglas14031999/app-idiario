@@ -14,11 +14,11 @@
     <p>Nenhum plano de aula foi encontrado.</p>
   </div>
   <ion-accordion-group *ngFor="let unity of unities; let i=index">
-    <ion-accordion>
+    <ion-accordion class="panel">
       <ion-item slot="header">
         <ion-label>{{ unity.name }}</ion-label>
       </ion-item>
-      <div class="ion-padding" slot="content">
+      <div slot="content">
         <ion-item
           *ngFor="let lessonPlan of unity.lessonPlans;"
           (click)="openDetail(lessonPlan.id)"

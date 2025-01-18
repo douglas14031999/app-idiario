@@ -65,11 +65,19 @@
   margin-right: 10px;
 }
 
+.panel,
 .details-panel {
   background-color: white;
-  margin: 10px 10px 20px 10px;
-  border: 1px solid #e7e6f0 !important;
   border-radius: 5px;
+}
+
+.panel [slot=content] {
+  padding-bottom: 15px;
+}
+
+.details-panel {
+  border: 1px solid #e7e6f0 !important;
+  margin: 10px 10px 20px 10px;
 }
 
 .detail {
