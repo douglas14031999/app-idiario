@@ -10,12 +10,13 @@
   </ion-toolbar>
   <div class="multiple-lines">
     <img
+      alt="Plano de ensino"
       class="teaching-plan-img edit-img"
       src="assets/img/teaching-plan/ilustraPlanoEnsino@2x.png"
     />
-    <p class="title-teaching-plan" text-center>Plano de ensino</p>
-    <p class="unity-name" text-center>{{ unity_name }}</p>
-    <p class="description" text-center>{{ description }}</p>
+    <p class="title-teaching-plan">Plano de ensino</p>
+    <p class="unity-name">{{ unity_name }}</p>
+    <p class="description">{{ description }}</p>
   </div>
 </ion-header>
 
@@ -28,7 +29,7 @@
           *ngFor="let knowledge_area of knowledge_areas"
           class="contents-list-item"
         >
-          {{ "- " + knowledge_area.description }}
+          - {{ knowledge_area.description }}
         </li>
       </ul>
     </div>
@@ -38,23 +39,24 @@
     </div>
     <div class="detail">
       <h3 class="detail-title">Período escolar</h3>
-      <p class="detail-text">{{ period }}</p>
+      <p class="detail-text">{{ period || '-' }}</p>
     </div>
     <div class="detail">
       <h3 class="detail-title">Objetivos</h3>
       <ul class="contents-list">
         <li *ngFor="let objective of objectives" class="contents-list-item">
-          {{ "- " + objective.description }}
+          - {{ objective.description }}
         </li>
+        <li *ngIf="objectives.length === 0" class="contents-list-item">-</li>
       </ul>
     </div>
     <div class="detail">
       <h3 class="detail-title">Conteúdos</h3>
       <ul class="contents-list">
         <li *ngFor="let content of contents" class="contents-list-item">
-          <!--
-          {{ "- " + content.description }}-->
+          - {{ content.description }}
         </li>
+        <li *ngIf="contents.length === 0" class="contents-list-item">-</li>
       </ul>
     </div>
     <div class="detail">

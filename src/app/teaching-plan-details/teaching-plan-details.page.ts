@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams } from '@ionic/angular';
 import { UtilsService } from '../services/utils';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { StorageService } from '../services/storage.service';
 
 @Component({
@@ -19,36 +18,35 @@ export class TeachingPlanDetailsPage implements OnInit {
   activities!: string;
   evaluation!: string;
   bibliography!: string;
-  contents!: string;
+  contents: any[] = [];
   knowledge_areas!: any;
   year!: string;
 
   constructor(
-    //public navCtrl: NavController,
-    //public navParams: NavParams,
     private route: ActivatedRoute,
+    private router: Router,
     private storage: StorageService,
     private utilsService: UtilsService,
   ) {}
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
+
     if (id) {
       this.teachingPlanId = +id;
     } else {
-      // Caso o id seja null ou undefined
       console.error('ID não encontrado na rota');
     }
 
     this.storage.get('teachingPlans').then((teachingPlans) => {
       const details = this.getTeachingPlanDetail(teachingPlans);
+
       if (details) {
         this.description = `${details.description} - ${details.grade_name}`;
         this.unity_name = details.unity_name;
         this.period = details.period;
-        this.contents = details.contents;
+        this.contents = details.contents || [];
         this.knowledge_areas = details.knowledge_areas;
         this.year = details.year;
-
         this.objectives = details.objectives || [];
         this.evaluation = this.utilsService.convertTextToHtml(
           details.evaluation,
@@ -63,21 +61,17 @@ export class TeachingPlanDetailsPage implements OnInit {
     });
   }
 
-  getTeachingPlanDetail(teachingPlans: any) {
-    let response: any;
-    if (!teachingPlans || !teachingPlans.unities) return null;
-
-    teachingPlans.unities.forEach((unity: any) => {
-      unity.plans.forEach((plan: any) => {
-        if (plan.id === this.teachingPlanId) {
-          response = plan;
-        }
-      });
-    });
-    return response;
+  // TODO refactor
+  // A estrutura de armazenamento em localstorage está péssima, deve ser
+  // problemas da atualização do Rails e precisa ser modificada.
+  getTeachingPlanDetail(teachingPlans: any[]): any {
+    return teachingPlans
+      .map((a) => a.unities.flatMap((b: any) => b.plans))
+      .flatMap((c) => c)
+      .find((plan) => plan.id === this.teachingPlanId);
   }
 
   goBack() {
-    //this.navCtrl.back(); // Atualizado para o método correto em Ionic 5+
+    this.router.navigate(['/tabs/tab4']);
   }
 }

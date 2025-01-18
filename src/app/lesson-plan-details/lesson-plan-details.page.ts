@@ -92,9 +92,9 @@ export class LessonPlanDetailsPage implements OnInit {
   // problemas da atualização do Rails e precisa ser modificada.
   getLessonPlanDetail(lessonPlans: any[]): LessonPlan | undefined {
     return lessonPlans
-      .map(a => a.unities.flatMap((b: any) => b.plans))
+      .map((a) => a.unities.flatMap((b: any) => b.plans))
       .flatMap((c) => c)
-      .find((plan) => plan.id === this.lessonPlanId)
+      .find((plan) => plan.id === this.lessonPlanId);
   }
 
   goBack() {
