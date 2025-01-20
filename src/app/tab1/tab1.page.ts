@@ -37,6 +37,16 @@ export class Tab1Page implements OnInit {
     await this.router.navigate(['/frequency']);
   }
 
+  async ionViewWillEnter() {
+    const frequencies = await this.storage.get('frequencies');
+
+    if (!frequencies) {
+      // Não exibe frequências já carregadas no cache se as mesmas foram
+      // limpas após o logout do usuário
+      this.lastFrequencyDays = [];
+    }
+  }
+
   private lastTenFrequencies(frequencies: any[]) {
     const lastDays = [];
     const frequencyLimit = 30;
