@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams } from '@ionic/angular';
+import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { ContentRecordsService } from '../services/content_records';
-import { UtilsService } from '../services/utils';
 import { StorageService } from '../services/storage.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { UtilsService } from '../services/utils';
 
 @Component({
   selector: 'app-content-record-form',
@@ -29,14 +28,13 @@ export class ContentRecordFormPage implements OnInit {
   contents: any[] = [];
 
   constructor(
-    //public navCtrl: NavController,
-    //public navParams: NavParams,
     private storage: StorageService,
     private utilsService: UtilsService,
     private contentRecordService: ContentRecordsService,
     private route: ActivatedRoute,
     private router: Router,
   ) {}
+
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       this.baseContents = {};
@@ -65,11 +63,14 @@ export class ContentRecordFormPage implements OnInit {
         const teachingPlans = results.teachingPlans || [];
 
         this.baseContents = this.getContentLessonPlan(contentLessonPlans);
-        if (!Object.keys(this.baseContents).length) {
+
+        if (!this.baseContents) {
           this.baseContents = this.getTeachingPlan(teachingPlans);
         }
+
         this.contentRecord = this.getContentRecord(contentRecords);
-        if (!Object.keys(this.contentRecord).length) {
+
+        if (!this.contentRecord) {
           this.contentRecord = {
             id: undefined,
             record_date: this.recordDate,
@@ -89,6 +90,7 @@ export class ContentRecordFormPage implements OnInit {
     });
 
     const state = this.router.getCurrentNavigation()?.extras.state;
+
     if (state && state['unities']) {
       console.log(state);
     }
@@ -134,10 +136,6 @@ export class ContentRecordFormPage implements OnInit {
     });
   }
 
-  async ionViewDidLoad() {
-    //await this.storage.create(); // Needed for initializing the storage
-  }
-
   addContent() {
     const indexFound = this.contents.findIndex((c) =>
       this.utilsService.compareStrings(c.description, this.newContent),
@@ -158,28 +156,24 @@ export class ContentRecordFormPage implements OnInit {
   }
 
   getContentLessonPlan(contentLessonPlans: any[]) {
-    let response = {};
-
-    contentLessonPlans.forEach((plan) => {
-      if (
-        plan.grade_id == this.gradeId &&
-        plan.classroom_id == this.classroomId &&
-        plan.discipline_id == this.disciplineId &&
-        plan.unity_id == this.unityId &&
-        plan.start_at <= this.recordDate &&
-        plan.end_at >= this.recordDate
-      ) {
-        response = plan;
-        return;
-      }
-    });
-
-    return response;
+    return contentLessonPlans
+      .flatMap((p) => p.lesson_plans)
+      .find((plan) => {
+        if (
+          plan.grade_id == this.gradeId &&
+          plan.classroom_id == this.classroomId &&
+          plan.discipline_id == this.disciplineId &&
+          plan.unity_id == this.unityId &&
+          plan.start_at <= this.recordDate &&
+          plan.end_at >= this.recordDate
+        ) {
+          return plan;
+        }
+      });
   }
 
   getContentRecord(contentRecords: any[]) {
-    let response = {};
-    contentRecords.forEach((contentRecord) => {
+    return contentRecords.find((contentRecord) => {
       if (
         contentRecord.grade_id == this.gradeId &&
         contentRecord.classroom_id == this.classroomId &&
@@ -187,33 +181,27 @@ export class ContentRecordFormPage implements OnInit {
         contentRecord.unity_id == this.unityId &&
         contentRecord.record_date == this.recordDate
       ) {
-        response = contentRecord;
-        return;
+        return contentRecord;
       }
     });
-    return response;
   }
 
   getTeachingPlan(teachingPlanUnities: any) {
-    let response = {};
-
-    teachingPlanUnities.unities
+    return teachingPlanUnities
+      .flatMap((t: any) => t.unities)
       .filter((x: any) => x.unity_id == this.unityId)
-      .forEach((x: any) => {
-        x.plans.forEach((teachingPlan: any) => {
-          if (
-            teachingPlan.grade_id == this.gradeId &&
-            teachingPlan.discipline_id == this.disciplineId
-          ) {
-            response = teachingPlan;
-            return;
-          }
-        });
+      .flatMap((x: any) => x.plans)
+      .find((teachingPlan: any) => {
+        if (
+          teachingPlan.grade_id == this.gradeId &&
+          teachingPlan.discipline_id == this.disciplineId
+        ) {
+          return teachingPlan;
+        }
       });
-    return response;
   }
 
   goBack() {
-    // this.navCtrl.pop();
+    this.router.navigate(['/tabs/tab2']);
   }
 }

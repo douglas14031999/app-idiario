@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Storage } from '@ionic/storage-angular';
 import { User } from '../data/user.interface';
 import { environment } from '../../environments/environment';
 
 @Injectable()
 export class NpsService {
   private user: User | undefined;
-  constructor(private storage: Storage) {}
   /*
   public startNps(user: User) {
     this.user = user;

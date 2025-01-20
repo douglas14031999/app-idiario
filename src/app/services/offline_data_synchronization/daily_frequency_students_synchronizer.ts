@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Observable, from, forkJoin } from 'rxjs';
 import { concatMap, catchError, map } from 'rxjs/operators';
-import { Storage } from '@ionic/storage-angular';
 import { ApiService } from '../api';
 import { AuthService } from '../auth';
 import { HttpClient } from '@angular/common/http';
+import { StorageService } from '../storage.service';
 
 @Injectable()
 export class DailyFrequencyStudentsSynchronizer {
   constructor(
     private http: HttpClient,
     private api: ApiService,
-    private storage: Storage,
+    private storage: StorageService,
     private auth: AuthService,
   ) {}
 

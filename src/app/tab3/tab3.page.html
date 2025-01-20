@@ -10,15 +10,15 @@
 </ion-header>
 
 <ion-content class="page-content">
-  <div *ngIf="!unities.length" class="empty-results">
+  <div *ngIf="unities.length === 0" class="empty-results">
     <p>Nenhum plano de aula foi encontrado.</p>
   </div>
-  <ion-accordion-group *ngFor="let unity of unities; let i=index">
-    <ion-accordion>
+  <ion-accordion-group *ngFor="let unity of unities">
+    <ion-accordion class="panel">
       <ion-item slot="header">
         <ion-label>{{ unity.name }}</ion-label>
       </ion-item>
-      <div class="ion-padding" slot="content">
+      <div slot="content">
         <ion-item
           *ngFor="let lessonPlan of unity.lessonPlans;"
           (click)="openDetail(lessonPlan.id)"

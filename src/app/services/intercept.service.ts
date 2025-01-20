@@ -18,17 +18,14 @@ export class InterceptService implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
-    // Obtenha o token de acesso do local de armazenamento (por exemplo, localStorage)
-    const accessToken = environment.YOUR_ACCESS_TOKEN;
+    const accessToken = environment.app.token;
 
-    // Clone a solicitação original e adicione o token de acesso aos cabeçalhos
     const authReq = req.clone({
       headers: new HttpHeaders({
-        'Access-Token': accessToken,
+        Authorization: `Bearer ${accessToken}`,
       }),
     });
 
-    // Envie a solicitação com os cabeçalhos atualizados
     return next.handle(authReq);
   }
 }

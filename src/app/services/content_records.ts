@@ -1,7 +1,6 @@
 import { Observable, of } from 'rxjs';
 import { forkJoin } from 'rxjs';
 import { from } from 'rxjs';
-import { Storage } from '@ionic/storage-angular';
 import { Injectable } from '@angular/core';
 import { ApiService } from './api';
 import { ConnectionService } from './connection';
@@ -15,12 +14,13 @@ import {
   HttpResponse,
   HttpErrorResponse,
 } from '@angular/common/http';
+import { StorageService } from './storage.service';
 
 @Injectable()
 export class ContentRecordsService {
   constructor(
     private http: HttpClient,
-    private storage: Storage,
+    private storage: StorageService,
     private api: ApiService,
     private connectionService: ConnectionService,
     private contentRecordsSynchronizer: ContentRecordsSynchronizer,

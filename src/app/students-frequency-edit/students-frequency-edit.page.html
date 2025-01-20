@@ -6,14 +6,13 @@
   </ion-toolbar>
   <div class="multiple-lines">
     <img
+      alt="Frequência"
       class="students-frequency-edit-img edit-img"
       src="assets/img/students-frequency-edit/ilustraFrequencia@2x.png"
     />
-    <p class="title-students-frequency-edit" text-center>Lista de Frequência</p>
-    <p class="unity-name-students-frequency-edit" text-center>
-      {{ unityName }}
-    </p>
-    <p class="date-students-frequency-edit" text-center>{{ formatDate }}</p>
+    <p class="title-students-frequency-edit">Lista de Frequência</p>
+    <p class="unity-name-students-frequency-edit">{{ unityName }}</p>
+    <p class="date-students-frequency-edit">{{ formatDate }}</p>
   </div>
 </ion-header>
 
@@ -35,14 +34,14 @@
   <ion-grid class="grid">
     <ion-row class="grid-row" *ngFor="let student of students">
       <ion-col>
-        <div class="student-name" text-left>
+        <div class="student-name">
           {{ student.name || student.student.name }}
         </div>
 
         <ion-list *ngIf="!globalAbsence" class="frequency-checkbox">
           <ion-item
             *ngFor="let frequency of student.frequencies; let i = index"
-            class="frequency-checkbox-item"
+            class="frequency-item"
             lines="none"
           >
             <label>
@@ -57,18 +56,25 @@
           </ion-item>
         </ion-list>
 
-        <ion-list *ngIf="globalAbsence" class="frequency-checkbox">
+        <ion-list *ngIf="globalAbsence">
           <ion-radio-group
             [(ngModel)]="student.present"
             (ionChange)="updateFrequency(student)"
+            class="frequency-checkbox"
           >
-            <ion-item class="global-frequency global-frequency-present">
-              <ion-label>Presente</ion-label>
-              <ion-radio value="true"></ion-radio>
+            <ion-item class="frequency-item" lines="none">
+              <label>
+                <ion-radio [value]="true" class="global-frequency-present">
+                  Presente
+                </ion-radio>
+              </label>
             </ion-item>
-            <ion-item class="global-frequency global-frequency-absent">
-              <ion-label>Faltou</ion-label>
-              <ion-radio value="false"></ion-radio>
+            <ion-item class="frequency-item" lines="none">
+              <label>
+                <ion-radio [value]="false" class="global-frequency-absent">
+                  Faltou
+                </ion-radio>
+              </label>
             </ion-item>
           </ion-radio-group>
         </ion-list>

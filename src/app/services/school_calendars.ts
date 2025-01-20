@@ -1,15 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Storage } from '@ionic/storage-angular';
 import { Observable, from } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiService } from './api';
+import { StorageService } from './storage.service';
 
 @Injectable()
 export class SchoolCalendarsService {
   constructor(
     private http: HttpClient,
-    private storage: Storage,
+    private storage: StorageService,
     private api: ApiService,
   ) {}
 

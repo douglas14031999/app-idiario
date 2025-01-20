@@ -1,4 +1,3 @@
-import { Storage } from '@ionic/storage-angular';
 import { Injectable } from '@angular/core';
 //import 'rxjs/Rx';
 import { ApiService } from './api';
@@ -8,7 +7,6 @@ import { HttpClient } from '@angular/common/http';
 export class TeachingPlansService {
   constructor(
     private http: HttpClient,
-    private storage: Storage,
     private api: ApiService,
   ) {}
 

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Storage } from '@ionic/storage-angular';
 import { Observable, of, forkJoin, switchMap } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ClassroomsPersisterService } from './classrooms_persister';
@@ -16,11 +15,12 @@ import { User } from '../../data/user.interface';
 import { DisciplineFrequenciesPersisterService } from './discipline_frequencies_persister';
 import { StudentsPersisterService } from './students_persister';
 import { GlobalFrequenciesPersisterService } from './global_frequencies_persister';
+import { StorageService } from '../storage.service';
 
 @Injectable()
 export class OfflineDataPersisterService {
   constructor(
-    private storage: Storage,
+    private storage: StorageService,
     private unitiesPersister: UnitiesPersisterService,
     private classroomsPersister: ClassroomsPersisterService,
     private examRulesPersister: ExamRulesPersisterService,

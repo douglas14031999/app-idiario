@@ -12,9 +12,9 @@
 <ion-content class="page-content" id="frequency-page">
   <form #f="ngForm" (ngSubmit)="frequencyForm(f)">
     <div class="form-frequency">
-      <div class="form-item" *ngIf="unities">
+      <div class="form-item" *ngIf="unities.length">
         <h3 class="form-item-title">Qual a escola?</h3>
-        <ion-list>
+        <ion-list class="panel">
           <ion-radio-group
             [(ngModel)]="unityId"
             name="unity"
@@ -42,7 +42,7 @@
         id="frequency-classroom"
       >
         <h3 class="form-item-title">Turma</h3>
-        <ion-list>
+        <ion-list class="panel">
           <ion-radio-group
             [(ngModel)]="classroomId"
             (ionChange)="onChangeClassroom()"
@@ -63,7 +63,7 @@
 
       <div class="form-item" *ngIf="!globalAbsence" id="frequency-discipline">
         <h3 class="form-item-title">Disciplina</h3>
-        <ion-list>
+        <ion-list class="panel">
           <ion-radio-group
             [(ngModel)]="disciplineId"
             name="discipline"
@@ -83,7 +83,7 @@
 
       <div class="form-item" *ngIf="!globalAbsence" id="frequency-classes">
         <h3 class="form-item-title">Aulas</h3>
-        <ion-list class="itens-checkbox">
+        <ion-list class="itens-checkbox panel">
           <ion-item
             class="form-item-check-item"
             *ngFor="let classCss of classes;"
@@ -105,19 +105,20 @@
           name="date"
           locale="pt-BR"
           presentation="date"
+          class="panel"
           [max]="currentDate.toISOString()"
         ></ion-datetime>
       </div>
 
-      <ion-button
-        expand="block"
-        type="submit"
-        class="button-frequency"
-        [disabled]="!f.valid || (!globalAbsence && !selectedClasses.length)"
-        *ngIf="unities.length"
-      >
-        Carregar lista de frequência
-      </ion-button>
+      <div class="container-button-frequency">
+        <ion-button
+          type="submit"
+          [disabled]="!f.valid || (!globalAbsence && !selectedClasses.length)"
+          *ngIf="unities.length"
+        >
+          Carregar lista de frequência
+        </ion-button>
+      </div>
     </div>
   </form>
 </ion-content>

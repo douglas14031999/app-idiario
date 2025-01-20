@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Storage } from '@ionic/storage-angular';
 import { Observable, forkJoin, from, of } from 'rxjs';
 import { concatMap, map, catchError } from 'rxjs/operators';
 import { DailyFrequencyService } from '../daily_frequency';
+import { StorageService } from '../storage.service';
 
 @Injectable()
 export class GlobalFrequenciesPersisterService {
   constructor(
-    private storage: Storage,
+    private storage: StorageService,
     private frequencies: DailyFrequencyService,
   ) {}
 

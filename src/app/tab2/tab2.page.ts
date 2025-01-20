@@ -4,7 +4,6 @@ import { SyncProvider } from '../services/sync';
 import { UtilsService } from '../services/utils';
 import { forkJoin } from 'rxjs';
 import { StorageService } from '../services/storage.service';
-import { NewContentRecordFormPage } from '../new-content-record-form/new-content-record-form.page';
 import { Router } from '@angular/router';
 
 @Component({
@@ -14,13 +13,12 @@ import { Router } from '@angular/router';
   standalone: false,
 })
 export class Tab2Page {
-  shownGroup: number | null = null;
-  contentDays: Array<any> = [];
-  unities: Array<any> = [];
-  lessonPlans: Array<any> = [];
-  contentRecords: Array<any> = [];
-  teachingPlans: { unities: Array<any> } = { unities: [] };
-  classrooms: Array<any> = [];
+  contentDays: any[] = [];
+  unities: any[] = [];
+  lessonPlans: any[] = [];
+  contentRecords: any[] = [];
+  teachingPlans: { unities: any[] } = { unities: [] };
+  classrooms: any[] = [];
 
   constructor(
     private sync: SyncProvider,
@@ -49,63 +47,53 @@ export class Tab2Page {
       this.contentRecords = results[1] || [];
       this.teachingPlans = results[2] || { unities: [] };
       this.classrooms = results[3] || [];
-
       this.contentDays = [];
+
       let currentDate = this.utilsService.getCurrentDate();
       currentDate.setHours(0, 0, 0, 0);
       const numberOfDays = 7;
 
-      // TODO verificar
-      // O objeto armazenado em localStorage é uma array de objetos com a chave `content_records`, possivelmente é um
-      // efeito colateral da mudança da versão do Rails.
-      this.contentRecords = this.contentRecords.flatMap(
-        (record) => record.content_records,
-      );
-
       for (let i = numberOfDays; i > 0; i--) {
-        let unities: Array<any> = [];
+        let unities: any[] = [];
 
-        this.contentRecords
-          .filter((x) => x.contents.length)
-          .forEach((contentRecord) => {
-            let contentDate = this.utilsService.getDate(
-              contentRecord.record_date,
-            );
-            contentDate.setHours(24, 0, 0, 0);
+        this.contentRecords.forEach((contentRecord) => {
+          let contentDate = this.utilsService.getDate(
+            contentRecord.record_date,
+          );
+          contentDate.setHours(24, 0, 0, 0);
 
-            // TODO retirar comentário após testes
-            // if (currentDate.getTime() !== contentDate.getTime()) {
-            //   return;
-            // }
+          if (currentDate.getTime() !== contentDate.getTime()) {
+            return;
+          }
 
-            let unityIndex = unities
-              .map((d) => d['id'])
-              .indexOf(contentRecord.unity_id);
+          let unityIndex = unities
+            .map((d) => d['id'])
+            .indexOf(Number(contentRecord.unity_id));
 
-            if (unityIndex < 0) {
-              unities.push({
-                id: contentRecord.unity_id,
-                name: contentRecord.unity_name,
-                filledRecords: 0,
-                totalRecords: 0,
-                unityItems: [],
-              });
-              unityIndex = unities.length - 1;
-            }
-
-            unities[unityIndex].filledRecords++;
-            unities[unityIndex].totalRecords++;
-            unities[unityIndex].unityItems.push({
-              discipline_id: contentRecord.discipline_id,
-              classroom_id: contentRecord.classroom_id,
-              grade_id: contentRecord.grade_id,
-              description: contentRecord.description,
-              classroom_name: contentRecord.classroom_name,
-              contents: contentRecord.contents,
-              plannedContents: [],
-              type: 'contentRecord',
+          if (unityIndex < 0) {
+            unities.push({
+              id: contentRecord.unity_id,
+              name: contentRecord.unity_name,
+              filledRecords: 0,
+              totalRecords: 0,
+              unityItems: [],
             });
+            unityIndex = unities.length - 1;
+          }
+
+          unities[unityIndex].filledRecords++;
+          unities[unityIndex].totalRecords++;
+          unities[unityIndex].unityItems.push({
+            discipline_id: contentRecord.discipline_id,
+            classroom_id: contentRecord.classroom_id,
+            grade_id: contentRecord.grade_id,
+            description: contentRecord.description,
+            classroom_name: contentRecord.classroom_name,
+            contents: contentRecord.contents,
+            plannedContents: [],
+            type: 'contentRecord',
           });
+        });
 
         this.processLessonPlans(unities, currentDate);
         this.processTeachingPlans(unities, currentDate);
@@ -124,7 +112,7 @@ export class Tab2Page {
     });
   }
 
-  processLessonPlans(unities: Array<any>, currentDate: Date) {
+  processLessonPlans(unities: any[], currentDate: Date) {
     (this.lessonPlans || []).forEach((lessonPlan) => {
       const startAt = this.utilsService.getDate(lessonPlan.start_at);
       const endAt = this.utilsService.getDate(lessonPlan.end_at);
@@ -155,7 +143,7 @@ export class Tab2Page {
     });
   }
 
-  processTeachingPlans(unities: Array<any>, currentDate: Date) {
+  processTeachingPlans(unities: any[], currentDate: Date) {
     (this.teachingPlans.unities || []).forEach((teachingPlanUnity) => {
       const unityIndex = unities
         .map((d) => parseInt(d['id']))
@@ -201,7 +189,7 @@ export class Tab2Page {
     });
   }
 
-  calculateUniqueContents(unities: Array<any>) {
+  calculateUniqueContents(unities: any[]) {
     unities.forEach((unity, unityIndex) => {
       unities[unityIndex].situation_percentage = (
         unity.filledRecords / unity.totalRecords || 0
@@ -226,11 +214,11 @@ export class Tab2Page {
   }
 
   getClassroomsByGradeAndUnity(
-    classrooms: Array<any>,
+    classrooms: any[],
     unityId: number,
     gradeId: number,
   ) {
-    let filteredClassrooms: Array<any> = [];
+    let filteredClassrooms: any[] = [];
     classrooms
       .filter((cu) => cu.unityId === unityId)
       .forEach((classroomUnity) => {
@@ -243,14 +231,6 @@ export class Tab2Page {
     return filteredClassrooms;
   }
 
-  toggleGroup(group: any) {
-    this.shownGroup = this.isGroupShown(group) ? null : group;
-  }
-
-  isGroupShown(group: any): boolean {
-    return this.shownGroup === group;
-  }
-
   newContentRecordForm(contentDate?: string, unityId?: number) {
     this.utilsService.hasAvailableStorage().then((available: boolean) => {
       if (!available) {
@@ -261,7 +241,7 @@ export class Tab2Page {
         );
         return;
       }
-      this.storage.get('unities').then((unities: Array<any>) => {
+      this.storage.get('unities').then((unities: any[]) => {
         const navigationExtras = {
           queryParams: {
             unityId: unityId,
@@ -297,9 +277,6 @@ export class Tab2Page {
         description: description,
         classroomName: classroomName,
         unityName: unityName,
-      },
-      state: {
-        //callback: this.refreshPage.bind(this)
       },
     };
 

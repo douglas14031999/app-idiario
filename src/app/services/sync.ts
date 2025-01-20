@@ -1,6 +1,5 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { AlertController, LoadingController } from '@ionic/angular';
-import { Storage } from '@ionic/storage-angular';
 import { Observable, from, interval, concat, forkJoin, of } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from './auth';
@@ -11,6 +10,7 @@ import { DailyFrequencyStudentsSynchronizer } from './offline_data_synchronizati
 import { DailyFrequenciesSynchronizer } from './offline_data_synchronization/daily_frequencies_synchronizer';
 import { OfflineDataPersisterService } from './offline_data_persistence/offline_data_persister';
 import { MessagesService } from './messages';
+import { StorageService } from './storage.service';
 
 @Injectable()
 export class SyncProvider {
@@ -23,7 +23,7 @@ export class SyncProvider {
     private connectionService: ConnectionService,
     private loadingCtrl: LoadingController,
     private messages: MessagesService,
-    private storage: Storage,
+    private storage: StorageService,
     private utilsService: UtilsService,
     private auth: AuthService,
     private dailyFrequenciesSynchronizer: DailyFrequenciesSynchronizer,

@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { StorageService } from '../services/storage.service';
 import { UtilsService } from '../services/utils';
-
-import { Storage } from '@ionic/storage-angular';
 
 interface LessonPlan {
   id: number;
@@ -28,8 +27,8 @@ interface Unity {
 
 @Component({
   selector: 'app-lesson-plan-details',
-  templateUrl: './lesson-plan-details.page.html',
-  styleUrls: ['./lesson-plan-details.page.scss'],
+  templateUrl: 'lesson-plan-details.page.html',
+  styleUrls: ['lesson-plan-details.page.scss'],
   standalone: false,
 })
 export class LessonPlanDetailsPage implements OnInit {
@@ -43,25 +42,30 @@ export class LessonPlanDetailsPage implements OnInit {
   bibliography!: string;
   contents: any[] = [];
   knowledge_areas!: any;
-  period_date!: string;
   start_at!: Date;
   end_at!: Date;
   opinion!: string;
   resources!: string;
 
   constructor(
-    private router: Router,
     private route: ActivatedRoute,
-    private storage: Storage,
+    private router: Router,
+    private storage: StorageService,
     private utilsService: UtilsService,
   ) {}
 
   async ngOnInit() {
-    const state = this.router.getCurrentNavigation()?.extras.state;
-    this.lessonPlanId = state!['lessonPlanId'];
-    await this.storage.create(); // Necessário para inicializar o storage
-    const lessonPlans: { unities: Unity[] } =
+    const id = this.route.snapshot.paramMap.get('id');
+
+    if (id) {
+      this.lessonPlanId = +id;
+    } else {
+      console.error('ID não encontrado na rota');
+    }
+
+    const lessonPlans: { unities: Unity[] }[] =
       await this.storage.get('lessonPlans');
+
     const details = this.getLessonPlanDetail(lessonPlans);
 
     if (details) {
@@ -70,7 +74,6 @@ export class LessonPlanDetailsPage implements OnInit {
       this.period = details.period;
       this.contents = details.contents;
       this.knowledge_areas = details.knowledge_areas;
-
       this.objectives = details.objectives || [];
       this.evaluation = this.utilsService.convertTextToHtml(
         details.evaluation || '',
@@ -90,21 +93,14 @@ export class LessonPlanDetailsPage implements OnInit {
     }
   }
 
-  getLessonPlanDetail(lessonPlans: {
-    unities: Unity[];
-  }): LessonPlan | undefined {
-    let response: LessonPlan | undefined;
-    lessonPlans.unities.forEach((unity: Unity) => {
-      unity.plans.forEach((plan: LessonPlan) => {
-        if (plan.id === this.lessonPlanId) {
-          response = plan;
-        }
-      });
-    });
-    return response;
+  getLessonPlanDetail(lessonPlans: any[]): LessonPlan | undefined {
+    return lessonPlans
+      .map((a) => a.unities.flatMap((b: any) => b.plans))
+      .flatMap((c) => c)
+      .find((plan) => plan.id === this.lessonPlanId);
   }
 
-  goBack() {
-    this.router.navigate(['/previous-page']); // Ajuste conforme necessário
+  async goBack() {
+    await this.router.navigate(['/tabs/tab3']);
   }
 }

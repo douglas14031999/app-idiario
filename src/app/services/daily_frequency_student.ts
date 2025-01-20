@@ -1,11 +1,10 @@
 import { Observable, Subject, from, forkJoin } from 'rxjs';
 import { finalize, mergeMap, last } from 'rxjs/operators';
-
 import { ConnectionService } from './connection';
-import { Storage } from '@ionic/storage-angular';
 import { Injectable } from '@angular/core';
 import { ApiService } from './api';
 import { HttpClient } from '@angular/common/http';
+import { StorageService } from './storage.service';
 
 @Injectable()
 export class DailyFrequencyStudentService {
@@ -13,7 +12,7 @@ export class DailyFrequencyStudentService {
 
   constructor(
     private http: HttpClient,
-    private storage: Storage,
+    private storage: StorageService,
     private api: ApiService,
     private connection: ConnectionService,
   ) {}

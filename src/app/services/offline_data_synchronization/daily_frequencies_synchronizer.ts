@@ -1,7 +1,6 @@
 import { ApiService } from './../api';
 import { Observable, from, concat } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { Storage } from '@ionic/storage-angular';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../auth';
 import { map } from 'rxjs/operators';
@@ -11,7 +10,6 @@ export class DailyFrequenciesSynchronizer {
   constructor(
     private http: HttpClient,
     private api: ApiService,
-    private storage: Storage,
     private auth: AuthService,
   ) {}
 

@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Storage } from '@ionic/storage-angular';
 import { Observable, forkJoin, from } from 'rxjs';
 import { catchError, concatMap } from 'rxjs/operators';
 import { StudentsService } from '../students';
+import { StorageService } from '../storage.service';
 
 @Injectable()
 export class StudentsPersisterService {
   constructor(
-    private storage: Storage,
+    private storage: StorageService,
     private students: StudentsService,
   ) {}
 

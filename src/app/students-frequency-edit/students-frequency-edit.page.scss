@@ -25,16 +25,13 @@
 }
 
 #students-frequency-edit-page.page-content {
-  background-color: #f0ebf8;
   padding-top: 10px;
   min-height: 550px;
 }
 
 .multiple-lines {
-  background-color: #6e00b5;
-  text-align: center;
-  color: white;
   height: 150px;
+
   p {
     margin: 2px 0;
   }
@@ -92,19 +89,34 @@
   margin-bottom: 0;
 }
 
-ion-checkbox::part(container) {
+ion-checkbox::part(container),
+ion-radio::part(container) {
   display: none;
 }
 
-ion-item.frequency-checkbox-item {
+ion-item.frequency-item {
   --background: #ff8870;
   border-radius: 5px;
   height: 40px;
   width: 48px;
   margin-right: 5px;
 
-  &:has(.checkbox-checked) {
+  &:has(.global-frequency-present),
+  &:has(.global-frequency-absent) {
+    --background: white;
+    border: 1px solid #dddce6;
+    width: 110px;
+  }
+
+  &:has(.checkbox-checked),
+  &:has(.radio-checked.global-frequency-present) {
     --background: #3fd4b4;
+    border-color: #3fd4b4;
+  }
+
+  &:has(.radio-checked.global-frequency-absent) {
+    --background: #ff8870;
+    border-color: #ff8870;
   }
 
   label {
@@ -114,25 +126,18 @@ ion-item.frequency-checkbox-item {
     align-items: center;
     color: white;
   }
-}
 
-.details-panel {
-  background-color: white;
-  margin: 10px 10px 20px 10px;
-  border: 1px solid #e7e6f0 !important;
-  border-radius: 5px;
-}
-
-.detail {
-  padding: 15px;
-  background-color: transparent;
-  border-bottom: 1px solid #e5deec !important;
-}
-
-.detail-title {
-  font-size: 16px;
-  color: #3f3d4d;
-  margin: 0 0 2px;
+  label {
+    &:has(.global-frequency-present),
+    &:has(.global-frequency-absent) {
+      color: #3f3d4d;
+      margin: -10px 0 0 5px;
+    }
+    &:has(.radio-checked.global-frequency-present),
+    &:has(.radio-checked.global-frequency-absent) {
+      color: white;
+    }
+  }
 }
 
 .checkbox-icon {
@@ -140,15 +145,15 @@ ion-item.frequency-checkbox-item {
   position: absolute;
 }
 
-.frequency-checkbox-item .checkbox-wp .checkbox-icon,
-.frequency-checkbox-item .checkbox-ios .checkbox-icon,
-.frequency-checkbox-item .checkbox-md .checkbox-icon {
+.frequency-item .checkbox-wp .checkbox-icon,
+.frequency-item .checkbox-ios .checkbox-icon,
+.frequency-item .checkbox-md .checkbox-icon {
   position: absolute !important;
 }
 
-.frequency-checkbox-item.item.item-block.item-wp.item-checkbox,
-.frequency-checkbox-item.item.item-block.item-ios.item-checkbox,
-.frequency-checkbox-item.item.item-block.item-md.item-checkbox {
+.frequency-item.item.item-block.item-wp.item-checkbox,
+.frequency-item.item.item-block.item-ios.item-checkbox,
+.frequency-item.item.item-block.item-md.item-checkbox {
   padding-left: 0 !important;
 }
 
@@ -158,13 +163,13 @@ ion-checkbox.checkbox.checkbox-md {
   margin: 0 !important;
 }
 
-.frequency-checkbox-item.item.item-block.item-wp.item-checkbox.item-checkbox-checked,
-.frequency-checkbox-item.item.item-block.item-ios.item-checkbox.item-checkbox-checked,
-.frequency-checkbox-item.item.item-block.item-md.item-checkbox.item-checkbox-checked {
+.frequency-item.item.item-block.item-wp.item-checkbox.item-checkbox-checked,
+.frequency-item.item.item-block.item-ios.item-checkbox.item-checkbox-checked,
+.frequency-item.item.item-block.item-md.item-checkbox.item-checkbox-checked {
   background-color: #3fd4b4;
 }
 
-ion-label.frequency-checkbox-item-label {
+ion-label.frequency-item-label {
   color: white !important;
   height: 30px;
   font-size: 16px;
@@ -186,7 +191,6 @@ ion-label.frequency-checkbox-item-label {
 
 .global-frequency ion-label {
   font-size: 16px;
-
   color: #3f3d4d;
   text-align: center !important;
   margin: 0 !important;
@@ -241,10 +245,4 @@ ion-label.frequency-checkbox-item-label {
 .global-frequency ion-radio.radio.radio-wp {
   margin: 0 !important;
   padding: 0 !important;
-}
-
-ion-content {
-  --offset-bottom: 0px;
-  --padding-start: 15px;
-  --padding-end: 15px;
 }
