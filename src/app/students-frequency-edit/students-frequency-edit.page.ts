@@ -1,12 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {AuthService} from '../services/auth';
-import {ConnectionService} from '../services/connection';
-import {DailyFrequencyStudentService} from '../services/daily_frequency_student';
-import {
-  DailyFrequencyStudentsSynchronizer
-} from '../services/offline_data_synchronization/daily_frequency_students_synchronizer';
-import {UtilsService} from '../services/utils';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../services/auth';
+import { ConnectionService } from '../services/connection';
+import { DailyFrequencyStudentService } from '../services/daily_frequency_student';
+import { DailyFrequencyStudentsSynchronizer } from '../services/offline_data_synchronization/daily_frequency_students_synchronizer';
+import { UtilsService } from '../services/utils';
 
 @Component({
   selector: 'app-students-frequency-edit',
@@ -38,8 +36,7 @@ export class StudentsFrequencyEditPage implements OnInit {
     private connection: ConnectionService,
     private route: ActivatedRoute,
     private router: Router,
-  ) {
-  }
+  ) {}
 
   async ngOnInit() {
     this.route.queryParams.subscribe((params) => {
@@ -144,7 +141,7 @@ export class StudentsFrequencyEditPage implements OnInit {
       students = this.studentsFrequency.students;
     } else {
       students = this.studentsFrequency[0].students.map((student: any) => {
-        return {...student.student, sequence: student['sequence']};
+        return { ...student.student, sequence: student['sequence'] };
       });
 
       students.forEach((student) => {

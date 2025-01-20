@@ -59,7 +59,7 @@
         <ion-list *ngIf="globalAbsence">
           <ion-radio-group
             [(ngModel)]="student.present"
-            (ionChange)="updateFrequency(student)"
+            (ionChange)="updateFrequency(student, null, $event.detail.value)"
             class="frequency-checkbox"
           >
             <ion-item class="frequency-item" lines="none">
