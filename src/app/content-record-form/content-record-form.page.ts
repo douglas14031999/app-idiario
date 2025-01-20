@@ -173,19 +173,17 @@ export class ContentRecordFormPage implements OnInit {
   }
 
   getContentRecord(contentRecords: any[]) {
-    return contentRecords
-      .flatMap((x: any) => x.content_records)
-      .find((contentRecord) => {
-        if (
-          contentRecord.grade_id == this.gradeId &&
-          contentRecord.classroom_id == this.classroomId &&
-          contentRecord.discipline_id == this.disciplineId &&
-          contentRecord.unity_id == this.unityId &&
-          contentRecord.record_date == this.recordDate
-        ) {
-          return contentRecord;
-        }
-      });
+    return contentRecords.find((contentRecord) => {
+      if (
+        contentRecord.grade_id == this.gradeId &&
+        contentRecord.classroom_id == this.classroomId &&
+        contentRecord.discipline_id == this.disciplineId &&
+        contentRecord.unity_id == this.unityId &&
+        contentRecord.record_date == this.recordDate
+      ) {
+        return contentRecord;
+      }
+    });
   }
 
   getTeachingPlan(teachingPlanUnities: any) {
