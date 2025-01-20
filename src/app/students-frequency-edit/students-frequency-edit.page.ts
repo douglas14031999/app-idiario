@@ -1,18 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams, LoadingController } from '@ionic/angular';
-import { AuthService } from '../services/auth';
-import { ConnectionService } from '../services/connection';
-import { DailyFrequencyStudentService } from '../services/daily_frequency_student';
-import { DailyFrequenciesSynchronizer } from '../services/offline_data_synchronization/daily_frequencies_synchronizer';
-import { DailyFrequencyStudentsSynchronizer } from '../services/offline_data_synchronization/daily_frequency_students_synchronizer';
-import { UtilsService } from '../services/utils';
-import { StorageService } from '../services/storage.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AuthService} from '../services/auth';
+import {ConnectionService} from '../services/connection';
+import {DailyFrequencyStudentService} from '../services/daily_frequency_student';
+import {
+  DailyFrequencyStudentsSynchronizer
+} from '../services/offline_data_synchronization/daily_frequency_students_synchronizer';
+import {UtilsService} from '../services/utils';
 
 @Component({
   selector: 'app-students-frequency-edit',
-  templateUrl: './students-frequency-edit.page.html',
-  styleUrls: ['./students-frequency-edit.page.scss'],
+  templateUrl: 'students-frequency-edit.page.html',
+  styleUrls: ['students-frequency-edit.page.scss'],
   standalone: false,
 })
 export class StudentsFrequencyEditPage implements OnInit {
@@ -32,19 +31,15 @@ export class StudentsFrequencyEditPage implements OnInit {
   formatDate: string | null = null;
 
   constructor(
-    private navCtrl: NavController,
-    //private navParams: NavParams,
     private dailyFrequencyStudentService: DailyFrequencyStudentService,
-    private loadingCtrl: LoadingController,
     private utilsService: UtilsService,
     private auth: AuthService,
-    private storage: StorageService,
-    private dailyFrequenciesSynchronizer: DailyFrequenciesSynchronizer,
     private dailyFrequencyStudentsSynchronizer: DailyFrequencyStudentsSynchronizer,
     private connection: ConnectionService,
     private route: ActivatedRoute,
     private router: Router,
-  ) {}
+  ) {
+  }
 
   async ngOnInit() {
     this.route.queryParams.subscribe((params) => {
@@ -90,8 +85,8 @@ export class StudentsFrequencyEditPage implements OnInit {
         frequencyDate: this.frequencyDate,
       };
 
-      this.dailyFrequencyStudentService.updateFrequency(params).subscribe(
-        (dailyFrequencyStudentsToSync) => {
+      this.dailyFrequencyStudentService.updateFrequency(params).subscribe({
+        next: (dailyFrequencyStudentsToSync) => {
           if (this.connection.isOnline) {
             this.loadingCount++;
             const loadingCountLocal = this.loadingCount;
@@ -99,26 +94,26 @@ export class StudentsFrequencyEditPage implements OnInit {
 
             this.dailyFrequencyStudentsSynchronizer
               .sync(dailyFrequencyStudentsToSync)
-              .subscribe(
-                () => {
+              .subscribe({
+                next: () => {
                   // Sucesso na sincronização
                 },
-                () => {
-                  // Erro na sincronização
+                error: (sync) => {
+                  console.error('Erro ao atualizar frequência:', sync);
                 },
-                () => {
+                complete: () => {
                   // Finalização da sincronização
                   if (this.loadingCount === loadingCountLocal) {
                     this.isSavingFrequencies = false;
                   }
                 },
-              );
+              });
           }
         },
-        (error) => {
+        error: (error) => {
           console.error('Erro ao atualizar frequência:', error);
         },
-      );
+      });
     });
   }
 
@@ -143,14 +138,13 @@ export class StudentsFrequencyEditPage implements OnInit {
   }
 
   private mountStudentList(): any[] {
-    let students: any[] = [];
+    let students: any[];
 
     if (this.globalAbsence) {
       students = this.studentsFrequency.students;
     } else {
       students = this.studentsFrequency[0].students.map((student: any) => {
-        const obj = { ...student.student, sequence: student['sequence'] };
-        return obj;
+        return {...student.student, sequence: student['sequence']};
       });
 
       students.forEach((student) => {
