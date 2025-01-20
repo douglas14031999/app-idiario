@@ -1,4 +1,4 @@
-import { Observable, Subject, from, forkJoin } from 'rxjs';
+import {Observable, Subject, from, forkJoin, defaultIfEmpty} from 'rxjs';
 import { finalize, mergeMap, last } from 'rxjs/operators';
 import { ConnectionService } from './connection';
 import { Injectable } from '@angular/core';
@@ -25,7 +25,7 @@ export class DailyFrequencyStudentService {
       const lastTrigger = this.trigger;
       const newTrigger = (this.trigger = new Subject<any>());
       return lastTrigger.pipe(
-        last(),
+        defaultIfEmpty(null),
         mergeMap(() => this.createObservable(newTrigger, frequency)),
       );
     }
