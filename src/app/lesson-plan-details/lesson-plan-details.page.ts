@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { StorageService } from '../services/storage.service';
 import { UtilsService } from '../services/utils';
 
@@ -27,8 +27,8 @@ interface Unity {
 
 @Component({
   selector: 'app-lesson-plan-details',
-  templateUrl: './lesson-plan-details.page.html',
-  styleUrls: ['./lesson-plan-details.page.scss'],
+  templateUrl: 'lesson-plan-details.page.html',
+  styleUrls: ['lesson-plan-details.page.scss'],
   standalone: false,
 })
 export class LessonPlanDetailsPage implements OnInit {
@@ -48,14 +48,21 @@ export class LessonPlanDetailsPage implements OnInit {
   resources!: string;
 
   constructor(
+    private route: ActivatedRoute,
     private router: Router,
     private storage: StorageService,
     private utilsService: UtilsService,
   ) {}
 
   async ngOnInit() {
-    const state = this.router.getCurrentNavigation()?.extras.state;
-    this.lessonPlanId = state!['lessonPlanId'];
+    const id = this.route.snapshot.paramMap.get('id');
+
+    if (id) {
+      this.lessonPlanId = +id;
+    } else {
+      console.error('ID não encontrado na rota');
+    }
+
     const lessonPlans: { unities: Unity[] }[] =
       await this.storage.get('lessonPlans');
 
@@ -67,7 +74,6 @@ export class LessonPlanDetailsPage implements OnInit {
       this.period = details.period;
       this.contents = details.contents;
       this.knowledge_areas = details.knowledge_areas;
-
       this.objectives = details.objectives || [];
       this.evaluation = this.utilsService.convertTextToHtml(
         details.evaluation || '',
@@ -87,9 +93,6 @@ export class LessonPlanDetailsPage implements OnInit {
     }
   }
 
-  // TODO refactor
-  // A estrutura de armazenamento em localstorage está péssima, deve ser
-  // problemas da atualização do Rails e precisa ser modificada.
   getLessonPlanDetail(lessonPlans: any[]): LessonPlan | undefined {
     return lessonPlans
       .map((a) => a.unities.flatMap((b: any) => b.plans))
@@ -97,7 +100,7 @@ export class LessonPlanDetailsPage implements OnInit {
       .find((plan) => plan.id === this.lessonPlanId);
   }
 
-  goBack() {
-    this.router.navigate(['/previous-page']);
+  async goBack() {
+    await this.router.navigate(['/tabs/tab3']);
   }
 }
