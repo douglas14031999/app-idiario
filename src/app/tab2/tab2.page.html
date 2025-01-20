@@ -13,14 +13,14 @@
 </ion-header>
 
 <ion-content class="page-content">
-  <div *ngIf="!contentDays.length" class="empty-results">
+  <div *ngIf="contentDays.length === 0" class="empty-results">
     <p>Nenhum conteúdo encontrado.</p>
   </div>
-  <div *ngFor="let contentDay of contentDays; let i = index">
+  <div *ngFor="let contentDay of contentDays">
     <h3 class="date-header">{{ contentDay.format_date }}</h3>
     <ion-accordion-group>
       <ion-accordion
-        *ngFor="let unity of contentDay.unities; let y = index"
+        *ngFor="let unity of contentDay.unities"
         class="panel"
       >
         <ion-item slot="header">
