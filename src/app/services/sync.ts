@@ -1,8 +1,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { Observable, from, interval, concat, forkJoin, of } from 'rxjs';
-import { catchError, switchMap, tap } from 'rxjs/operators';
-import { AuthService } from './auth';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ConnectionService } from './connection';
 import { UtilsService } from './utils';
 import { ContentRecordsSynchronizer } from './offline_data_synchronization/content_records_synchronizer';
@@ -25,7 +24,6 @@ export class SyncProvider {
     private messages: MessagesService,
     private storage: StorageService,
     private utilsService: UtilsService,
-    private auth: AuthService,
     private dailyFrequenciesSynchronizer: DailyFrequenciesSynchronizer,
     private dailyFrequencyStudentsSynchronizer: DailyFrequencyStudentsSynchronizer,
     private contentRecordsSynchronizer: ContentRecordsSynchronizer,
@@ -45,6 +43,7 @@ export class SyncProvider {
     if (this.loadingSync) {
       return this.loadingSync.dismiss();
     }
+
     return Promise.resolve();
   }
 
@@ -280,13 +279,86 @@ export class SyncProvider {
   }
 
   execute() {
-    return from(this.storage.get('user')).pipe(
-      tap(() => this.startSyncProcess()),
-      switchMap((user) => this.offlineDataPersister.persist(user)),
+    return from(this.startSyncProcess()).pipe(
+      switchMap(() => forkJoin({ user: this.storage.get('user') })),
+
+      // Passo 1
+      // Mapear os dados ainda não sincronizados
+      switchMap((payload) =>
+        forkJoin({
+          dailyFrequenciesToSync: from(
+            this.storage.get('dailyFrequenciesToSync') || [],
+          ),
+          dailyFrequencyStudentsToSync: from(
+            this.storage.get('dailyFrequencyStudentsToSync') || [],
+          ),
+          contentRecordsToSync: from(
+            this.storage.get('contentRecordsToSync') || [],
+          ),
+        }).pipe(map((result) => ({ ...payload, ...result }))),
+      ),
+
+      // Passo 2
+      // Fazer a sincronização dos dados
+      switchMap((payload) => {
+        const {
+          user,
+          dailyFrequenciesToSync,
+          dailyFrequencyStudentsToSync,
+          contentRecordsToSync,
+        } = payload;
+
+        const dailyFrequenciesObservable = dailyFrequenciesToSync?.length
+          ? this.dailyFrequenciesSynchronizer.sync(dailyFrequenciesToSync)
+          : of(null);
+
+        const dailyFrequencyStudentsObservable =
+          dailyFrequencyStudentsToSync?.length
+            ? this.dailyFrequencyStudentsSynchronizer.sync(
+                dailyFrequencyStudentsToSync,
+              )
+            : of(null);
+
+        const contentRecordsObservable = contentRecordsToSync?.length
+          ? this.contentRecordsSynchronizer.sync(
+              contentRecordsToSync,
+              user?.['teacher_id'],
+            )
+          : of(null);
+
+        return concat(
+          dailyFrequenciesObservable,
+          dailyFrequencyStudentsObservable,
+          contentRecordsObservable,
+        ).pipe(map((result) => ({ ...payload, ...result })));
+      }),
+
+      // Passo 3
+      // Remover do storage o que já foi sincronizado
+      switchMap((payload) =>
+        forkJoin({
+          dailyFrequencyStudentsToRemove: this.storage.remove(
+            'dailyFrequencyStudentsToSync',
+          ),
+          dailyFrequenciesToRemove: this.storage.remove(
+            'dailyFrequenciesToSync',
+          ),
+        }).pipe(map((result) => ({ ...payload, ...result }))),
+      ),
+
+      // Passo 4
+      // Sincronizar os dados
+      switchMap((payload) =>
+        this.offlineDataPersister
+          .persist(payload.user)
+          .pipe(map((result) => ({ ...payload, ...result }))),
+      ),
+
       tap(() => {
         this.completeSync().then(() => {});
         this.setSyncDate();
       }),
+
       catchError((err) => {
         this.handleError(err.message).then(() => {});
         throw err;
