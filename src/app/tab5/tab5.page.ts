@@ -28,7 +28,7 @@ export class Tab5Page implements OnInit {
   }
 
   async ngOnInit() {
-    this.app_version = environment.appversion;
+    this.app_version = environment.app.version;
     await Device.getInfo().then((res) => {
       if (res) {
         this.device = res;
