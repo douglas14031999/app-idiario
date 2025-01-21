@@ -13,16 +13,18 @@ export class CustomersService {
   ) {}
 
   getCustomers(): Observable<Customer[]> {
-    return this.http.get<any[]>(this.api.getallHostsUrl()).pipe(
+    return this.http.get<any[]>(this.api.getAllHostsUrl()).pipe(
       map((response: any) => {
         if (response && response.customers) {
-          return response.customers.map((customer: Customer) => {
-            return {
-              name: customer.name,
-              url: customer.url,
-              support_url: customer.support_url,
-            };
-          });
+          return response.customers
+            .map((customer: Customer) => {
+              return {
+                name: customer.name,
+                url: customer.url,
+                support_url: customer.support_url,
+              };
+            })
+            .sort((a: Customer, b: Customer) => a.name.localeCompare(b.name));
         } else {
           return [];
         }
