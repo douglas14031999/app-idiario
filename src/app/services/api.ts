@@ -6,32 +6,14 @@ import { environment } from 'src/environments/environment';
 export class ApiService {
   serverUrl: string = '';
 
-  constructor(private storage: StorageService) {
-    /*if (this.serverUrl == "") {
-      this.storage.get('serverUrl').then(url => {
-        console.log(url)
-        this.serverUrl = url;
-      })
-    }*/
-    this.serverUrl = environment.cities.url;
-  }
-
-  async getServerUrl() {
-    return environment.cities.url;
-    /*
-    await this.storage.get('serverUrl').then(url => {
-      console.log(url)
-      //this.serverUrl = url;
-      return url
-    })*/
-  }
+  constructor(private storage: StorageService) {}
 
   setServerUrl(serverUrl: string) {
     this.storage.set('serverUrl', serverUrl);
     this.serverUrl = serverUrl;
   }
 
-  getTeatcherClassroomsUrl() {
+  getTeacherClassroomsUrl() {
     return this.serverUrl + '/api/v2/teacher_classrooms.json';
   }
 
@@ -93,7 +75,7 @@ export class ApiService {
     return this.serverUrl + '/api/v2/content_records/sync.json';
   }
 
-  getallHostsUrl() {
-    return '';
+  getAllHostsUrl() {
+    return environment.app.cities_url;
   }
 }

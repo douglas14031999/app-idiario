@@ -1,28 +1,23 @@
-import { Observable } from 'rxjs';
-import { ConnectionService } from './connection';
-import { ApiService } from './api';
-//import { Response } from '@angular/http';
-import { Injectable } from '@angular/core';
-import { SchoolCalendarsService } from '../services/school_calendars';
-//import 'rxjs/Rx';
-import { UtilsService } from './utils';
-
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ApiService } from './api';
+import { SchoolCalendarsService } from './school_calendars';
 import { StorageService } from './storage.service';
+import { UtilsService } from './utils';
 
 @Injectable()
 export class ClassroomsService {
   constructor(
     private http: HttpClient,
     private storage: StorageService,
-    private connection: ConnectionService,
     private api: ApiService,
     private utilsService: UtilsService,
     private schoolCalendarsService: SchoolCalendarsService,
   ) {}
 
   getOnlineClassrooms(teacherId: number, unityId: number) {
-    return this.http.get(this.api.getTeatcherClassroomsUrl(), {
+    return this.http.get(this.api.getTeacherClassroomsUrl(), {
       params: { teacher_id: teacherId, unity_id: unityId },
     });
   }
@@ -39,15 +34,13 @@ export class ClassroomsService {
             observer.complete();
             return;
           }
-          let currentYear = '2024'; // TODO problema
-          // var currentYear = this.utilsService.getCurrentDate().getFullYear();
+          let currentYear = this.utilsService.getCurrentDate().getFullYear();
 
           classrooms.forEach((classroom: { unityId: number; data: any[] }) => {
             this.schoolCalendarsService
               .getOfflineSchoolCalendar(unityId)
               .subscribe((schoolCalendar: any) => {
                 const currentDate = new Date().toISOString().substr(0, 10);
-                //const currentDate = '2023-02-04'
                 const hasStepOnCurrentDate =
                   schoolCalendar.data.steps.filter(
                     (step: {
