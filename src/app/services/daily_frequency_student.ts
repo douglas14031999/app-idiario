@@ -1,21 +1,13 @@
-import { Observable, Subject, from, forkJoin } from 'rxjs';
-import { finalize, mergeMap, last } from 'rxjs/operators';
-import { ConnectionService } from './connection';
 import { Injectable } from '@angular/core';
-import { ApiService } from './api';
-import { HttpClient } from '@angular/common/http';
+import { Observable, Subject, from, forkJoin, defaultIfEmpty } from 'rxjs';
+import { finalize, mergeMap } from 'rxjs/operators';
 import { StorageService } from './storage.service';
 
 @Injectable()
 export class DailyFrequencyStudentService {
   private trigger: Subject<any> | undefined;
 
-  constructor(
-    private http: HttpClient,
-    private storage: StorageService,
-    private api: ApiService,
-    private connection: ConnectionService,
-  ) {}
+  constructor(private storage: StorageService) {}
 
   obsQueue(frequency: any): Observable<any> {
     if (!this.trigger || this.trigger.closed) {
@@ -25,7 +17,7 @@ export class DailyFrequencyStudentService {
       const lastTrigger = this.trigger;
       const newTrigger = (this.trigger = new Subject<any>());
       return lastTrigger.pipe(
-        last(),
+        defaultIfEmpty(null),
         mergeMap(() => this.createObservable(newTrigger, frequency)),
       );
     }

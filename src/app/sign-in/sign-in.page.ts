@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoadingController, NavController } from '@ionic/angular';
+import { LoadingController } from '@ionic/angular';
 import { Customer } from '../data/customer.interface';
 import { User } from '../data/user.interface';
 import { ApiService } from '../services/api';
@@ -9,8 +9,6 @@ import { AuthService } from '../services/auth';
 import { ConnectionService } from '../services/connection';
 import { CustomersService } from '../services/customers';
 import { MessagesService } from '../services/messages';
-import { OfflineDataPersisterService } from '../services/offline_data_persistence/offline_data_persister';
-import { SyncProvider } from '../services/sync';
 import { UtilsService } from '../services/utils';
 
 @Component({
@@ -20,31 +18,25 @@ import { UtilsService } from '../services/utils';
   standalone: false,
 })
 export class SignInPage implements OnInit {
-  cities: Customer[] = [
-    { name: 'i-Diário', url: 'http://localhost:3000', support_url: '' },
-  ];
+  cities: Customer[] = [];
   anyError: boolean = false;
   errorMessage: string = '';
   selectedCity: Customer | undefined;
   isOnline: boolean = true;
   supportUrl: string = '';
-
   credentials: string = '';
   password: string = '';
 
   constructor(
     private auth: AuthService,
     private loadingCtrl: LoadingController,
-    private navCtrl: NavController,
     private connection: ConnectionService,
     private customersService: CustomersService,
     private api: ApiService,
     private utilsService: UtilsService,
     private messages: MessagesService,
     private cdr: ChangeDetectorRef,
-    private sync: SyncProvider,
     private router: Router,
-    private offlineDataPersister: OfflineDataPersisterService,
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -58,8 +50,7 @@ export class SignInPage implements OnInit {
     this.isOnline = online;
 
     if (this.isOnline) {
-      // TODO reativar a busca dos clientes disponíveis
-      // this.getCustomers();
+      this.getCustomers();
     } else {
       this.selectedCity = undefined;
       await this.messages.showToast('Sem conexão!', 1000, 'top');
@@ -100,8 +91,7 @@ export class SignInPage implements OnInit {
         if (user) {
           this.auth.setCurrentUser(user).subscribe({
             next: () => {
-              this.sync.execute().subscribe();
-              this.router.navigate([''], { queryParams: user });
+              this.router.navigate(['/tabs/tab1']);
             },
           });
         } else {

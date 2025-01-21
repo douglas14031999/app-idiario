@@ -3,10 +3,12 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
+  app: {
+    version: '1.2.0',
+    token: '',
+    cities_url: '',
+  },
   production: false,
-  YOUR_ACCESS_TOKEN: '',
-  appversion: '0.0.87',
-  cities:  { name: '', url: '', support_url: '' }
 };
 
 /*

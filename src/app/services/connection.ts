@@ -9,18 +9,25 @@ export class ConnectionService {
 
   constructor() {
     this.init();
-    //this.isOnline = (this.network.type !== "none");
   }
-  async init() {
-    this.status = await Network.getStatus();
-    if (this.status.connectionType != 'none') {
-      this.isOnline = true;
-    }
+
+  init() {
+    Network.getStatus().then(status => {
+      this.status =  status;
+
+      if (this.status.connectionType != 'none') {
+        this.isOnline = true;
+      }
+
+      this.setStatus(this.isOnline);
+    })
   }
+
   setStatus(online: boolean) {
     this.isOnline = online;
     this.eventOnline.emit(this.isOnline);
   }
+
   getNetworkType() {
     return this.status.connectionType;
   }
