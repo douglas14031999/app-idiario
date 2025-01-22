@@ -40,9 +40,11 @@ export class Tab1Page implements OnInit {
   async ionViewWillEnter() {
     const frequencies = await this.storage.get('frequencies');
 
-    if (!frequencies) {
-      // Não exibe frequências já carregadas no cache se as mesmas foram
-      // limpas após o logout do usuário
+    // Não exibe frequências já carregadas no cache se as mesmas foram
+    // limpas após o logout do usuário
+    if (frequencies) {
+      this.lastFrequencyDays = this.lastTenFrequencies(frequencies.daily_frequencies);
+    } else {
       this.lastFrequencyDays = [];
     }
   }
@@ -81,8 +83,7 @@ export class Tab1Page implements OnInit {
 
     frequencies.forEach((frequency) => {
       if (
-        // TODO Lógica diferente
-        unities.findIndex((unity) => unity.id === frequency.unity_id) === -1
+        unities.findIndex((unity) => unity.id == frequency.unity_id) === -1
       ) {
         unities.push({
           id: frequency.unity_id,
@@ -99,7 +100,7 @@ export class Tab1Page implements OnInit {
 
   classroomDisciplinesOfUnityFrequency(frequencies: any[], unityId: number) {
     const frequenciesOfUnity = frequencies.filter(
-      (frequency) => frequency.unity_id === unityId,
+      (frequency) => frequency.unity_id == unityId,
     );
     const classroomDisciplines: {
       classroomId: any;
@@ -110,11 +111,10 @@ export class Tab1Page implements OnInit {
     }[] = [];
 
     frequenciesOfUnity.forEach((frequency) => {
-      // TODO Lógica diferente
       const indexOfClassroomDiscipline = classroomDisciplines.findIndex(
         (cd) =>
-          cd.classroomId === frequency.classroom_id &&
-          cd.disciplineId === frequency.discipline_id,
+          cd.classroomId == frequency.classroom_id &&
+          cd.disciplineId == frequency.discipline_id,
       );
 
       if (indexOfClassroomDiscipline < 0) {
