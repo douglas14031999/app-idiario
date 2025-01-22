@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { AuthService } from '../services/auth';
 import { DailyFrequencyService } from '../services/daily_frequency';
@@ -26,27 +26,28 @@ export class Tab1Page implements OnInit {
     private auth: AuthService,
     private utilsService: UtilsService,
     private storage: StorageService,
+    private route: ActivatedRoute,
   ) {}
 
   async ngOnInit() {
     await this.sync.isSyncDelayed();
+
+    this.route.params.subscribe(async () => {
+      await this.refreshLastFrequencyDays();
+    });
+  }
+
+  // Resolve o problema com a desatualização dos dados.
+  async refreshLastFrequencyDays() {
+    const currentDate = this.currentDate;
+    this.currentDate = new Date();
+    this.lastFrequencyDays = [];
     await this.loadMoreFrequencies();
+    this.currentDate = currentDate;
   }
 
   async newFrequency() {
     await this.router.navigate(['/frequency']);
-  }
-
-  async ionViewWillEnter() {
-    const frequencies = await this.storage.get('frequencies');
-
-    // Não exibe frequências já carregadas no cache se as mesmas foram
-    // limpas após o logout do usuário
-    if (frequencies) {
-      this.lastFrequencyDays = this.lastTenFrequencies(frequencies.daily_frequencies);
-    } else {
-      this.lastFrequencyDays = [];
-    }
   }
 
   private lastTenFrequencies(frequencies: any[]) {
@@ -214,7 +215,7 @@ export class Tab1Page implements OnInit {
 
   doRefresh() {
     this.sync.execute().subscribe({
-      next: () => this.loadMoreFrequencies(),
+      next: async () => await this.refreshLastFrequencyDays(),
     });
   }
 }
