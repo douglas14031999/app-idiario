@@ -1,28 +1,20 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import {
-  IonContent,
-  LoadingController,
-  NavController,
-  NavParams,
-} from '@ionic/angular';
+import { Router } from '@angular/router';
+import { IonContent, LoadingController, NavParams } from '@ionic/angular';
+import { catchError, finalize, of, tap } from 'rxjs';
 import { Classroom } from '../data/classroom.interface';
 import { Unity } from '../data/unity.interface';
 import { User } from '../data/user.interface';
 import { AuthService } from '../services/auth';
 import { ClassroomsService } from '../services/classrooms';
-import { ConnectionService } from '../services/connection';
 import { DailyFrequencyService } from '../services/daily_frequency';
 import { DisciplinesService } from '../services/disciplines';
 import { ExamRulesService } from '../services/exam_rules';
 import { MessagesService } from '../services/messages';
-import { OfflineDataPersisterService } from '../services/offline_data_persistence/offline_data_persister';
 import { SchoolCalendarsService } from '../services/school_calendars';
-import { UnitiesService } from '../services/unities';
-import { UtilsService } from '../services/utils';
-import { ActivatedRoute, Router } from '@angular/router';
 import { StorageService } from '../services/storage.service';
-import { catchError, finalize, of, tap } from 'rxjs';
+import { UtilsService } from '../services/utils';
 
 @Component({
   selector: 'app-frequency',
@@ -88,14 +80,14 @@ export class FrequencyPage implements OnInit {
     }
     this.showLoader('Carregando...').then((loader) => {
       this.auth.currentUser().subscribe((user: User) => {
-        this.classroomsService.getOfflineClassrooms(this.unityId!).subscribe(
-          (classrooms: any) => {
+        this.classroomsService.getOfflineClassrooms(this.unityId!).subscribe({
+          next: (classrooms: any) => {
             this.schoolCalendarsService
               .getOfflineSchoolCalendar(this.unityId!)
-              .subscribe(
-                (schoolCalendar: any) => {
+              .subscribe({
+                next: (schoolCalendar: any) => {
                   this.resetSelectedValues();
-                  this.classrooms = classrooms.data[0];
+                  this.classrooms = classrooms?.data[0] || [];
                   loader.dismiss();
 
                   if (!schoolCalendar.data) {
@@ -111,17 +103,17 @@ export class FrequencyPage implements OnInit {
                   this.cdr.detectChanges();
                   this.scrollTo('frequency-classroom');
                 },
-                (error) => {
+                error: (error) => {
                   loader.dismiss();
                   this.messages.showToast(error);
                 },
-              );
+              });
           },
-          (error) => {
+          error: (error) => {
             loader.dismiss();
             this.messages.showToast(error);
           },
-        );
+        });
       });
     });
   }
@@ -209,8 +201,8 @@ export class FrequencyPage implements OnInit {
             disciplineId: disciplineId,
             classNumbers: classes.join(),
           })
-          .subscribe(
-            (result: any) => {
+          .subscribe({
+            next: (result: any) => {
               console.log(result);
               const navigationExtras = {
                 queryParams: {
@@ -228,10 +220,10 @@ export class FrequencyPage implements OnInit {
 
               loader.dismiss();
             },
-            (error) => {
+            error: (error) => {
               loader.dismiss();
             },
-          );
+          });
       });
     });
   }
