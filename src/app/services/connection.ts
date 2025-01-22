@@ -12,15 +12,15 @@ export class ConnectionService {
   }
 
   init() {
-    Network.getStatus().then(status => {
-      this.status =  status;
+    Network.getStatus().then((status) => {
+      this.status = status;
 
       if (this.status.connectionType != 'none') {
         this.isOnline = true;
       }
 
       this.setStatus(this.isOnline);
-    })
+    });
   }
 
   setStatus(online: boolean) {
