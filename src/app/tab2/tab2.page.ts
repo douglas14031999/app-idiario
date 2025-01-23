@@ -4,7 +4,7 @@ import { SyncProvider } from '../services/sync';
 import { UtilsService } from '../services/utils';
 import { forkJoin } from 'rxjs';
 import { StorageService } from '../services/storage.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-tab2',
@@ -26,10 +26,15 @@ export class Tab2Page {
     private utilsService: UtilsService,
     private messages: MessagesService,
     private router: Router,
+    private route: ActivatedRoute,
   ) {}
 
-  ionViewWillEnter() {
-    this.loadContentDays();
+  async ngOnInit() {
+    await this.sync.isSyncDelayed();
+
+    this.route.params.subscribe(() => {
+      this.loadContentDays();
+    });
   }
 
   refreshPage() {

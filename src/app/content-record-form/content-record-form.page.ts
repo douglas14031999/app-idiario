@@ -88,12 +88,6 @@ export class ContentRecordFormPage implements OnInit {
         this.loadContents();
       });
     });
-
-    const state = this.router.getCurrentNavigation()?.extras.state;
-
-    if (state && state['unities']) {
-      console.log(state);
-    }
   }
 
   async ionViewWillLeave() {
@@ -120,8 +114,11 @@ export class ContentRecordFormPage implements OnInit {
   }
 
   loadContents() {
-    this.contents = (this.baseContents['contents'] || [])
-      .concat(this.contentRecord['contents'] || [])
+    const baseContents = this.baseContents?.contents || [];
+    const contentRecord = this.contentRecord?.contents || [];
+
+    this.contents = baseContents
+      .concat(contentRecord)
       .filter(
         (c1: any, i: number, self: any[]) =>
           self.findIndex((c2) => c2.description === c1.description) === i,
@@ -202,6 +199,19 @@ export class ContentRecordFormPage implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/tabs/tab2']);
+    // Garante que o localstore é atualizado para que os conteúdos sejam
+    // exibidos corretamente na tela de listagem.
+    forkJoin({
+      contentRecords: this.storage.get('contentRecords'),
+    }).subscribe(async (results) => {
+      await this.contentRecordService.updateContentRecords(
+        this.contentRecordService.addOrReplaceContentRecord(
+          results.contentRecords,
+          this.contentRecord,
+        ),
+      );
+
+      await this.router.navigate(['/tabs/tab2']);
+    });
   }
 }

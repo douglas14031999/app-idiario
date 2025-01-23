@@ -83,9 +83,7 @@ export class Tab1Page implements OnInit {
     const unities: { id: any; name: any; classroomDisciplines: any[] }[] = [];
 
     frequencies.forEach((frequency) => {
-      if (
-        unities.findIndex((unity) => unity.id == frequency.unity_id) === -1
-      ) {
+      if (unities.findIndex((unity) => unity.id == frequency.unity_id) === -1) {
         unities.push({
           id: frequency.unity_id,
           name: frequency.unity_name,
