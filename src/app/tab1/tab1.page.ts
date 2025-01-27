@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { AuthService } from '../services/auth';
 import { DailyFrequencyService } from '../services/daily_frequency';
@@ -26,25 +26,28 @@ export class Tab1Page implements OnInit {
     private auth: AuthService,
     private utilsService: UtilsService,
     private storage: StorageService,
+    private route: ActivatedRoute,
   ) {}
 
   async ngOnInit() {
     await this.sync.isSyncDelayed();
+
+    this.route.params.subscribe(async () => {
+      await this.refreshLastFrequencyDays();
+    });
+  }
+
+  // Resolve o problema com a desatualização dos dados.
+  async refreshLastFrequencyDays() {
+    const currentDate = this.currentDate;
+    this.currentDate = new Date();
+    this.lastFrequencyDays = [];
     await this.loadMoreFrequencies();
+    this.currentDate = currentDate;
   }
 
   async newFrequency() {
     await this.router.navigate(['/frequency']);
-  }
-
-  async ionViewWillEnter() {
-    const frequencies = await this.storage.get('frequencies');
-
-    if (!frequencies) {
-      // Não exibe frequências já carregadas no cache se as mesmas foram
-      // limpas após o logout do usuário
-      this.lastFrequencyDays = [];
-    }
   }
 
   private lastTenFrequencies(frequencies: any[]) {
@@ -80,10 +83,7 @@ export class Tab1Page implements OnInit {
     const unities: { id: any; name: any; classroomDisciplines: any[] }[] = [];
 
     frequencies.forEach((frequency) => {
-      if (
-        // TODO Lógica diferente
-        unities.findIndex((unity) => unity.id === frequency.unity_id) === -1
-      ) {
+      if (unities.findIndex((unity) => unity.id == frequency.unity_id) === -1) {
         unities.push({
           id: frequency.unity_id,
           name: frequency.unity_name,
@@ -99,7 +99,7 @@ export class Tab1Page implements OnInit {
 
   classroomDisciplinesOfUnityFrequency(frequencies: any[], unityId: number) {
     const frequenciesOfUnity = frequencies.filter(
-      (frequency) => frequency.unity_id === unityId,
+      (frequency) => frequency.unity_id == unityId,
     );
     const classroomDisciplines: {
       classroomId: any;
@@ -110,11 +110,10 @@ export class Tab1Page implements OnInit {
     }[] = [];
 
     frequenciesOfUnity.forEach((frequency) => {
-      // TODO Lógica diferente
       const indexOfClassroomDiscipline = classroomDisciplines.findIndex(
         (cd) =>
-          cd.classroomId === frequency.classroom_id &&
-          cd.disciplineId === frequency.discipline_id,
+          cd.classroomId == frequency.classroom_id &&
+          cd.disciplineId == frequency.discipline_id,
       );
 
       if (indexOfClassroomDiscipline < 0) {
@@ -214,7 +213,7 @@ export class Tab1Page implements OnInit {
 
   doRefresh() {
     this.sync.execute().subscribe({
-      next: () => this.loadMoreFrequencies(),
+      next: async () => await this.refreshLastFrequencyDays(),
     });
   }
 }

@@ -6,7 +6,11 @@ import { environment } from 'src/environments/environment';
 export class ApiService {
   serverUrl: string = '';
 
-  constructor(private storage: StorageService) {}
+  constructor(private storage: StorageService) {
+    this.storage.get('serverUrl').then((serverUrl) => {
+      this.serverUrl = serverUrl;
+    });
+  }
 
   setServerUrl(serverUrl: string) {
     this.storage.set('serverUrl', serverUrl);

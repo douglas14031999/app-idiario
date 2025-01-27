@@ -49,18 +49,18 @@ export class StudentsFrequencyEditPage implements OnInit {
       } else {
         this.studentsFrequency = state?.['result']['daily_frequencies'];
       }
+
+      this.classes = this.mountClassNumbers();
+      this.setCurrentClassroom();
+      this.setCurrentDiscipline();
+      this.setCurrentUnity();
+      this.setCurrentFrequencyDate();
+      this.students = this.mountStudentList();
+
+      const date = this.utilsService.getDate(this.frequencyDate as string);
+      date.setHours(24, 0, 0, 0);
+      this.formatDate = this.utilsService.toBrazilianFormat(date);
     });
-
-    this.classes = this.mountClassNumbers();
-    this.setCurrentClassroom();
-    this.setCurrentDiscipline();
-    this.setCurrentUnity();
-    this.setCurrentFrequencyDate();
-    this.students = this.mountStudentList();
-
-    const date = this.utilsService.getDate(this.frequencyDate as string);
-    date.setHours(24, 0, 0, 0);
-    this.formatDate = this.utilsService.toBrazilianFormat(date);
   }
 
   updateFrequency(
