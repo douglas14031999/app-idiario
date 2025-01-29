@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'i-diario',
+  appId: 'com.ionicframework.appoffline153013',
+  appName: 'Portábilis Diário',
   webDir: 'www',
   server: {
     androidScheme: 'https',
