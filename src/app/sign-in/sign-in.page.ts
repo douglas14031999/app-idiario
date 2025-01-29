@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { Customer } from '../data/customer.interface';
 import { User } from '../data/user.interface';
@@ -37,23 +37,30 @@ export class SignInPage implements OnInit {
     private messages: MessagesService,
     private cdr: ChangeDetectorRef,
     private router: Router,
+    private route: ActivatedRoute,
   ) {}
 
   async ngOnInit(): Promise<void> {
-    this.isOnline = this.connection.isOnline;
-    this.connection.eventOnline.subscribe((online: boolean) => {
-      this.changeInputMunicipios(online);
+    this.route.params.subscribe(() => {
+      this.changeInputMunicipios();
     });
   }
 
-  async changeInputMunicipios(online: boolean) {
-    this.isOnline = online;
+  async changeInputMunicipios() {
+    this.isOnline = this.connection.isOnline;
+    this.connection.eventOnline.subscribe((online: boolean) => {
+      this.isOnline = online;
+
+      if (this.isOnline) {
+        this.getCustomers();
+      } else {
+        this.selectedCity = undefined;
+        this.messages.showToast('Sem conexão!', 1000, 'top');
+      }
+    });
 
     if (this.isOnline) {
       this.getCustomers();
-    } else {
-      this.selectedCity = undefined;
-      await this.messages.showToast('Sem conexão!', 1000, 'top');
     }
   }
 
