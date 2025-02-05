@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin, from } from 'rxjs';
+import { Observable, forkJoin, from, of } from 'rxjs';
 import { map, concatMap } from 'rxjs/operators';
 import { DailyFrequencyService } from '../daily_frequency';
 import { StorageService } from '../storage.service';
@@ -52,6 +52,11 @@ export class DisciplineFrequenciesPersisterService {
     const frequenciesObservables = disciplines
       .filter(onlyFrequencyByDiscipline)
       .flatMap(mountObserversToFrequencies);
+
+    // Evita deixar a sincronização de forma infinita
+    if (frequenciesObservables.length === 0) {
+      return of(null);
+    }
 
     // TODO continuar a partir daqui e entender lógica abaixo
     return forkJoin(frequenciesObservables).pipe(
