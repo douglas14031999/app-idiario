@@ -29,7 +29,7 @@ export class FrequencyPage implements OnInit {
   unities: Unity[] = [];
   unityId: number | undefined;
   classrooms: Classroom[] = [];
-  classroomId: number;
+  classroomId: number | undefined;
   date: any;
   currentDate: Date = new Date();
   globalAbsence = true;
@@ -52,7 +52,6 @@ export class FrequencyPage implements OnInit {
     private storage: StorageService,
     private router: Router,
   ) {
-    this.classroomId = 0;
   }
 
   async ngOnInit() {
@@ -123,6 +122,8 @@ export class FrequencyPage implements OnInit {
       return;
     }
 
+    const classroomId = Number(this.classroomId);
+
     this.disciplineId = undefined;
 
     // Evitar ExpressionChangedAfterItHasBeenCheckedError
@@ -138,7 +139,7 @@ export class FrequencyPage implements OnInit {
     await loader.present();
 
     this.examRulesService
-      .getOfflineExamRules(this.classroomId)
+      .getOfflineExamRules(classroomId)
       .pipe(
         tap((result: any) => {
           if (
@@ -146,7 +147,7 @@ export class FrequencyPage implements OnInit {
             result.data.exam_rule.allow_frequency_by_discipline
           ) {
             this.disciplinesService
-              .getOfflineDisciplines(this.classroomId)
+              .getOfflineDisciplines(classroomId)
               .pipe(
                 tap((disciplineResult: any) => {
                   this.disciplines = disciplineResult.data;
@@ -230,7 +231,7 @@ export class FrequencyPage implements OnInit {
 
   resetSelectedValues() {
     this.globalAbsence = true;
-    //this.classroomId = undefined;
+    this.classroomId = undefined;
     this.disciplineId = undefined;
     this.selectedClasses = [];
   }
