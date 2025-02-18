@@ -21,6 +21,7 @@ export class NewContentRecordFormPage implements OnInit {
   date: any;
   disciplines: any;
   disciplineId: number | null = null;
+  currentDate: Date = new Date();
 
   constructor(
     private route: ActivatedRoute,
