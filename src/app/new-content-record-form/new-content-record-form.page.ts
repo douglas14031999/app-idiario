@@ -45,16 +45,18 @@ export class NewContentRecordFormPage implements OnInit {
   }
 
   onChangeUnity() {
-    if (!this.unityId) return;
+    if (!this.unityId) {
+      return;
+    }
 
-    this.classroomsService.getOfflineClassrooms(this.unityId).subscribe(
-      (classrooms: any) => {
-        this.classrooms = classrooms.data[0];
+    this.classroomsService.getOfflineClassrooms(this.unityId).subscribe({
+      next: (classrooms: any) => {
+        this.classrooms = classrooms.data;
       },
-      (error) => {
-        console.log(error);
+      error: (err: any) => {
+        console.log(err);
       },
-    );
+    });
   }
 
   onChangeClassroom() {
