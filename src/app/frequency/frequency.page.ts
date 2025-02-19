@@ -51,8 +51,7 @@ export class FrequencyPage implements OnInit {
     private messages: MessagesService,
     private storage: StorageService,
     private router: Router,
-  ) {
-  }
+  ) {}
 
   async ngOnInit() {
     if (!this.date) {
@@ -86,7 +85,7 @@ export class FrequencyPage implements OnInit {
               .subscribe({
                 next: (schoolCalendar: any) => {
                   this.resetSelectedValues();
-                  this.classrooms = classrooms?.data[0] || [];
+                  this.classrooms = classrooms.data || [];
                   loader.dismiss();
 
                   if (!schoolCalendar.data) {
