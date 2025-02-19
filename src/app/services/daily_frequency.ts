@@ -74,7 +74,7 @@ export class DailyFrequencyService {
         from(this.storage.get('frequencies')),
         from(this.storage.get('dailyFrequenciesToSync')),
         this.studentsService.getOfflineGlobalStudents(classroomId),
-        this.offlineClassroomFinder.find({ classroomId }),
+        this.offlineClassroomFinder.find(classroomId),
         this.offlineUnityFinder.find({ unityId }),
       ]).subscribe((results) => {
         const dailyFrequencies = results[0]?.daily_frequencies || [];
@@ -142,7 +142,7 @@ export class DailyFrequencyService {
           classroomId,
           disciplineId,
         ),
-        this.offlineClassroomFinder.find({ classroomId }),
+        this.offlineClassroomFinder.find(classroomId),
         this.offlineDisciplineFinder.find({ disciplineId }),
         this.offlineUnityFinder.find({ unityId }),
       ]).subscribe((results) => {
