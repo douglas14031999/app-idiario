@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Unity } from '../data/unity.interface';
 import { Classroom } from '../data/classroom.interface';
+import { Unity } from '../data/unity.interface';
 import { ClassroomsService } from '../services/classrooms';
 import { DisciplinesService } from '../services/disciplines';
 import { UtilsService } from '../services/utils';
-import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-new-content-record-form',
@@ -38,7 +38,7 @@ export class NewContentRecordFormPage implements OnInit {
 
       if (!this.date) {
         this.date = this.utilsService.toStringWithoutTime(
-          this.utilsService.getCurrentDate()
+          this.utilsService.getCurrentDate(),
         );
       }
     });
@@ -71,14 +71,14 @@ export class NewContentRecordFormPage implements OnInit {
 
     this.disciplineId = null;
 
-    this.disciplinesService.getOfflineDisciplines(this.classroomId).subscribe(
-      (result: any) => {
+    this.disciplinesService.getOfflineDisciplines(this.classroomId).subscribe({
+      next: (result: any) => {
         this.disciplines = result.data;
       },
-      (error) => {
+      error: (error: any) => {
         console.log(error);
       },
-    );
+    });
   }
 
   submitNewContentRecord(form: NgForm) {
