@@ -57,6 +57,7 @@ export class NewContentRecordFormPage implements OnInit {
 
     this.classroomsService.getOfflineClassrooms(this.unityId).subscribe({
       next: (classrooms: any) => {
+        this.resetSelectedValues();
         this.classrooms = classrooms.data;
       },
       error: (err: any) => {
