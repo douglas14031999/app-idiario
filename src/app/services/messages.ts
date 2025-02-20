@@ -8,19 +8,19 @@ export class MessagesService {
     private toastCtrl: ToastController,
   ) {}
 
-  public async showError(message: string) {
-    let title = 'Erro';
-    let buttons = [
+  public async showError(
+    message: string,
+    title: string = 'Error',
+    buttons: any[] = [
       {
         text: 'OK',
         handler: () => {},
       },
-    ];
-
+    ],
+  ) {
     const alert = await this.alertCtrl.create({
       header: title,
       message: message,
-      //enableBackdropDismiss: false,
       buttons: buttons,
     });
 

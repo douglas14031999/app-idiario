@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { Device } from '@capacitor/device';
 import { StorageService } from '../services/storage.service';
 import { environment } from '../../environments/environment';
+import { MessagesService } from '../services/messages';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-tab5',
@@ -19,6 +21,7 @@ export class Tab5Page implements OnInit {
 
   constructor(
     private storage: StorageService,
+    private messages: MessagesService,
     private router: Router,
   ) {
     this.storage.get('user').then((user) => {
@@ -38,6 +41,47 @@ export class Tab5Page implements OnInit {
   }
 
   logout() {
+    forkJoin({
+      dailyFrequencyStudentsToSync: this.storage.get(
+        'dailyFrequencyStudentsToSync',
+      ),
+      contentRecordsToSync: this.storage.get('contentRecordsToSync'),
+    }).subscribe({
+      next: ({ dailyFrequencyStudentsToSync, contentRecordsToSync }) => {
+        if (
+          dailyFrequencyStudentsToSync &&
+          dailyFrequencyStudentsToSync.length
+        ) {
+          this.showConfirmExit();
+        } else if (contentRecordsToSync && contentRecordsToSync.length) {
+          this.showConfirmExit();
+        } else {
+          this.doLogout();
+        }
+      },
+    });
+  }
+
+  showConfirmExit() {
+    this.messages.showError(
+      'Encontramos alguns lançamentos que ainda não foram sincronizados.',
+      'Deseja realmente sair?',
+      [
+        {
+          text: 'Cancelar',
+          handler: () => {},
+        },
+        {
+          text: 'Apagar lançamentos e sair',
+          handler: () => {
+            this.doLogout();
+          },
+        },
+      ],
+    );
+  }
+
+  doLogout(): void {
     this.storage.clear().finally(async () => {
       await this.router.navigate(['/sign-in']);
     });
