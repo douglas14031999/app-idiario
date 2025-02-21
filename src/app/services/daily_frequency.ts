@@ -91,10 +91,10 @@ export class DailyFrequencyService {
             class_number: null;
           }) => {
             return (
-              dailyFrequency.classroom_id === classroomId &&
-              dailyFrequency.frequency_date === frequencyDate &&
-              dailyFrequency.discipline_id === null &&
-              dailyFrequency.class_number === null
+              dailyFrequency.classroom_id == classroomId &&
+              dailyFrequency.frequency_date == frequencyDate &&
+              dailyFrequency.discipline_id == null &&
+              dailyFrequency.class_number == null
             );
           },
         );
@@ -161,12 +161,12 @@ export class DailyFrequencyService {
             frequency_date: string;
           }) => {
             return (
-              dailyFrequency.classroom_id === classroomId &&
-              dailyFrequency.discipline_id === disciplineId &&
+              dailyFrequency.classroom_id == classroomId &&
+              dailyFrequency.discipline_id == disciplineId &&
               splitedClassNumbers.includes(
                 String(dailyFrequency.class_number),
               ) &&
-              dailyFrequency.frequency_date === frequencyDate
+              dailyFrequency.frequency_date == frequencyDate
             );
           },
         );

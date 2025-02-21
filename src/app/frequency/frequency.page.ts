@@ -203,7 +203,6 @@ export class FrequencyPage implements OnInit {
           })
           .subscribe({
             next: (result: any) => {
-              console.log(result);
               const navigationExtras = {
                 queryParams: {
                   global: this.globalAbsence,
