@@ -40,7 +40,6 @@ export class MessagesService {
     const alert = await this.alertCtrl.create({
       header: title,
       message: message,
-      //enableBackdropDismiss: false,
       buttons: buttons,
     });
 
