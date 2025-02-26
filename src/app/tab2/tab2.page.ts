@@ -19,6 +19,7 @@ export class Tab2Page {
   contentRecords: any[] = [];
   teachingPlans: { unities: any[] } = { unities: [] };
   classrooms: any[] = [];
+  currentDate: Date = new Date();
 
   constructor(
     private sync: SyncProvider,
@@ -52,14 +53,13 @@ export class Tab2Page {
       this.contentRecords = results[1] || [];
       this.teachingPlans = results[2] || { unities: [] };
       this.classrooms = results[3] || [];
-      this.contentDays = [];
 
-      let currentDate = this.utilsService.getCurrentDate();
-      currentDate.setHours(0, 0, 0, 0);
       const numberOfDays = 7;
 
       for (let i = numberOfDays; i > 0; i--) {
         let unities: any[] = [];
+        let currentDate = this.currentDate;
+        currentDate.setHours(0, 0, 0, 0);
 
         this.contentRecords.forEach((contentRecord) => {
           let contentDate = this.utilsService.getDate(
@@ -112,7 +112,7 @@ export class Tab2Page {
           });
         }
 
-        currentDate.setDate(currentDate.getDate() - 1);
+        this.currentDate.setDate(currentDate.getDate() - 1);
       }
     });
   }

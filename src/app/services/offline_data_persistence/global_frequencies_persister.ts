@@ -13,7 +13,7 @@ export class GlobalFrequenciesPersisterService {
 
   persist(user: any, classrooms: any[], examRules: any[]): Observable<any> {
     const frequenciesObservables = classrooms
-      .flatMap((classroomList) => classroomList.data[0])
+      .flatMap((classroomList) => classroomList.data)
       .map((classroom: { id: number }) => {
         const currentExamRule = examRules.find(
           (rule: any) => rule.classroomId === classroom.id,

@@ -37,13 +37,10 @@ export class Tab1Page implements OnInit {
     });
   }
 
-  // Resolve o problema com a desatualização dos dados.
   async refreshLastFrequencyDays() {
-    const currentDate = this.currentDate;
     this.currentDate = new Date();
     this.lastFrequencyDays = [];
     await this.loadMoreFrequencies();
-    this.currentDate = currentDate;
   }
 
   async newFrequency() {
@@ -52,7 +49,7 @@ export class Tab1Page implements OnInit {
 
   private lastTenFrequencies(frequencies: any[]) {
     const lastDays = [];
-    const frequencyLimit = 30;
+    const frequencyLimit = 10;
 
     for (let i = frequencyLimit; i > 0; i--) {
       const shortDate = this.utilsService.toStringWithoutTime(this.currentDate);

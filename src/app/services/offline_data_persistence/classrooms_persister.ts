@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { ClassroomsService } from '../classrooms';
 import { StorageService } from '../storage.service';
 import { User } from '../../data/user.interface';
@@ -17,20 +17,10 @@ export class ClassroomsPersisterService {
       return this.classrooms.getOnlineClassrooms(user.teacher_id, unity.id);
     });
 
-    const transformClassrooms = map((classrooms) => [
-      {
-        data: classrooms,
-        unityId: unities[0].id,
-      },
-    ]);
-
     const setClassroomsInStorage = tap((classrooms) =>
       this.storage.set('classrooms', classrooms),
     );
 
-    return forkJoin(classroomsObservables).pipe(
-      transformClassrooms,
-      setClassroomsInStorage,
-    );
+    return forkJoin(classroomsObservables).pipe(setClassroomsInStorage);
   }
 }

@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Unity } from '../data/unity.interface';
 import { Classroom } from '../data/classroom.interface';
+import { Unity } from '../data/unity.interface';
 import { ClassroomsService } from '../services/classrooms';
 import { DisciplinesService } from '../services/disciplines';
 import { UtilsService } from '../services/utils';
-import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-new-content-record-form',
@@ -21,6 +21,7 @@ export class NewContentRecordFormPage implements OnInit {
   date: any;
   disciplines: any;
   disciplineId: number | null = null;
+  currentDate: Date = new Date();
 
   constructor(
     private route: ActivatedRoute,
@@ -34,6 +35,12 @@ export class NewContentRecordFormPage implements OnInit {
     this.route.queryParams.subscribe((params) => {
       this.unityId = params['unityId'];
       this.date = params['date'];
+
+      if (!this.date) {
+        this.date = this.utilsService.toStringWithoutTime(
+          this.utilsService.getCurrentDate(),
+        );
+      }
     });
 
     const state = this.router.getCurrentNavigation()?.extras.state;
@@ -44,16 +51,19 @@ export class NewContentRecordFormPage implements OnInit {
   }
 
   onChangeUnity() {
-    if (!this.unityId) return;
+    if (!this.unityId) {
+      return;
+    }
 
-    this.classroomsService.getOfflineClassrooms(this.unityId).subscribe(
-      (classrooms: any) => {
-        this.classrooms = classrooms.data[0];
+    this.classroomsService.getOfflineClassrooms(this.unityId).subscribe({
+      next: (classrooms: any) => {
+        this.resetSelectedValues();
+        this.classrooms = classrooms.data;
       },
-      (error) => {
-        console.log(error);
+      error: (err: any) => {
+        console.log(err);
       },
-    );
+    });
   }
 
   onChangeClassroom() {
@@ -61,14 +71,14 @@ export class NewContentRecordFormPage implements OnInit {
 
     this.disciplineId = null;
 
-    this.disciplinesService.getOfflineDisciplines(this.classroomId).subscribe(
-      (result: any) => {
+    this.disciplinesService.getOfflineDisciplines(this.classroomId).subscribe({
+      next: (result: any) => {
         this.disciplines = result.data;
       },
-      (error) => {
+      error: (error: any) => {
         console.log(error);
       },
-    );
+    });
   }
 
   submitNewContentRecord(form: NgForm) {

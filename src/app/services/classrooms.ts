@@ -5,6 +5,7 @@ import { ApiService } from './api';
 import { SchoolCalendarsService } from './school_calendars';
 import { StorageService } from './storage.service';
 import { UtilsService } from './utils';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class ClassroomsService {
@@ -17,9 +18,16 @@ export class ClassroomsService {
   ) {}
 
   getOnlineClassrooms(teacherId: number, unityId: number) {
-    return this.http.get(this.api.getTeacherClassroomsUrl(), {
-      params: { teacher_id: teacherId, unity_id: unityId },
-    });
+    return this.http
+      .get(this.api.getTeacherClassroomsUrl(), {
+        params: { teacher_id: teacherId, unity_id: unityId },
+      })
+      .pipe(
+        map((res) => ({
+          data: res,
+          unityId: unityId,
+        })),
+      );
   }
 
   getOfflineClassrooms(unityId: number) {
