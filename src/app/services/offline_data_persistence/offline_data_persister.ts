@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, forkJoin, switchMap } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { ClassroomsPersisterService } from './classrooms_persister';
 import { ContentLessonPlansPersisterService } from './content_lesson_plans_persister';
 import { ContentRecordsPersisterService } from './content_records_persister';
@@ -60,6 +60,12 @@ export class OfflineDataPersisterService {
 
     return of(user).pipe(
       map((user) => ({ user })),
+
+      tap(({ user }) => {
+        if (!user.teacher_id) {
+          throw new Error('Seu usuário não possui vínculo de professor.');
+        }
+      }),
 
       // Passo 1
       // Sincronizar as unidades (escolas)

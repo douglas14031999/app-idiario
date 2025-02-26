@@ -66,6 +66,7 @@ export class SyncProvider {
     await this.hideLoading();
     await this.messages.showError(
       errorMessage || 'Não foi possível concluir a sincronização.',
+      'Erro',
     );
   }
 
@@ -367,14 +368,17 @@ export class SyncProvider {
         const year = new Date().getFullYear();
         const years: number[] = [];
 
-        schoolCalendars.forEach((calendar: { data: { year: number }, unityId: number }) => {
-          if (calendar.data.year < year) {
-            years.push(calendar.data.year);
-          }
-        });
+        schoolCalendars.forEach(
+          (calendar: { data: { year: number }; unityId: number }) => {
+            if (calendar.data.year < year) {
+              years.push(calendar.data.year);
+            }
+          },
+        );
 
         this.messages.showAlert(
-          'Existem escolas com o ano letivo em aberto para os anos de: ' + years.filter((x, i, a) => a.indexOf(x) == i).join(', '),
+          'Existem escolas com o ano letivo em aberto para os anos de: ' +
+            years.filter((x, i, a) => a.indexOf(x) == i).join(', '),
           'Ano letivo em aberto',
         );
       }),
