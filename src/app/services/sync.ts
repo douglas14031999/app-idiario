@@ -376,6 +376,10 @@ export class SyncProvider {
           },
         );
 
+        if (years.length === 0) {
+          return;
+        }
+
         this.messages.showAlert(
           'Existem escolas com o ano letivo em aberto para os anos de: ' +
             years.filter((x, i, a) => a.indexOf(x) == i).join(', '),
