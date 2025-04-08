@@ -4,7 +4,7 @@
 
 export const environment = {
   app: {
-    version: '1.2.5',
+    version: '1.2.9',
     token: '',
     cities_url: '',
   },
