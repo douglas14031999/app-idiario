@@ -52,6 +52,7 @@ export class NewContentRecordFormPage implements OnInit {
 
   onChangeUnity() {
     if (!this.unityId) {
+      this.resetSelectedValues();
       return;
     }
 
@@ -61,6 +62,8 @@ export class NewContentRecordFormPage implements OnInit {
         this.classrooms = classrooms.data;
       },
       error: (err: any) => {
+        this.classrooms = [];
+        this.disciplines = [];
         console.log(err);
       },
     });
