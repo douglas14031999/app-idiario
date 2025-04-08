@@ -34,6 +34,14 @@ export class Tab2Page {
     await this.sync.isSyncDelayed();
 
     this.route.params.subscribe(() => {
+      this.contentDays = [];
+      this.unities = [];
+      this.lessonPlans = [];
+      this.contentRecords = [];
+      this.teachingPlans = { unities: [] };
+      this.classrooms = [];
+      this.currentDate = new Date();
+
       this.loadContentDays();
     });
   }

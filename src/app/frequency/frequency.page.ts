@@ -102,12 +102,14 @@ export class FrequencyPage implements OnInit {
                   this.scrollTo('frequency-classroom');
                 },
                 error: (error) => {
+                  this.resetOptions();
                   loader.dismiss();
                   this.messages.showToast(error);
                 },
               });
           },
           error: (error) => {
+            this.resetOptions();
             loader.dismiss();
             this.messages.showToast(error);
           },
@@ -232,6 +234,13 @@ export class FrequencyPage implements OnInit {
     this.classroomId = undefined;
     this.disciplineId = undefined;
     this.selectedClasses = [];
+  }
+
+  resetOptions() {
+    this.classrooms = [];
+    this.disciplines = [];
+    this.classes= [];
+    this.resetSelectedValues();
   }
 
   updateSelectedClasses(selectedClass: any) {

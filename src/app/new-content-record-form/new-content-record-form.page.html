@@ -94,7 +94,11 @@
         ></ion-datetime>
       </div>
 
-      <ion-button expand="block" type="submit" [disabled]="!f.valid">
+      <ion-button
+        expand="block"
+        type="submit"
+        [disabled]="!f.valid || !classrooms.length"
+      >
         Avançar
       </ion-button>
     </div>

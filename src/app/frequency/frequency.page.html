@@ -113,7 +113,7 @@
       <div class="container-button-frequency">
         <ion-button
           type="submit"
-          [disabled]="!f.valid || (!globalAbsence && !selectedClasses.length)"
+          [disabled]="!f.valid || !classrooms.length || (!globalAbsence && !selectedClasses.length)"
           *ngIf="unities.length"
         >
           Carregar lista de frequência
