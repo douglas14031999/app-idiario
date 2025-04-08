@@ -6,6 +6,7 @@ import { Unity } from '../data/unity.interface';
 import { ClassroomsService } from '../services/classrooms';
 import { DisciplinesService } from '../services/disciplines';
 import { UtilsService } from '../services/utils';
+import { MessagesService } from "../services/messages";
 
 @Component({
   selector: 'app-new-content-record-form',
@@ -27,6 +28,7 @@ export class NewContentRecordFormPage implements OnInit {
     private route: ActivatedRoute,
     private classroomsService: ClassroomsService,
     private disciplinesService: DisciplinesService,
+    private messages: MessagesService,
     private router: Router,
     private utilsService: UtilsService,
   ) {}
@@ -64,6 +66,7 @@ export class NewContentRecordFormPage implements OnInit {
       error: (err: any) => {
         this.classrooms = [];
         this.disciplines = [];
+        this.messages.showError(err, 'Erro');
         console.log(err);
       },
     });
