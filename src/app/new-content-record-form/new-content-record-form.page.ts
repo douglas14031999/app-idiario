@@ -62,6 +62,7 @@ export class NewContentRecordFormPage implements OnInit {
       next: (classrooms: any) => {
         this.resetSelectedValues();
         this.classrooms = classrooms.data;
+        this.disciplines = [];
       },
       error: (err: any) => {
         this.classrooms = [];
