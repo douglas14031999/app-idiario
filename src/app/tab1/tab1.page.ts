@@ -149,12 +149,18 @@ export class Tab1Page implements OnInit {
     const frequencies = await this.storage.get('frequencies');
 
     if (frequencies) {
-      const newFrequencies = this.lastTenFrequencies(
-        frequencies.daily_frequencies,
-      );
+      const lastFrequencyCounter = this.lastFrequencyDays.length;
+      let counter = 0;
 
-      if (newFrequencies.length > 0) {
+      // Caso os últimos 10 dias não possuam lançamento, busca até 10 semanas no passado
+      while (lastFrequencyCounter >= this.lastFrequencyDays.length && counter < 10) {
+        const newFrequencies = this.lastTenFrequencies(
+          frequencies.daily_frequencies,
+        ).filter((f) => f.exists);
+
         this.lastFrequencyDays = this.lastFrequencyDays.concat(newFrequencies);
+
+        counter += 1;
       }
     }
 

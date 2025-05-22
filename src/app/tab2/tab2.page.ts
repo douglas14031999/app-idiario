@@ -62,67 +62,87 @@ export class Tab2Page {
       this.teachingPlans = results[2] || { unities: [] };
       this.classrooms = results[3] || [];
 
-      const numberOfDays = 7;
+      const lastContentCounter = this.contentDays.length;
+      let counter = 0;
 
-      for (let i = numberOfDays; i > 0; i--) {
-        let unities: any[] = [];
-        let currentDate = this.currentDate;
-        currentDate.setHours(0, 0, 0, 0);
+      // Caso as últimas 10 semanas não possuam lançamento, busca até 10 semanas no passado
+      while (lastContentCounter >= this.contentDays.length && counter < 10) {
+        const lastContents = this.loadLastSevenDays();
 
-        this.contentRecords.forEach((contentRecord) => {
-          let contentDate = this.utilsService.getDate(
-            contentRecord.record_date,
-          );
-          contentDate.setHours(24, 0, 0, 0);
-
-          if (currentDate.getTime() !== contentDate.getTime()) {
-            return;
-          }
-
-          let unityIndex = unities
-            .map((d) => d['id'])
-            .indexOf(Number(contentRecord.unity_id));
-
-          if (unityIndex < 0) {
-            unities.push({
-              id: contentRecord.unity_id,
-              name: contentRecord.unity_name,
-              filledRecords: 0,
-              totalRecords: 0,
-              unityItems: [],
-            });
-            unityIndex = unities.length - 1;
-          }
-
-          unities[unityIndex].filledRecords++;
-          unities[unityIndex].totalRecords++;
-          unities[unityIndex].unityItems.push({
-            discipline_id: contentRecord.discipline_id,
-            classroom_id: contentRecord.classroom_id,
-            grade_id: contentRecord.grade_id,
-            description: contentRecord.description,
-            classroom_name: contentRecord.classroom_name,
-            contents: contentRecord.contents,
-            plannedContents: [],
-            type: 'contentRecord',
-          });
-        });
-
-        this.processLessonPlans(unities, currentDate);
-        this.processTeachingPlans(unities, currentDate);
-        this.calculateUniqueContents(unities);
-
-        if (unities.length) {
-          this.contentDays.push({
-            unities: unities,
-            date: this.utilsService.toStringWithoutTime(currentDate),
-            format_date: this.utilsService.toExtensiveFormat(currentDate),
-          });
+        if (lastContents.length) {
+          this.contentDays = this.contentDays.concat(lastContents);
+          break;
         }
 
-        this.currentDate.setDate(currentDate.getDate() - 1);
+        counter += 1;
       }
     });
+  }
+
+  loadLastSevenDays(): object[] {
+    const numberOfDays = 7;
+    const contents: object[] = [];
+
+    for (let i = numberOfDays; i > 0; i--) {
+      let unities: any[] = [];
+      let currentDate = this.currentDate;
+      currentDate.setHours(0, 0, 0, 0);
+
+      this.contentRecords.forEach((contentRecord) => {
+        let contentDate = this.utilsService.getDate(
+          contentRecord.record_date,
+        );
+        contentDate.setHours(24, 0, 0, 0);
+
+        if (currentDate.getTime() !== contentDate.getTime()) {
+          return;
+        }
+
+        let unityIndex = unities
+          .map((d) => d['id'])
+          .indexOf(Number(contentRecord.unity_id));
+
+        if (unityIndex < 0) {
+          unities.push({
+            id: contentRecord.unity_id,
+            name: contentRecord.unity_name,
+            filledRecords: 0,
+            totalRecords: 0,
+            unityItems: [],
+          });
+          unityIndex = unities.length - 1;
+        }
+
+        unities[unityIndex].filledRecords++;
+        unities[unityIndex].totalRecords++;
+        unities[unityIndex].unityItems.push({
+          discipline_id: contentRecord.discipline_id,
+          classroom_id: contentRecord.classroom_id,
+          grade_id: contentRecord.grade_id,
+          description: contentRecord.description,
+          classroom_name: contentRecord.classroom_name,
+          contents: contentRecord.contents,
+          plannedContents: [],
+          type: 'contentRecord',
+        });
+      });
+
+      this.processLessonPlans(unities, currentDate);
+      this.processTeachingPlans(unities, currentDate);
+      this.calculateUniqueContents(unities);
+
+      if (unities.length) {
+        contents.push({
+          unities: unities,
+          date: this.utilsService.toStringWithoutTime(currentDate),
+          format_date: this.utilsService.toExtensiveFormat(currentDate),
+        });
+      }
+
+      this.currentDate.setDate(currentDate.getDate() - 1);
+    }
+
+    return contents;
   }
 
   processLessonPlans(unities: any[], currentDate: Date) {

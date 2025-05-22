@@ -344,6 +344,9 @@ export class SyncProvider {
           dailyFrequenciesToRemove: this.storage.remove(
             'dailyFrequenciesToSync',
           ),
+          contentRecordsToRemove: this.storage.remove(
+            'contentRecordsToSync',
+          ),
         }).pipe(map((result) => ({ ...payload, ...result }))),
       ),
 
