@@ -4,9 +4,9 @@
 
 export const environment = {
   app: {
-    version: '1.2.9',
-    token: '',
-    cities_url: '',
+    version: '<VERSION>', // A versão do aplicativo (x.x.x)
+    token: '<TOKEN>',     // AUTH_TOKEN
+    cities_url: '<URL>',  // URL do i-Diário
   },
   production: false,
 };
