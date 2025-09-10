@@ -1,60 +1,88 @@
 # i-Diário App
 
-Aplicativo para o professor com lançamento de frequência e registro de conteúdos offline, integrado com o software livre [i-Diário](https://github.com/portabilis/i-diario) e [i-Educar](https://github.com/portabilis/i-educar)
+Aplicativo para o professor com lançamento de frequência e registro de conteúdos offline, integrado ao [i-Diário](https://github.com/portabilis/i-diario) e [i-Educar](https://github.com/portabilis/i-educar)
 
-## Pré requisitos
+## Dependências
 
-- node.js (20+)
-- npm
+Para executar o projeto é necessário a utilização de alguns softwares.
+
+- [Node.js](https://nodejs.org/)
+- [NPM](https://www.npmjs.com/)
+- [i-Diário](https://github.com/portabilis/i-diario)
 
 ## Instalação
 
-- Instalar a biblioteca do ionic
+Clone o repositório:
 
 ```bash
-$ npm install -g @ionic/cli
+git clone https://github.com/portabilis/i-diario-app.git && cd i-diario-app
 ```
 
-- Baixar o i-Diário App:
+Instale as dependências:
 
 ```bash
-$ git clone https://github.com/portabilis/i-diario-app.git
+npm install
 ```
 
-- Instalar as dependências
+Crie o arquivo `src/environments/environment.ts` e o configure:
 
 ```bash
-$ cd i-diario-app
-$ npm install
+cp src/environments/environment.example.ts src/environments/environment.ts
 ```
 
-- Iniciar o servidor
+```ts 
+// src/environments/environment.ts
+export const environment = {
+  app: {
+    version: '<VERSION>', // A versão do aplicativo (x.x.x)
+    token: '<TOKEN>',     // AUTH_TOKEN
+    cities_url: '<URL>',  // URL do i-Diário
+  },
+  production: false,
+};
+```
+
+> É mandatório que o i-Diário tenha a variável `AUTH_TOKEN` configurada no arquivo `config/secrets.yml` do contrário o aplicativo não conseguirá autenticar na API do i-Diário.
+
+Execute o servidor:
 
 ```bash
-$  ionic serve
+npm run start
 ```
 
-## Publicações na loja do Android e iOS
-
-Seguir os passos na [documentação](https://ionicframework.com/docs/angular/your-first-app/deploying-mobile) do framework
+Será possível acessar o aplicativo através do browser na URL [http://localhost:4200](http://localhost:4200).
 
 ## Sincronização com i-Diário
 
 - Criar um usuário do tipo servidor, vinculado com um professor e com turmas no ano letivo atual
-- Realizar login com o professor no aplicativo
+- Realizar login com o usuário e senha do professor no aplicativo
 - Clicar no ícone de sincronização
 
-# Build Capacitor
+## Deploy
+
+O deploy do aplicativo se dá através do build e publicação nas lojas de aplicativos.
+
+É interessante seguir os passos da [documentação](https://ionicframework.com/docs/angular/your-first-app/deploying-mobile) do framework.
+
+### Build
+
+Antes de enviar para as lojas será necessário fazer um build e assinar o aplicativo com seu certificado.
+
+#### Android
+
+Para fazer a publicação na Play Store é necessário o uso do [Android Studio](https://developer.android.com/studio).
+
+#### iOS
+
+Para fazer a publicação na Apple Store é necessário o uso do [Xcode](https://developer.apple.com/xcode/)
 
 ```bash
-$  ionic build
-$  npx capacitor-assets generate
-$  ionic cap add ios
-$  ionic cap add android
-$  ionic cap copy
-$  ionic cap sync
-$  ionic cap open ios
-$  ionic cap open android
+npm run build
+npx capacitor-assets generate
+npx cap add ios
+npx cap add android
+npx cap copy
+npx cap sync
+npx cap open ios
+npx cap open android
 ```
-
-O projeto foi atualizado para `@ionic/angular": "^7.0.0"` e `"@angular/common": "^17.0.2"`.
