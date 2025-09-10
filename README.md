@@ -86,3 +86,11 @@ npx cap sync
 npx cap open ios
 npx cap open android
 ```
+
+## Perguntas frequentes (FAQ)
+
+Algumas perguntas aparecem recorrentemente. Olhe primeiro por aqui: [FAQ](https://github.com/portabilis/i-educar-website/blob/master/docs/faq.md).
+
+---
+
+Powered by [Portábilis](https://portabilis.com.br/).
