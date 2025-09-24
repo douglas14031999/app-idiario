@@ -5,6 +5,7 @@
 
 .form-frequency {
   margin: 20px 10px 0 10px;
+  padding-bottom: calc(15px + env(safe-area-inset-bottom));
 }
 
 .form-item {
