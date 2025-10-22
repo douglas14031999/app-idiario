@@ -15,6 +15,10 @@
   font-size: 16px;
 }
 
+.page-content {
+  --padding-bottom: calc(15px + env(safe-area-inset-bottom));
+}
+
 #content-record-form {
   .item-inner {
     border-bottom: 0;

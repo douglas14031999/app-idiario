@@ -48,6 +48,10 @@ ion-back-button {
   display: none;
 }
 
+.page-content {
+  --padding-bottom: calc(15px + env(safe-area-inset-bottom));
+}
+
 .contents-list-item {
   font-size: 14px;
   color: #3f3d4d;

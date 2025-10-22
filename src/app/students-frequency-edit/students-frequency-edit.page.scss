@@ -27,6 +27,7 @@
 #students-frequency-edit-page.page-content {
   padding-top: 10px;
   min-height: 550px;
+  padding-bottom: calc(15px + env(safe-area-inset-bottom));
 }
 
 .multiple-lines {
@@ -64,6 +65,7 @@
   border: 1px solid #dddce6 !important;
   width: auto !important;
   padding: 0;
+  margin-bottom: calc(10px + env(safe-area-inset-bottom));
 }
 
 .grid-row {
