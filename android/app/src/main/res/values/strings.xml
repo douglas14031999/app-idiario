@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Portábilis Diário</string>
+    <string name="title_activity_main">Portábilis Diário</string>
+    <string name="package_name">com.ionicframework.appoffline153013</string>
+    <string name="custom_url_scheme">com.ionicframework.appoffline153013</string>
+</resources>

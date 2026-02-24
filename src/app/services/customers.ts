@@ -11,12 +11,12 @@ export class CustomersService {
   constructor(
     private http: HttpClient,
     private api: ApiService,
-  ) {}
+  ) { }
 
   getCustomers(): Observable<Customer[]> {
     if (!environment.production) {
       const all = {
-        name: 'Localhost',
+        name: (environment.app as any).city_name || 'Localhost',
         url: environment.app.cities_url,
         support_url: environment.app.cities_url,
       } as Customer;
