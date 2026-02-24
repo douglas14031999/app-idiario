@@ -13,7 +13,7 @@ export class DisciplinesService {
     private storage: StorageService,
     private connection: ConnectionService,
     private api: ApiService,
-  ) {}
+  ) { }
 
   getOnlineDisciplines(
     teacherId: number,
@@ -37,6 +37,7 @@ export class DisciplinesService {
     return new Observable((observer) => {
       this.storage.get('disciplines').then((disciplines) => {
         if (!disciplines) {
+          observer.next(null);
           observer.complete();
           return;
         }

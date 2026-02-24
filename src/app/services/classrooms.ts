@@ -15,7 +15,7 @@ export class ClassroomsService {
     private api: ApiService,
     private utilsService: UtilsService,
     private schoolCalendarsService: SchoolCalendarsService,
-  ) {}
+  ) { }
 
   getOnlineClassrooms(teacherId: number, unityId: number) {
     return this.http
@@ -39,6 +39,7 @@ export class ClassroomsService {
       }) => {
         this.storage.get('classrooms').then((classrooms) => {
           if (!classrooms) {
+            observer.next(null);
             observer.complete();
             return;
           }

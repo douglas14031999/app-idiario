@@ -11,7 +11,7 @@ export class ExamRulesService {
     private http: HttpClient,
     private storage: StorageService,
     private api: ApiService,
-  ) {}
+  ) { }
 
   getOnlineExamRules(
     teacherId: number,
@@ -33,6 +33,7 @@ export class ExamRulesService {
     return new Observable((observer) => {
       this.storage.get('examRules').then((examRules) => {
         if (!examRules) {
+          observer.next(null);
           observer.complete();
           return;
         }

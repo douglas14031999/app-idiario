@@ -11,7 +11,7 @@ export class SchoolCalendarsService {
     private http: HttpClient,
     private storage: StorageService,
     private api: ApiService,
-  ) {}
+  ) { }
 
   getOnlineSchoolCalendar(unityId: number): Observable<any> {
     const request = this.http.get(this.api.getSchoolCalendarUrl(), {
@@ -32,6 +32,7 @@ export class SchoolCalendarsService {
     return new Observable((observer) => {
       from(this.storage.get('schoolCalendars')).subscribe((schoolCalendars) => {
         if (!schoolCalendars) {
+          observer.next(null);
           observer.complete();
           return;
         }

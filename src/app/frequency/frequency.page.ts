@@ -51,7 +51,7 @@ export class FrequencyPage implements OnInit {
     private messages: MessagesService,
     private storage: StorageService,
     private router: Router,
-  ) {}
+  ) { }
 
   async ngOnInit() {
     if (!this.date) {
@@ -143,6 +143,10 @@ export class FrequencyPage implements OnInit {
       .getOfflineExamRules(classroomId)
       .pipe(
         tap((result: any) => {
+          if (!result || !result.data) {
+            this.messages.showToast('Nenhuma regra de avaliação encontrada. Por favor, sincronize os dados.');
+            return;
+          }
           if (
             result.data.exam_rule &&
             result.data.exam_rule.allow_frequency_by_discipline
@@ -151,6 +155,10 @@ export class FrequencyPage implements OnInit {
               .getOfflineDisciplines(classroomId)
               .pipe(
                 tap((disciplineResult: any) => {
+                  if (!disciplineResult || !disciplineResult.data) {
+                    this.messages.showToast('Nenhuma disciplina encontrada.');
+                    return;
+                  }
                   this.disciplines = disciplineResult.data;
                   this.globalAbsence = false;
                   this.cdr.detectChanges();
@@ -158,11 +166,11 @@ export class FrequencyPage implements OnInit {
                 }),
                 catchError((error) => {
                   console.log(error);
-                  return of(null); // Retorna um Observable nulo para encerrar o fluxo
+                  return of(null);
                 }),
                 finalize(() => loader.dismiss()),
               )
-              .subscribe(); // É necessário o subscribe para ativar o fluxo do Observable
+              .subscribe();
           } else {
             this.globalAbsence = true;
             this.cdr.detectChanges();
@@ -172,9 +180,9 @@ export class FrequencyPage implements OnInit {
         }),
         catchError((error) => {
           console.log(error);
-          return of(null); // Retorna um Observable nulo para encerrar o fluxo
+          return of(null);
         }),
-        //finalize(() => loader.dismiss())
+        finalize(() => loader.dismiss()),
       )
       .subscribe();
   }
@@ -239,7 +247,7 @@ export class FrequencyPage implements OnInit {
   resetOptions() {
     this.classrooms = [];
     this.disciplines = [];
-    this.classes= [];
+    this.classes = [];
     this.resetSelectedValues();
   }
 
