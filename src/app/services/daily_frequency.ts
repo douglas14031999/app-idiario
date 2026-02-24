@@ -23,10 +23,14 @@ export class DailyFrequencyService {
     private offlineDisciplineFinder: OfflineDisciplineFinder,
     private offlineUnityFinder: OfflineUnityFinder,
     private dailyFrequenciesSynchronizer: DailyFrequenciesSynchronizer,
-  ) {}
+  ) { }
 
   getStudents(params: any): Observable<any> {
-    return this.getOfflineStudents(params);
+    if (this.connection.isOnline) {
+      return this.getOnlineStudents(params);
+    } else {
+      return this.getOfflineStudents(params);
+    }
   }
 
   getOnlineStudents(params: any): Observable<any> {

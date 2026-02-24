@@ -11,7 +11,7 @@ export class StudentsService {
     private http: HttpClient,
     private storage: StorageService,
     private api: ApiService,
-  ) {}
+  ) { }
 
   getStudents(
     classroomId: number,
@@ -40,15 +40,16 @@ export class StudentsService {
     return new Observable((observer) => {
       this.storage.get('students').then((students) => {
         if (!students) {
+          observer.next({ data: { classroom_students: [] } });
           observer.complete();
           return;
         }
 
-        students.forEach((student: { classroomId: number }) => {
-          if (student.classroomId == classroomId) {
-            observer.next(student);
-          }
-        });
+        const filteredStudents = students.filter(
+          (student: { classroomId: number }) => student.classroomId == classroomId
+        );
+
+        observer.next({ data: { classroom_students: filteredStudents } });
         observer.complete();
       });
     });
@@ -61,20 +62,18 @@ export class StudentsService {
     return new Observable((observer) => {
       this.storage.get('students').then((students) => {
         if (!students) {
+          observer.next({ data: { classroom_students: [] } });
           observer.complete();
           return;
         }
 
-        students.forEach(
-          (student: { classroomId: number; disciplineId: number }) => {
-            if (
-              student.classroomId == classroomId &&
-              student.disciplineId == disciplineId
-            ) {
-              observer.next(student);
-            }
-          },
+        const filteredStudents = students.filter(
+          (student: { classroomId: number; disciplineId: number }) =>
+            student.classroomId == classroomId &&
+            student.disciplineId == disciplineId
         );
+
+        observer.next({ data: { classroom_students: filteredStudents } });
         observer.complete();
       });
     });
