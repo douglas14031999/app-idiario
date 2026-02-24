@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonContent, LoadingController, NavParams } from '@ionic/angular';
-import { catchError, finalize, of, tap } from 'rxjs';
+import { catchError, finalize, of, switchMap, tap } from 'rxjs';
 import { Classroom } from '../data/classroom.interface';
 import { Unity } from '../data/unity.interface';
 import { User } from '../data/user.interface';
@@ -131,7 +131,7 @@ export class FrequencyPage implements OnInit {
     let _classes = this.classes;
     this.classes = [];
     this.selectedClasses = [];
-    this.cdr.detectChanges(); // Aviso: pode ser sintoma de outro problema
+    this.cdr.detectChanges();
     this.classes = _classes;
 
     const loader = await this.loadingCtrl.create({
@@ -142,44 +142,52 @@ export class FrequencyPage implements OnInit {
     this.examRulesService
       .getOfflineExamRules(classroomId)
       .pipe(
-        tap((result: any) => {
+        switchMap((result: any) => {
           if (!result || !result.data) {
-            this.messages.showToast('Nenhuma regra de avaliação encontrada. Por favor, sincronize os dados.');
-            return;
+            // Sem regra de avaliação: usar frequência global como fallback
+            console.warn('Nenhuma regra de avaliação encontrada para classroom:', classroomId);
+            this.globalAbsence = true;
+            this.cdr.detectChanges();
+            this.scrollTo('frequency-date');
+            return of(null);
           }
+
           if (
             result.data.exam_rule &&
             result.data.exam_rule.allow_frequency_by_discipline
           ) {
-            this.disciplinesService
+            // Frequência por disciplina: buscar disciplinas
+            return this.disciplinesService
               .getOfflineDisciplines(classroomId)
               .pipe(
                 tap((disciplineResult: any) => {
                   if (!disciplineResult || !disciplineResult.data) {
-                    this.messages.showToast('Nenhuma disciplina encontrada.');
-                    return;
+                    this.messages.showToast('Nenhuma disciplina encontrada. Por favor, sincronize os dados.');
+                    this.globalAbsence = true;
+                  } else {
+                    this.disciplines = disciplineResult.data;
+                    this.globalAbsence = false;
+                    this.scrollTo('frequency-discipline');
                   }
-                  this.disciplines = disciplineResult.data;
-                  this.globalAbsence = false;
                   this.cdr.detectChanges();
-                  this.scrollTo('frequency-discipline');
                 }),
                 catchError((error) => {
-                  console.log(error);
+                  console.error('Erro ao buscar disciplinas:', error);
+                  this.globalAbsence = true;
+                  this.cdr.detectChanges();
                   return of(null);
                 }),
-                finalize(() => loader.dismiss()),
-              )
-              .subscribe();
+              );
           } else {
+            // Frequência global
             this.globalAbsence = true;
             this.cdr.detectChanges();
             this.scrollTo('frequency-date');
-            loader.dismiss();
+            return of(null);
           }
         }),
         catchError((error) => {
-          console.log(error);
+          console.error('Erro ao buscar regras de avaliação:', error);
           return of(null);
         }),
         finalize(() => loader.dismiss()),
