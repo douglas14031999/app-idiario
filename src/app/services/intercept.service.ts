@@ -4,7 +4,6 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpHeaders,
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -30,9 +29,9 @@ export class InterceptService implements HttpInterceptor {
     let handle: Observable<HttpEvent<any>>;
     if (accessToken && accessToken !== 'TOKEN' && accessToken !== 'URL') {
       const authReq = req.clone({
-        headers: new HttpHeaders({
+        setHeaders: {
           Authorization: `Bearer ${accessToken}`,
-        }),
+        },
       });
       handle = next.handle(authReq);
     } else {

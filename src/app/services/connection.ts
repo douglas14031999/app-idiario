@@ -21,6 +21,11 @@ export class ConnectionService {
 
       this.setStatus(this.isOnline);
     });
+
+    Network.addListener('networkStatusChange', (status) => {
+      this.status = status;
+      this.setStatus(status.connected);
+    });
   }
 
   setStatus(online: boolean) {

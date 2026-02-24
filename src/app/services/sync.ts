@@ -188,74 +188,76 @@ export class SyncProvider {
                   return of(null);
                 }
 
-                this.startSyncProcess();
-
-                return forkJoin({
-                  user: from(this.storage.get('user')),
-                  dailyFrequenciesToSync: from(
-                    this.storage.get('dailyFrequenciesToSync') || [],
-                  ),
-                  dailyFrequencyStudentsToSync: from(
-                    this.storage.get('dailyFrequencyStudentsToSync') || [],
-                  ),
-                  contentRecordsToSync: from(
-                    this.storage.get('contentRecordsToSync') || [],
-                  ),
-                }).pipe(
-                  switchMap((results) => {
-                    if (!results) {
-                      observer.error('Nenhum resultado retornado.');
-                      return of(null);
-                    }
-
-                    const {
-                      user,
-                      dailyFrequenciesToSync,
-                      dailyFrequencyStudentsToSync,
-                      contentRecordsToSync,
-                    } = results;
-
-                    // Tratamento seguro para sincronizações
-                    const dailyFrequenciesObservable =
-                      dailyFrequenciesToSync?.length
-                        ? this.dailyFrequenciesSynchronizer.sync(
-                          dailyFrequenciesToSync,
-                        )
-                        : of(null);
-
-                    const dailyFrequencyStudentsObservable =
-                      dailyFrequencyStudentsToSync?.length
-                        ? this.dailyFrequencyStudentsSynchronizer.sync(
-                          dailyFrequencyStudentsToSync,
-                        )
-                        : of(null);
-
-                    const contentRecordsObservable =
-                      contentRecordsToSync?.length
-                        ? this.contentRecordsSynchronizer.sync(
-                          contentRecordsToSync,
-                          user?.['teacher_id'],
-                        )
-                        : of(null);
-
-                    // Garantimos que todos os observables sejam válidos para o concat
-                    return concat(
-                      dailyFrequenciesObservable,
-                      dailyFrequencyStudentsObservable,
-                      contentRecordsObservable,
-                    ).pipe(
-                      switchMap(() =>
-                        forkJoin([
-                          this.storage.remove('dailyFrequencyStudentsToSync'),
-                          this.storage.remove('dailyFrequenciesToSync'),
-                        ]),
+                return from(this.startSyncProcess()).pipe(
+                  switchMap(() =>
+                    forkJoin({
+                      user: from(this.storage.get('user')),
+                      dailyFrequenciesToSync: from(
+                        this.storage.get('dailyFrequenciesToSync') || [],
                       ),
-                      catchError((error) => {
-                        observer.error(error);
-                        return of(null); // Continua o fluxo em caso de erro
+                      dailyFrequencyStudentsToSync: from(
+                        this.storage.get('dailyFrequencyStudentsToSync') || [],
+                      ),
+                      contentRecordsToSync: from(
+                        this.storage.get('contentRecordsToSync') || [],
+                      ),
+                    }).pipe(
+                      switchMap((results) => {
+                        if (!results) {
+                          observer.error('Nenhum resultado retornado.');
+                          return of(null);
+                        }
+
+                        const {
+                          user,
+                          dailyFrequenciesToSync,
+                          dailyFrequencyStudentsToSync,
+                          contentRecordsToSync,
+                        } = results;
+
+                        // Tratamento seguro para sincronizações
+                        const dailyFrequenciesObservable =
+                          dailyFrequenciesToSync?.length
+                            ? this.dailyFrequenciesSynchronizer.sync(
+                              dailyFrequenciesToSync,
+                            )
+                            : of(null);
+
+                        const dailyFrequencyStudentsObservable =
+                          dailyFrequencyStudentsToSync?.length
+                            ? this.dailyFrequencyStudentsSynchronizer.sync(
+                              dailyFrequencyStudentsToSync,
+                            )
+                            : of(null);
+
+                        const contentRecordsObservable =
+                          contentRecordsToSync?.length
+                            ? this.contentRecordsSynchronizer.sync(
+                              contentRecordsToSync,
+                              user?.['teacher_id'],
+                            )
+                            : of(null);
+
+                        // Garantimos que todos os observables sejam válidos para o concat
+                        return concat(
+                          dailyFrequenciesObservable,
+                          dailyFrequencyStudentsObservable,
+                          contentRecordsObservable,
+                        ).pipe(
+                          switchMap(() =>
+                            forkJoin([
+                              this.storage.remove('dailyFrequencyStudentsToSync'),
+                              this.storage.remove('dailyFrequenciesToSync'),
+                            ]),
+                          ),
+                          catchError((error) => {
+                            observer.error(error);
+                            return of(null); // Continua o fluxo em caso de erro
+                          }),
+                        );
                       }),
-                    );
-                  }),
+                    ),
+                  ),
                 );
               }),
             );

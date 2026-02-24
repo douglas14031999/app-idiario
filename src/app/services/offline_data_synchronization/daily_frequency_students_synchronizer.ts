@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, from, forkJoin } from 'rxjs';
+import { Observable, from, forkJoin, of } from 'rxjs';
 import { concatMap, catchError, map } from 'rxjs/operators';
 import { ApiService } from '../api';
 import { AuthService } from '../auth';
@@ -13,7 +13,7 @@ export class DailyFrequencyStudentsSynchronizer {
     private api: ApiService,
     private storage: StorageService,
     private auth: AuthService,
-  ) {}
+  ) { }
 
   public sync(dailyFrequencyStudents: any[]): Observable<any> {
     if (!dailyFrequencyStudents || dailyFrequencyStudents.length === 0) {
@@ -38,10 +38,13 @@ export class DailyFrequencyStudentsSynchronizer {
               catchError((error) => {
                 console.error(
                   'Erro ao sincronizar dailyFrequencyStudent:',
-                  dfs,
-                  error,
+                  'studentId:', dfs.studentId,
+                  'classroomId:', dfs.classroomId,
+                  'date:', dfs.frequencyDate,
+                  'status:', error.status,
+                  'message:', error.message,
                 );
-                return from([]); // retorna um observable vazio em caso de erro para continuar a execução
+                return of(null);
               }),
             );
         });
@@ -53,8 +56,8 @@ export class DailyFrequencyStudentsSynchronizer {
         return this.clearSyncedFrequencies();
       }),
       catchError((error) => {
-        console.error('Erro durante a sincronização:', error);
-        return from([]); // Em caso de erro geral, continuar o fluxo
+        console.error('Erro durante a sincronização de frequências de alunos:', error);
+        return of(null);
       }),
     );
   }
