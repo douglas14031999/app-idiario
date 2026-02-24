@@ -251,9 +251,6 @@ export class SyncProvider {
                         ]),
                       ),
                       catchError((error) => {
-                        this.handleError(
-                          'Erro durante o processo de sincronização.',
-                        );
                         observer.error(error);
                         return of(null); // Continua o fluxo em caso de erro
                       }),
@@ -273,7 +270,7 @@ export class SyncProvider {
           },
           error: (error) => {
             console.log(error);
-            this.handleError(error);
+            this.handleError(error.message || error);
             observer.error(error); // Notifica o erro
           },
         });

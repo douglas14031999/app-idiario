@@ -42,10 +42,8 @@ export class InterceptService implements HttpInterceptor {
     return handle.pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.message && error.message.includes('Http failure during parsing') && error.message.includes('/usuarios/logar')) {
-          this.messages.showError(
-            'Sua sessão expirou. Por favor, faça login novamente.',
-            'Sessão Expirada'
-          );
+          const friendlyMessage = 'Sua sessão expirou. Por favor, faça login novamente.';
+          return throwError(() => new Error(friendlyMessage));
         }
         return throwError(() => error);
       })
