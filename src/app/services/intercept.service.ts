@@ -13,11 +13,16 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class InterceptService implements HttpInterceptor {
-  constructor() {}
+  constructor() { }
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
+    // Não adicionar Token em requisições de login ou de busca de municípios
+    if (req.url.includes('/usuarios/logar.json') || req.url === environment.app.cities_url) {
+      return next.handle(req);
+    }
+
     const accessToken = environment.app.token;
 
     const authReq = req.clone({
