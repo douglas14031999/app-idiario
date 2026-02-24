@@ -65,10 +65,6 @@ export class SyncProvider {
     this.isSyncingStatus = false;
     await this.hideLoading();
 
-    if (errorMessage && errorMessage.includes('Http failure during parsing') && errorMessage.includes('/usuarios/logar')) {
-      errorMessage = 'Sua sessão expirou. Por favor, faça login novamente para sincronizar.';
-    }
-
     await this.messages.showError(
       errorMessage || 'Não foi possível concluir a sincronização.',
       'Erro',

@@ -6,14 +6,17 @@ import {
   HttpEvent,
   HttpHeaders,
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { MessagesService } from './messages';
 
 @Injectable({
   providedIn: 'root',
 })
 export class InterceptService implements HttpInterceptor {
-  constructor() { }
+  constructor(private messages: MessagesService) { }
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler,
@@ -24,17 +27,28 @@ export class InterceptService implements HttpInterceptor {
     }
 
     const accessToken = environment.app.token;
-
-    // Só adicionar o token se ele for válido e não for o placeholder 'TOKEN'
+    let handle: Observable<HttpEvent<any>>;
     if (accessToken && accessToken !== 'TOKEN' && accessToken !== 'URL') {
       const authReq = req.clone({
         headers: new HttpHeaders({
           Authorization: `Bearer ${accessToken}`,
         }),
       });
-      return next.handle(authReq);
+      handle = next.handle(authReq);
+    } else {
+      handle = next.handle(req);
     }
 
-    return next.handle(req);
+    return handle.pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.message && error.message.includes('Http failure during parsing') && error.message.includes('/usuarios/logar')) {
+          this.messages.showError(
+            'Sua sessão expirou. Por favor, faça login novamente.',
+            'Sessão Expirada'
+          );
+        }
+        return throwError(() => error);
+      })
+    );
   }
 }
