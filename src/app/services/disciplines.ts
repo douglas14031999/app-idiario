@@ -42,12 +42,13 @@ export class DisciplinesService {
           return;
         }
 
-        disciplines.forEach((discipline: any) => {
-          if (discipline.classroomId == classroomId) {
-            observer.next(discipline);
-            observer.complete();
-          }
-        });
+        const found = disciplines.find((discipline: any) => discipline.classroomId == classroomId);
+        if (found) {
+          observer.next(found);
+        } else {
+          observer.next(null);
+        }
+        observer.complete();
       });
     });
   }

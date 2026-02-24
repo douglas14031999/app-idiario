@@ -37,12 +37,13 @@ export class SchoolCalendarsService {
           return;
         }
 
-        schoolCalendars.forEach((schoolCalendar: any) => {
-          if (schoolCalendar.unityId == unityId) {
-            observer.next(schoolCalendar);
-            observer.complete();
-          }
-        });
+        const found = schoolCalendars.find((schoolCalendar: any) => schoolCalendar.unityId == unityId);
+        if (found) {
+          observer.next(found);
+        } else {
+          observer.next(null);
+        }
+        observer.complete();
       });
     });
   }

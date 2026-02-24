@@ -38,12 +38,13 @@ export class ExamRulesService {
           return;
         }
 
-        examRules.forEach((examRule: any) => {
-          if (examRule.classroomId == classroomId) {
-            observer.next(examRule);
-            observer.complete();
-          }
-        });
+        const found = examRules.find((examRule: any) => examRule.classroomId == classroomId);
+        if (found) {
+          observer.next(found);
+        } else {
+          observer.next(null);
+        }
+        observer.complete();
       });
     });
   }

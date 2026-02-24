@@ -64,6 +64,11 @@ export class SyncProvider {
   async handleError(errorMessage?: string) {
     this.isSyncingStatus = false;
     await this.hideLoading();
+
+    if (errorMessage && errorMessage.includes('Http failure during parsing') && errorMessage.includes('/usuarios/logar')) {
+      errorMessage = 'Sua sessão expirou. Por favor, faça login novamente para sincronizar.';
+    }
+
     await this.messages.showError(
       errorMessage || 'Não foi possível concluir a sincronização.',
       'Erro',
@@ -119,7 +124,7 @@ export class SyncProvider {
         const daysDifference = Math.round(
           (this.utilsService.getCurrentDate().getTime() -
             lastSyncDate.getTime()) /
-            (1000 * 60 * 60 * 24),
+          (1000 * 60 * 60 * 24),
         );
 
         if (daysDifference >= 5) {
@@ -218,23 +223,23 @@ export class SyncProvider {
                     const dailyFrequenciesObservable =
                       dailyFrequenciesToSync?.length
                         ? this.dailyFrequenciesSynchronizer.sync(
-                            dailyFrequenciesToSync,
-                          )
+                          dailyFrequenciesToSync,
+                        )
                         : of(null);
 
                     const dailyFrequencyStudentsObservable =
                       dailyFrequencyStudentsToSync?.length
                         ? this.dailyFrequencyStudentsSynchronizer.sync(
-                            dailyFrequencyStudentsToSync,
-                          )
+                          dailyFrequencyStudentsToSync,
+                        )
                         : of(null);
 
                     const contentRecordsObservable =
                       contentRecordsToSync?.length
                         ? this.contentRecordsSynchronizer.sync(
-                            contentRecordsToSync,
-                            user?.['teacher_id'],
-                          )
+                          contentRecordsToSync,
+                          user?.['teacher_id'],
+                        )
                         : of(null);
 
                     // Garantimos que todos os observables sejam válidos para o concat
@@ -316,15 +321,15 @@ export class SyncProvider {
         const dailyFrequencyStudentsObservable =
           dailyFrequencyStudentsToSync?.length
             ? this.dailyFrequencyStudentsSynchronizer.sync(
-                dailyFrequencyStudentsToSync,
-              )
+              dailyFrequencyStudentsToSync,
+            )
             : of(null);
 
         const contentRecordsObservable = contentRecordsToSync?.length
           ? this.contentRecordsSynchronizer.sync(
-              contentRecordsToSync,
-              user?.['teacher_id'],
-            )
+            contentRecordsToSync,
+            user?.['teacher_id'],
+          )
           : of(null);
 
         return concat(
@@ -361,7 +366,7 @@ export class SyncProvider {
       // Passo 5
       // Encerrar o loading e definir a data da última sincronização
       tap(() => {
-        this.completeSync().then(() => {});
+        this.completeSync().then(() => { });
         this.setSyncDate();
       }),
 
@@ -385,13 +390,13 @@ export class SyncProvider {
 
         this.messages.showAlert(
           'Existem escolas com o ano letivo em aberto para os anos de: ' +
-            years.filter((x, i, a) => a.indexOf(x) == i).join(', '),
+          years.filter((x, i, a) => a.indexOf(x) == i).join(', '),
           'Ano letivo em aberto',
         );
       }),
 
       catchError((err) => {
-        this.handleError(err.message).then(() => {});
+        this.handleError(err.message).then(() => { });
         throw err;
       }),
     );

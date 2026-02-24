@@ -45,49 +45,58 @@ export class ClassroomsService {
           }
           let currentYear = this.utilsService.getCurrentDate().getFullYear();
 
-          classrooms.forEach((classroom: { unityId: number; data: any[] }) => {
-            this.schoolCalendarsService
-              .getOfflineSchoolCalendar(unityId)
-              .subscribe((schoolCalendar: any) => {
-                const currentDate = new Date().toISOString().substr(0, 10);
-                const hasStepOnCurrentDate =
-                  schoolCalendar.data.steps.filter(
-                    (step: {
-                      start_date_for_posting: any;
-                      start_at: any;
-                      end_date_for_posting: any;
-                      end_at: any;
-                    }) => {
-                      const startDate =
-                        step.start_date_for_posting || step.start_at;
-                      const endDate = step.end_date_for_posting || step.end_at;
+          const classroom = classrooms.find((c: any) => c.unityId == unityId);
+          if (!classroom) {
+            observer.next(null);
+            observer.complete();
+            return;
+          }
 
-                      return startDate <= currentDate && endDate >= currentDate;
-                    },
-                  ).length >= 1;
+          this.schoolCalendarsService
+            .getOfflineSchoolCalendar(unityId)
+            .subscribe((schoolCalendar: any) => {
+              if (!schoolCalendar || !schoolCalendar.data) {
+                observer.next(classroom);
+                observer.complete();
+                return;
+              }
 
-                if (!hasStepOnCurrentDate) {
-                  observer.error(
-                    'Data atual está fora do período de postagem de faltas. Tente novamente.',
+              const currentDate = new Date().toISOString().substr(0, 10);
+              const hasStepOnCurrentDate =
+                schoolCalendar.data.steps.filter(
+                  (step: {
+                    start_date_for_posting: any;
+                    start_at: any;
+                    end_date_for_posting: any;
+                    end_at: any;
+                  }) => {
+                    const startDate =
+                      step.start_date_for_posting || step.start_at;
+                    const endDate = step.end_date_for_posting || step.end_at;
+
+                    return startDate <= currentDate && endDate >= currentDate;
+                  },
+                ).length >= 1;
+
+              if (!hasStepOnCurrentDate) {
+                observer.error(
+                  'Data atual está fora do período de postagem de faltas. Tente novamente.',
+                );
+                observer.complete();
+                return;
+              }
+
+              classroom.data = classroom.data.filter(
+                (value: { year: any }) => {
+                  return (
+                    (value.year || currentYear) ==
+                    (schoolCalendar.data.year || currentYear)
                   );
-                  observer.complete();
-                  return;
-                }
-
-                if (classroom.unityId == unityId) {
-                  classroom.data = classroom.data.filter(
-                    (value: { year: any }) => {
-                      return (
-                        (value.year || currentYear) ==
-                        (schoolCalendar.data.year || currentYear)
-                      );
-                    },
-                  );
-                  observer.next(classroom);
-                  observer.complete();
-                }
-              });
-          });
+                },
+              );
+              observer.next(classroom);
+              observer.complete();
+            });
         });
       },
     );
