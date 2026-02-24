@@ -1,8 +1,9 @@
 import { ApiService } from './../api';
-import { Observable, from, concat } from 'rxjs';
+import { Observable, from, forkJoin, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { StorageService } from '../storage.service';
+import { map, concatMap, catchError, tap } from 'rxjs/operators';
 
 @Injectable()
 export class ContentRecordsSynchronizer {
@@ -10,35 +11,33 @@ export class ContentRecordsSynchronizer {
     private http: HttpClient,
     private api: ApiService,
     private storage: StorageService,
-  ) {}
+  ) { }
 
   public sync(contentRecords: any[], teacherId: number): Observable<any> {
-    return new Observable((observer) => {
-      if (contentRecords && contentRecords.length) {
-        let contentRecordObservables = contentRecords.map((contentRecord) => {
-          contentRecord['teacher_id'] = teacherId;
-          return this.http.post(
-            this.api.getContentRecordsSyncUrl(),
-            contentRecord,
-          );
-        });
+    if (!contentRecords || !contentRecords.length) {
+      return of(null);
+    }
 
-        concat(...contentRecordObservables).subscribe(
-          (result: any) => {
-            this.destroyPendingSyncRecord(result);
-            observer.next(result);
-          },
-          (error) => {
-            observer.error(error);
-          },
-          () => {
-            observer.complete();
-          },
-        );
-      } else {
-        observer.complete();
-      }
+    const requests = contentRecords.map((contentRecord) => {
+      contentRecord['teacher_id'] = teacherId;
+      return this.http.post(this.api.getContentRecordsSyncUrl(), contentRecord).pipe(
+        tap((result: any) => {
+          this.destroyPendingSyncRecord(result);
+        }),
+        catchError((error) => {
+          console.error(
+            'Erro ao sincronizar contentRecord:',
+            'classroomId:', contentRecord.classroom_id,
+            'disciplineId:', contentRecord.discipline_id,
+            'date:', contentRecord.record_date,
+            'error:', error
+          );
+          return of(null);
+        })
+      );
     });
+
+    return forkJoin(requests);
   }
 
   private destroyPendingSyncRecord(contentRecord: any) {

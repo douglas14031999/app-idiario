@@ -1,9 +1,9 @@
 import { ApiService } from './../api';
-import { Observable, from, concat } from 'rxjs';
+import { Observable, from, forkJoin, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../auth';
-import { map } from 'rxjs/operators';
+import { map, concatMap, catchError } from 'rxjs/operators';
 
 @Injectable()
 export class DailyFrequenciesSynchronizer {
@@ -11,37 +11,32 @@ export class DailyFrequenciesSynchronizer {
     private http: HttpClient,
     private api: ApiService,
     private auth: AuthService,
-  ) {}
+  ) { }
 
   public sync(dailyFrequencies: any[]): Observable<any> {
-    return new Observable((observer) => {
-      if (dailyFrequencies) {
-        this.auth.currentUser().subscribe((user) => {
-          let dailyFrequencyObservables = dailyFrequencies.map(
-            (dailyFrequency) => {
-              return this.mountDailyFrequencyPostRequest(
-                dailyFrequency,
-                user.teacher_id,
-              );
-            },
-          );
+    if (!dailyFrequencies || dailyFrequencies.length === 0) {
+      return of(null);
+    }
 
-          concat(...dailyFrequencyObservables).subscribe(
-            (result) => {
-              observer.next(result);
-            },
-            (error) => {
-              observer.error(error);
-            },
-            () => {
-              observer.complete();
-            },
+    return this.auth.currentUser().pipe(
+      concatMap((user) => {
+        const requests = dailyFrequencies.map((df) => {
+          return this.mountDailyFrequencyPostRequest(df, user.teacher_id).pipe(
+            catchError((error) => {
+              console.error(
+                'Erro ao sincronizar dailyFrequency:',
+                'unityId:', df.unity_id,
+                'classroomId:', df.classroom_id,
+                'date:', df.frequency_date,
+                'error:', error
+              );
+              return of(null);
+            })
           );
         });
-      } else {
-        observer.complete();
-      }
-    });
+        return forkJoin(requests);
+      })
+    );
   }
 
   private mountDailyFrequencyPostRequest(

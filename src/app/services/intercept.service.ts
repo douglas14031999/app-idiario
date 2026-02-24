@@ -20,8 +20,14 @@ export class InterceptService implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
-    // Não adicionar Token em requisições de login ou de busca de municípios
-    if (req.url.includes('/usuarios/logar.json') || req.url === environment.app.cities_url) {
+    // Definir URLs que não devem conter Token
+    const isLogin = req.url.includes('/usuarios/logar.json');
+    const citiesUrl = environment.app.cities_url;
+    const normalizedReqUrl = req.url.endsWith('/') ? req.url.slice(0, -1) : req.url;
+    const normalizedCitiesUrl = citiesUrl.endsWith('/') ? citiesUrl.slice(0, -1) : citiesUrl;
+    const isCitiesLookup = normalizedReqUrl === normalizedCitiesUrl;
+
+    if (isLogin || isCitiesLookup) {
       return next.handle(req);
     }
 

@@ -5,32 +5,22 @@ import { environment } from 'src/environments/environment';
 @Injectable()
 export class ApiService {
   serverUrl: string = '';
+  private serverUrlPromise: Promise<string>;
 
   constructor(private storage: StorageService) {
-    this.storage.get('serverUrl').then((serverUrl) => {
-      this.serverUrl = serverUrl;
+    this.serverUrlPromise = this.storage.get('serverUrl').then((serverUrl) => {
+      this.serverUrl = serverUrl || '';
+      return this.serverUrl;
     });
   }
 
-  private getOrigin(url: string): string {
-    if (!url) return '';
-    try {
-      const urlObj = new URL(url);
-      return urlObj.origin;
-    } catch (e) {
-      // Fallback para quando não for uma URL completa (ex: localhost:3000)
-      if (url.includes('://')) return url.split('/')[0] + '//' + url.split('/')[2];
-      return url.split('/')[0];
-    }
-  }
-
-  setServerUrl(serverUrl: string) {
-    serverUrl = this.getOrigin(serverUrl);
+  async setServerUrl(serverUrl: string) {
     if (serverUrl && serverUrl.endsWith('/')) {
       serverUrl = serverUrl.slice(0, -1);
     }
-    this.storage.set('serverUrl', serverUrl);
+    await this.storage.set('serverUrl', serverUrl);
     this.serverUrl = serverUrl;
+    this.serverUrlPromise = Promise.resolve(serverUrl);
   }
 
   private cleanUrl(url: string): string {
