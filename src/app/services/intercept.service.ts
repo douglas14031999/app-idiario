@@ -25,12 +25,16 @@ export class InterceptService implements HttpInterceptor {
 
     const accessToken = environment.app.token;
 
-    const authReq = req.clone({
-      headers: new HttpHeaders({
-        Authorization: `Bearer ${accessToken}`,
-      }),
-    });
+    // Só adicionar o token se ele for válido e não for o placeholder 'TOKEN'
+    if (accessToken && accessToken !== 'TOKEN' && accessToken !== 'URL') {
+      const authReq = req.clone({
+        headers: new HttpHeaders({
+          Authorization: `Bearer ${accessToken}`,
+        }),
+      });
+      return next.handle(authReq);
+    }
 
-    return next.handle(authReq);
+    return next.handle(req);
   }
 }

@@ -12,7 +12,20 @@ export class ApiService {
     });
   }
 
+  private getOrigin(url: string): string {
+    if (!url) return '';
+    try {
+      const urlObj = new URL(url);
+      return urlObj.origin;
+    } catch (e) {
+      // Fallback para quando não for uma URL completa (ex: localhost:3000)
+      if (url.includes('://')) return url.split('/')[0] + '//' + url.split('/')[2];
+      return url.split('/')[0];
+    }
+  }
+
   setServerUrl(serverUrl: string) {
+    serverUrl = this.getOrigin(serverUrl);
     if (serverUrl && serverUrl.endsWith('/')) {
       serverUrl = serverUrl.slice(0, -1);
     }
